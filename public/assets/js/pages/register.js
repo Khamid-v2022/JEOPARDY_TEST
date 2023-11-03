@@ -1,0 +1,8 @@
+/**
+ * Register
+ */
+
+'use strict';
+(function () {
+    
+})();
