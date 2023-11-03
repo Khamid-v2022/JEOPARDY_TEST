@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,14 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
+Route::post('login', [AuthController::class, 'do_login']);
+Route::get('logout', [AuthController::class, 'do_logout'])->name('logout');
+
 Route::get('register', [AuthController::class, 'register_page'])->name('register');
+Route::post('register', [AuthController::class, 'do_register']);
+
+Route::group(['middleware' => ['user']], function() {
+    Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');
+});

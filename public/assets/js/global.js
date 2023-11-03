@@ -7,6 +7,14 @@
 let menu, animate;
 
 (function () {
+	
+	// CSRF-TOKEN 
+	$.ajaxSetup({
+		headers: {
+			"X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
+		},
+	});
+	
 	// Initialize menu
 	//-----------------
 	let layoutMenuEl = document.querySelectorAll('#layout-menu');
@@ -115,12 +123,6 @@ let menu, animate;
 	// Auto update menu collapsed/expanded based on the themeConfig
 	window.Helpers.setCollapsed(true, false);
 
-
-	// CSRF-TOKEN 
-	$.ajaxSetup({
-		headers: {
-			"X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-		},
-	});
+	
 	
 })();

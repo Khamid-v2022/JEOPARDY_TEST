@@ -1,6 +1,6 @@
 @extends('layouts/blankLayout')
 
-@section('title', 'Login page')
+@section('title', 'Login')
 
 @section('vendor-style')
 @endsection
@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                            <button class="btn btn-primary w-100" id="submit_btn" type="submit">Sign in<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
                         </div>
                     </form>
 

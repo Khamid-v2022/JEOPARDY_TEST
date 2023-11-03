@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-        <title>@yield('title')</title>
+        <title>@yield('title') - {{env('APP_NAME')}}</title>
 
         <meta name="description" content="" />
         <meta name="csrf-token" content="{{ csrf_token() }}" >
@@ -19,17 +19,20 @@
 
         <!-- Icons. Uncomment required icon fonts -->
         <link rel="stylesheet" href="{{asset('assets/vendor/fonts/boxicons.css')}}" />
+        <script src="https://kit.fontawesome.com/930584b15c.js" crossorigin="anonymous"></script>
 
         <!-- Core CSS -->
         <link rel="stylesheet" href="{{asset('assets/vendor/css/core.css')}}" class="template-customizer-core-css" />
         <link rel="stylesheet" href="{{asset('assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" />
-        <link rel="stylesheet" href="{{asset('assets/css/global.css')}}" />
 
         <!-- Vendors CSS -->
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
+        
         @yield('vendor-style')
 
         <!-- Page CSS -->
+        <link rel="stylesheet" href="{{asset('assets/css/global.css')}}" />
         @yield('page-style')
 
         <!-- Helpers -->
@@ -38,9 +41,7 @@
     </head>
 
     <body>
-
         @yield('layoutContent')
-
     
         <!-- Core JS -->
         <!-- build:js assets/vendor/js/core.js -->
@@ -53,11 +54,11 @@
         <!-- endbuild -->
 
         <!-- Vendors JS -->
+        <script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
         @yield('vendor-script')
 
-        <!-- Main JS -->
-        <script src="{{asset('assets/js/global.js')}}"></script>
 
+        <script src="{{asset('assets/js/global.js')}}"></script>
         <!-- Page JS -->
         @yield('page-script')
    
