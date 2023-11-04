@@ -16,15 +16,19 @@
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
+                    @php
+                    $currentRouteName = Route::currentRouteName();
+                    @endphp
+
                     <!-- Dashboard -->
-                    <li class="menu-item active">
+                    <li class="menu-item {{ $currentRouteName == 'pages-dashboard' ? 'active' : ''}}">
                         <a href="/" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
                             <div data-i18n="Analytics">Dashboard</div>
                         </a>
                     </li>
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">
+                    <li class="menu-item {{ $currentRouteName == 'jeopardy-test' ? 'active' : ''}}">
+                        <a href="{{ route('jeopardy-test') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Basic">Test</div>
                         </a>

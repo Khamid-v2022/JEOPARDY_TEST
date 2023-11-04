@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JeopardyTest;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +30,7 @@ Route::group(['middleware' => ['user']], function() {
     Route::get('/read-csv', [DashboardController::class, 'read_csv']);
     Route::get('/structure-question', [DashboardController::class, 'structure_question']);
     
+    Route::get('/jeopardy-test', [JeopardyTest::class, 'index'])->name('jeopardy-test');
+    Route::get('/jeopardy-test/get-questions', [JeopardyTest::class, 'get_questions']);
 });
 
