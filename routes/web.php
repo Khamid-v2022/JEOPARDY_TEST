@@ -27,5 +27,7 @@ Route::post('register', [AuthController::class, 'do_register']);
 Route::group(['middleware' => ['user']], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');
     Route::get('/read-csv', [DashboardController::class, 'read_csv']);
+    Route::get('/structure-question', [DashboardController::class, 'structure_question']);
+    
 });
 

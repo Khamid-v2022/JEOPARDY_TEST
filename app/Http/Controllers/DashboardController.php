@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OriginalQuestion;
+use App\Models\Category;
+use App\Models\Question;
 
 
 class DashboardController extends MyController {
@@ -32,5 +34,45 @@ class DashboardController extends MyController {
         // }
     
         // fclose($file);
+    }
+
+    public function structure_question(){
+        set_time_limit(3000);
+        // $this->make_category_from_origin();
+        // $this->make_query_from_origin();
+    }
+
+    private function make_category_from_origin() {
+        $categories = OriginalQuestion::distinct('category')->get('category');
+        
+        foreach($categories as $category){
+            // echo $category['category'] . "<br>";
+            Category::create(['category' => $category['category']]);
+        }
+        echo "Category END";
+    }
+
+    private function make_query_from_origin() {
+        $questions = OriginalQuestion::get();
+        
+        foreach($questions as $question){
+            $category = Category::where('category', $question->category)->first();
+            $value = $this->getIntegerFromStr($question->value);
+            if($category){
+                Question::create([
+                    'category_id' => $category->id,
+                    'question' => trim($question->question),
+                    'answer' => trim($question->answer),
+                    'value' => $value
+                ]);
+            }
+        }
+        echo "Question END";
+    }
+
+    private function getIntegerFromStr($str) {
+        $numberWithoutCommas = (int)str_replace('$', '', str_replace(',', '', $str));
+
+        return $numberWithoutCommas; 
     }
 }
