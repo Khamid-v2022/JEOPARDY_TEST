@@ -4,7 +4,7 @@ var current_index = 0;
 var myInterval = null;
 
 (function () {
-    $("#start_btn").on("click", function(){
+    $(".start-btn").on("click", function(){
         loadQuestions();
     })
 
@@ -15,18 +15,7 @@ var myInterval = null;
             return;
         }
 
-        clearInterval(myInterval);
-        question[current_index]['user_answer'] = answer;
-
-        $("#answer_input").val("");
-
-        current_index++;
-        if(current_index >= question.length){
-            console.log("ended");
-            alert("You are completed the test");
-            return;
-        }
-        ask_question();
+        ask_next();
     })
 })();
 
@@ -65,6 +54,7 @@ function loadQuestions() {
             if(response.code == 200) {
                 question = response.questions;
                 $("#start_step").addClass("d-none");
+                $("#complete_step").addClass("d-none");
                 $("#begin_step").removeClass("d-none");
                 startCountDownForStartTest();
             }
@@ -118,18 +108,7 @@ function startCountDownForQustion() {
     myInterval = setInterval(function () {
         remain_second--;
         if(remain_second == 0){
-            clearInterval(myInterval);
-            const answer = $("#answer_input").val();
-            question[current_index]['user_answer'] = answer;
-
-            $("#answer_input").val("");
-            current_index++;
-            if(current_index >= question.length){
-                console.log("ended");
-                alert("You are completed the test");
-                return;
-            }
-            ask_question();
+            ask_next();
             return;
         }
         const html = "0:" + (remain_second >= 10 ? remain_second : ("0" + remain_second)); 
@@ -137,4 +116,45 @@ function startCountDownForQustion() {
     }, 1000);   
 }
 
+function ask_next(){
+    clearInterval(myInterval);
+    const answer = $("#answer_input").val();
+    question[current_index]['user_answer'] = answer;
+
+    $("#answer_input").val("");
+    current_index++;
+    if(current_index >= question.length){
+        end_question();
+        return false;
+    }
+
+    ask_question();
+    return true;
+}
+
+function end_question() {
+    $("#question_form").addClass("d-none");
+    $("#complete_step").removeClass("d-none");
+
+    const _url = "/jeopardy-test/submit-response";
+    $.ajax({
+        url: _url,
+        type: "POST",
+        data: {data: JSON.stringify(question)},
+        success: function(response) {
+            if(response.code == 200) {
+                $(".submitting-wrapper").addClass("d-none");
+                $(".your-score").html(response.score);
+                $(".result-wrapper").removeClass("d-none");
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            Swal.fire({
+                icon: 'error',
+                title: '',
+                text: XMLHttpRequest.responseJSON.message,
+            })
+        }       
+    })
+}
 

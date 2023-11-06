@@ -32,5 +32,6 @@ Route::group(['middleware' => ['user']], function() {
     
     Route::get('/jeopardy-test', [JeopardyTest::class, 'index'])->name('jeopardy-test');
     Route::get('/jeopardy-test/get-questions', [JeopardyTest::class, 'get_questions']);
+    Route::post('/jeopardy-test/submit-response', [JeopardyTest::class, 'submit_response']);
 });
 
