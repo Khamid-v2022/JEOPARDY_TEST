@@ -27,6 +27,7 @@
 
         <!-- Vendors CSS -->
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}"></script>
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
         
         @yield('vendor-style')
@@ -49,6 +50,8 @@
         <script src="{{asset('assets/vendor/libs/popper/popper.js')}}"></script>
         <script src="{{asset('assets/vendor/js/bootstrap.js')}}"></script>
         <script src="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
+        <script src="{{asset('assets/vendor/libs/datatables/jquery.dataTables.js')}}"></script>
+        <script src="{{asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js')}}"></script>
 
         <script src="{{asset('assets/vendor/js/menu.js')}}"></script>
         <!-- endbuild -->

@@ -5,13 +5,41 @@ use Illuminate\Http\Request;
 use App\Models\OriginalQuestion;
 use App\Models\Category;
 use App\Models\Question;
-
+use App\Models\UserAnswerHeader;
 
 class DashboardController extends MyController {
 
     public function index() {
-        return view('pages.dashboard');
+        $my_tests = UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->orderBy('created_at', 'DESC')->get();
+        if(count($my_tests) > 0) {
+            for($index = 0; $index < count($my_tests); $index++) {
+                $diff = $this->getTimeByStringFormat($my_tests[$index]->started_at, $my_tests[$index]->ended_at);
+                $my_tests[$index]['progress_time'] = $diff['formated'];
+                $my_tests[$index]['progress_time_second'] = $diff['second'];;
+            }
+        }
+        
+        return view('pages.dashboard', [
+            'history' => $my_tests
+        ]);
     }
+
+    private function getTimeByStringFormat($from, $to) {
+        $from = strtotime($from);
+        $to = strtotime($to);
+
+        $diff = abs($to - $from);
+
+        $minutes = floor($diff / 60);
+        $seconds = $diff % 60;
+
+        $total_second = $diff;
+
+        $timeDifference = $minutes > 0 ? "{$minutes}min {$seconds}s" : "{$seconds}s";
+
+        return array('formated' => $timeDifference, 'second' => $total_second);
+    }
+
 
     public function read_csv(){
         set_time_limit(3000);
