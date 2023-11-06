@@ -14,6 +14,7 @@ class UserAnswer extends Model
         'user_id',
         'question_id',
         'user_answer',
+        'answer_time',
         'is_correct'
     ];
     

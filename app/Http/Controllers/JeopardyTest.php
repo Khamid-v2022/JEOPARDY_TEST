@@ -17,14 +17,28 @@ class JeopardyTest extends MyController {
     }
 
     public function get_questions() {
-        // $questions = OriginalQuestion::inRandomOrder()->take(50)->get();
-        $questions = OriginalQuestion::where('id', "<", 5)->take(50)->get();
+        $questions = OriginalQuestion::inRandomOrder()->take(50)->get();
+        // $questions = OriginalQuestion::where('id', "<", 5)->take(50)->get();
+
+        $is_trial_test = 0;
+        if($this->user->subscription_status == 0) {
+            $is_trial_test = 1;
+        }
+
+        // create Header
+        $header = UserAnswerHeader::create([
+            'user_id' => $this->user->id,
+            'is_trial_test' => $is_trial_test,
+            'started_at' => date("Y-m-d H:i:s")
+        ]);
+
         $questions->makeHidden(['value', 'answer']);
-        return response()->json(['code'=>200, 'questions'=>$questions], 200);
+        return response()->json(['code'=>200, 'questions'=>$questions, 'header_id' => $header->id], 200);
     }
 
     public function submit_response(Request $request) {
         $answers = json_decode($request->data);
+        $header_id = $request->header_id;
 
         $is_trial_test = 0;
         if($this->user->subscription_status == 0) {
@@ -34,11 +48,8 @@ class JeopardyTest extends MyController {
             $is_trial_test = 1;
         }
 
-        // create Header
-        $header = UserAnswerHeader::create([
-            'user_id' => $this->user->id,
-            'is_trial_test' => $is_trial_test
-        ]);
+        // get Header
+        $header = UserAnswerHeader::where('id', $header_id)->first();
 
         $correct_count = 0;
         foreach($answers as $answer) {
@@ -47,7 +58,8 @@ class JeopardyTest extends MyController {
                 'header_id' => $header->id,
                 'user_id' => $this->user->id,
                 'question_id' => $question->id,
-                'user_answer' => $answer->user_answer
+                'user_answer' => $answer->user_answer,
+                'answer_time' => $answer->answer_time
             ]);
 
             if(strtolower(trim($question->answer)) == strtolower(trim($answer->user_answer))){
@@ -58,6 +70,7 @@ class JeopardyTest extends MyController {
         }
 
         $header->score = $correct_count;
+        $header->ended_at = date("Y-m-d H:i:s");
         $header->save();
 
 

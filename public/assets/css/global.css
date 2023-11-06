@@ -248,7 +248,7 @@
     font-size: 24px;
   }
 
-  .question-wrapper .count-down {
+  .question-wrapper .answer-count-down {
     font-size: 20px;
     position: absolute;
     bottom: 14px;

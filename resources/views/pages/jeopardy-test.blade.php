@@ -22,6 +22,7 @@
             <p>To submit your responses, you may press enter or wait for the time to run out.</p>
         </div>
 
+        <!-- question step -->
         <div class="centered-div d-none" id="question_form">
             <div class="question-wrapper card">
                 <div class="category category-title">
@@ -34,20 +35,21 @@
                     <div class="card-body question mt-3">
                         Tonight we sup on this animal's jowls, used to flavor stews as a southern delicacy; it's a motorcycle term, too, my love
                     </div>
-                    <div class="text-center mt-3 count-down">0:15</div>
+                    <div class="text-center mt-3 answer-count-down">0:<span class="count-down">15</span></div>
                 </div>
             </div>
             <div class="text-end" id="question_index"></div>
             <div class="submit-form text-center">
-                <form id="submit_form">
+                <form id="submit_form" autocomplete="off">
                     <p class="mt-3">Responses do NOT need to be in the form of a question.<br>
                     To submit your responses, you may press enter or wait for the time to run out
                     </p>
-                    <input type="text" class="form-control" id="answer_input">
+                    <input type="text" class="form-control" id="answer_input" autocomplete="off">
                 </form>
             </div>
         </div>
 
+        <!-- result step -->
         <div class="centered-div mt-5 d-none" id="complete_step">
             <div class="submitting-wrapper text-center">
                 <h3>Your response is being transmitted.<i class="fas fa-spinner fa-spin ms-2"></i></h3>

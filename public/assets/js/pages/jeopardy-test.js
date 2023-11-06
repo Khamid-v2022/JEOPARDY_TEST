@@ -3,6 +3,8 @@ var question = [];
 var current_index = 0;
 var myInterval = null;
 
+var current_trial_test_header = null;
+
 (function () {
     $(".start-btn").on("click", function(){
         loadQuestions();
@@ -52,6 +54,7 @@ function loadQuestions() {
         type: "GET",
         success: function(response) {
             if(response.code == 200) {
+                current_trial_test_header = response.header_id;
                 question = response.questions;
                 $("#start_step").addClass("d-none");
                 $("#complete_step").addClass("d-none");
@@ -86,7 +89,7 @@ function startCountDownForStartTest() {
 }
 
 function ask_question(){
-    $(".count-down").html("0:15");
+    $(".count-down").html("15");
     $("#question_index").html((current_index + 1) + "/50");
 
     $(".question-wrapper .category").html(question[current_index].category);
@@ -107,12 +110,13 @@ function startCountDownForQustion() {
     let remain_second = 15;
     myInterval = setInterval(function () {
         remain_second--;
+        const html = remain_second >= 10 ? remain_second : ("0" + remain_second); 
+        $(".count-down").html(html);
+
         if(remain_second == 0){
             ask_next();
             return;
         }
-        const html = "0:" + (remain_second >= 10 ? remain_second : ("0" + remain_second)); 
-        $(".count-down").html(html);
     }, 1000);   
 }
 
@@ -120,6 +124,7 @@ function ask_next(){
     clearInterval(myInterval);
     const answer = $("#answer_input").val();
     question[current_index]['user_answer'] = answer;
+    question[current_index]['answer_time'] = 15 - parseInt($(".count-down").html());
 
     $("#answer_input").val("");
     current_index++;
@@ -140,7 +145,10 @@ function end_question() {
     $.ajax({
         url: _url,
         type: "POST",
-        data: {data: JSON.stringify(question)},
+        data: {
+            data: JSON.stringify(question),
+            header_id: current_trial_test_header
+        },
         success: function(response) {
             if(response.code == 200) {
                 $(".submitting-wrapper").addClass("d-none");

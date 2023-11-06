@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('question_id');
             $table->string('user_answer', 255)->nullable();
+            $table->integer('answer_time')->default(15)->nullable();
             $table->tinyInteger('is_correct')->default(0);
             $table->timestamps();
         });

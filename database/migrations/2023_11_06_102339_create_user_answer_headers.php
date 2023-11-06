@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('score')->default(0);
             $table->tinyInteger('is_trial_test')->default(1);
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('ended_at')->nullable();
             $table->timestamps();
         });
     }
