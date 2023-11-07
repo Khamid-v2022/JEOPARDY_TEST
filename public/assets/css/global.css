@@ -80,6 +80,10 @@
   display: block !important;
 }
 
+
+.input-group-text {
+  text-align: left;
+}
 /*
 * Layout demo
 ******************************************************************************/

@@ -40,5 +40,6 @@ Route::group(['middleware' => ['user']], function() {
 
     Route::get('/pages-billing', [BillingController::class, 'index'])->name('pages-billing');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');
+    Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account']);
 });
 
