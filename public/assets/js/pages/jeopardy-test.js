@@ -166,3 +166,8 @@ function end_question() {
     })
 }
 
+function goto_detailPage() {
+    if(current_trial_test_header)
+        location.href = '/jeopardy-test/view-detail/' + current_trial_test_header;
+}
+

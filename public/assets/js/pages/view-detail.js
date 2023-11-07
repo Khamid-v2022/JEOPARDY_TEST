@@ -1,18 +1,18 @@
 $(function() {
-    $("#recent_history").DataTable({
+    $("#detail_table").DataTable({
         columnDefs: [
             {
-                targets: 2,
+                targets: 4,
                 type: 'time'
             },
             {
-                targets: 4,
-                searchable: false,
+                targets: [1, 2, 3],
                 orderable: false
             }
         ],
+        // dom: '<"row"<"col-sm-12 col-md-6"l>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        order: [[0, 'desc']]
+        order: [[0, 'asc']]
     })
 
     $.extend( $.fn.dataTableExt.oSort, {

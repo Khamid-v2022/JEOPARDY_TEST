@@ -27,8 +27,8 @@
                             <div data-i18n="Analytics">Dashboard</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ $currentRouteName == 'jeopardy-test' ? 'active' : ''}}">
-                        <a href="{{ route('jeopardy-test') }}" class="menu-link">
+                    <li class="menu-item {{ $currentRouteName == 'pages-jeopardy-test' ? 'active' : ''}}">
+                        <a href="{{ route('pages-jeopardy-test') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Basic">Test</div>
                         </a>
@@ -45,6 +45,11 @@
                     </div>
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            @if(Auth::user()->subscription_status == 0)
+                            <li>
+                                <a class="btn btn-primary me-3" href="{{ route('pages-checkout') }}">Upgrade Account</a>
+                            </li>
+                            @endif
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">

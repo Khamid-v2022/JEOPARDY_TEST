@@ -10,7 +10,7 @@ use App\Models\UserAnswer;
 use App\Models\UserAnswerHeader;
 
 
-class JeopardyTest extends MyController {
+class JeopardyTestController extends MyController {
 
     public function index() {
         return view('pages.jeopardy-test');
@@ -18,7 +18,7 @@ class JeopardyTest extends MyController {
 
     public function get_questions() {
         $questions = OriginalQuestion::inRandomOrder()->take(50)->get();
-        // $questions = OriginalQuestion::where('id', "<", 5)->take(50)->get();
+        // $questions = OriginalQuestion::where('id', "<", 6)->take(50)->get();
 
         $is_trial_test = 0;
         if($this->user->subscription_status == 0) {
@@ -33,6 +33,12 @@ class JeopardyTest extends MyController {
         ]);
 
         $questions->makeHidden(['value', 'answer']);
+       
+        // remove hyperlink from the question
+        for($index = 0; $index < count($questions); $index++) {
+            $questions[$index]->question = strip_tags($questions[$index]->question);
+        }
+
         return response()->json(['code'=>200, 'questions'=>$questions, 'header_id' => $header->id], 200);
     }
 
@@ -75,5 +81,13 @@ class JeopardyTest extends MyController {
 
 
         return response()->json(['code'=>200, 'score'=>$correct_count], 200);
+    }
+
+    public function view_detail($header_id) {
+        $details = UserAnswer::where('user_id', $this->user->id)->where('header_id', $header_id)->get();
+
+        return view('pages.view-detail', [
+            'details' => $details
+        ]);
     }
 }

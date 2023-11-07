@@ -5,10 +5,11 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y main-container">
     @if(Auth::user()->subscription_status == 0 && Auth::user()->is_trial_used == 1)
-    <div class="centered-div mt-5">
-        <h3>You have already completed the trial test.<br><br> <small>If you would like to access more tests, please click the button below to subscribe.</small></h3>
-        <a class="btn btn-primary" href="/checkout">Upgrade Account</a>
-    </div>
+        <div class="centered-div mt-5">
+            <h3>You have already completed the FREE test.</h3>
+            <p>If you would like to access more tests, please click the button below to subscribe.</p>
+            <a class="btn btn-primary" href="{{ route('pages-checkout') }}">Upgrade Account</a>
+        </div>
     @else
         <div class="centered-div mt-5" id="start_step">
             <h2 class="mb-5">Click the Start button below to start the test</h2>
@@ -55,13 +56,18 @@
                 <h3>Your response is being transmitted.<i class="fas fa-spinner fa-spin ms-2"></i></h3>
             </div>
             <div class="result-wrapper d-none">
-                <h1 class="mb-3">YOU'VE COMPLETED THE TEST!</h1>
-                <h1><span class="your-score text-success">30</span><small class="text-muted">/50</small></h1>
+                @if(Auth::user()->subscription_status == 1)
+                    <h1 class="mb-3">YOU'VE COMPLETED THE TEST!</h1>
+                @else
+                    <h1 class="mb-3">YOU'VE COMPLETED THE FREE TEST!</h1>
+                @endif
+                <h1><span class="your-score text-success"></span><small class="text-muted">/50</small></h1>
+                <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
                 @if(Auth::user()->subscription_status == 1)
                     <button class="btn btn-primary start-btn" style="width: 200px" id="">Start Again<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
                 @else
                     <p class="mt-5">If you would like to conduct more tests, please click the button below to subscribe.</p>
-                    <a class="btn btn-primary" href="/checkout">Upgrade Account</a>
+                    <a class="btn btn-primary" href="{{ route('pages-checkout') }}">Upgrade Account</a>
                 @endif
             </div>
         </div>

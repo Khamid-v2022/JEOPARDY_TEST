@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JeopardyTest;
+use App\Http\Controllers\JeopardyTestController;
+use App\Http\Controllers\CheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,11 +19,11 @@ use App\Http\Controllers\JeopardyTest;
 */
 
 
-Route::get('login', [AuthController::class, 'index'])->name('login');
+Route::get('login', [AuthController::class, 'index'])->name('pages-login');
 Route::post('login', [AuthController::class, 'do_login']);
 Route::get('logout', [AuthController::class, 'do_logout'])->name('logout');
 
-Route::get('register', [AuthController::class, 'register_page'])->name('register');
+Route::get('register', [AuthController::class, 'register_page'])->name('pages-register');
 Route::post('register', [AuthController::class, 'do_register']);
 
 Route::group(['middleware' => ['user']], function() {
@@ -30,8 +31,12 @@ Route::group(['middleware' => ['user']], function() {
     Route::get('/read-csv', [DashboardController::class, 'read_csv']);
     Route::get('/structure-question', [DashboardController::class, 'structure_question']);
     
-    Route::get('/jeopardy-test', [JeopardyTest::class, 'index'])->name('jeopardy-test');
-    Route::get('/jeopardy-test/get-questions', [JeopardyTest::class, 'get_questions']);
-    Route::post('/jeopardy-test/submit-response', [JeopardyTest::class, 'submit_response']);
+    Route::get('/jeopardy-test', [JeopardyTestController::class, 'index'])->name('pages-jeopardy-test');
+    Route::get('/jeopardy-test/get-questions', [JeopardyTestController::class, 'get_questions']);
+    Route::post('/jeopardy-test/submit-response', [JeopardyTestController::class, 'submit_response']);
+
+    Route::get('/jeopardy-test/view-detail/{id}', [JeopardyTestController::class, 'view_detail'])->where('id', '[0-9]+')->name('pages-view-detail');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');
 });
 
