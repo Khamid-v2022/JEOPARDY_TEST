@@ -16,7 +16,10 @@ var current_trial_test_header = null;
         if(answer.trim()==""){
             return;
         }
-
+        
+        var audio = new Audio('/assets/sound/correct_effect.mp3');
+        audio.play();
+        
         ask_next();
     })
 })();
