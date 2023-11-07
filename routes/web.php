@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JeopardyTestController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\BillingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['user']], function() {
 
     Route::get('/jeopardy-test/view-detail/{id}', [JeopardyTestController::class, 'view_detail'])->where('id', '[0-9]+')->name('pages-view-detail');
 
+    Route::get('/pages-billing', [BillingController::class, 'index'])->name('pages-billing');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');
 });
 
