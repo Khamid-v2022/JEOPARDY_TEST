@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JeopardyTestController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\UserSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Route::group(['middleware' => ['user']], function() {
     // Route::get('/structure-question', [DashboardController::class, 'structure_question']);
     
     Route::get('/jeopardy-test', [JeopardyTestController::class, 'index'])->name('pages-jeopardy-test');
-    Route::get('/jeopardy-test/get-questions', [JeopardyTestController::class, 'get_questions']);
+    Route::get('/jeopardy-test/get-questions/{count}', [JeopardyTestController::class, 'get_questions'])->where('count', '[0-9]+');
     Route::post('/jeopardy-test/submit-response', [JeopardyTestController::class, 'submit_response']);
 
     Route::get('/jeopardy-test/view-detail/{id}', [JeopardyTestController::class, 'view_detail'])->where('id', '[0-9]+')->name('pages-view-detail');
@@ -43,5 +44,9 @@ Route::group(['middleware' => ['user']], function() {
     Route::get('/pages-billing', [BillingController::class, 'index'])->name('pages-billing');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');
     Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account']);
+
+    Route::get('/my-profile', [UserSettingController::class, 'index'])->name('my-profile');
+    Route::post('/my-profile/update', [UserSettingController::class, 'update_profile']);
+    Route::delete('/my-profile/delete', [UserSettingController::class, 'delete_profile']);
 });
 

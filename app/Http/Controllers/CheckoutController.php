@@ -7,8 +7,10 @@ use App\Models\BillingHistory;
 use Stripe;
 
 class CheckoutController extends MyController {
-
     public function index() {
+        if($this->user->subscription_status == 1){
+            return redirect('/');
+        }
         return view('pages.checkout');
     }
 
@@ -72,6 +74,5 @@ class CheckoutController extends MyController {
             // failed
             return response()->json(['code'=>400, 'message'=>'Payment failed.'], 200);
         }
-
    }
 }

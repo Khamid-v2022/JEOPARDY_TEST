@@ -16,9 +16,9 @@ class JeopardyTestController extends MyController {
         return view('pages.jeopardy-test');
     }
 
-    public function get_questions() {
-        $questions = OriginalQuestion::inRandomOrder()->take(50)->get();
-        // $questions = OriginalQuestion::where('id', "<", 6)->take(50)->get();
+    public function get_questions($count) {
+        $questions = OriginalQuestion::inRandomOrder()->take($count)->get();
+        // $questions = OriginalQuestion::where('id', "<", 6)->take(5)->get();
 
         $is_trial_test = 0;
         if($this->user->subscription_status == 0) {

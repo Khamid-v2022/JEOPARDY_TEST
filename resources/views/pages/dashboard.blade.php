@@ -34,8 +34,8 @@
                         <td>{{ $item->progress_time }}<span class="d-none sort-value">{{ $item->progress_time_second }}</span></td>
                         <td>{{ $item->score }} <small class="text-muted">/{{ count($item->get_questions()) }}</small></td>
                         <td>
-                            <a href="{{ route('pages-view-detail', [$item->id]) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-show'></i></a>
-                            <a href="javascript:;" class="ms-2 delete-record" data-id="{{ $item->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class='bx bx-trash'></i></a>
+                            <a href="{{ route('pages-view-detail', [$item->id]) }}" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-show'></i></a>
+                            <a href="javascript:;" class="delete-record" data-id="{{ $item->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class='bx bx-trash'></i></a>
                         </td>
                     </tr>
                     @endforeach

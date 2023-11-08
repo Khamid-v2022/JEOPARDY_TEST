@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('name', 30)->nullable();
             $table->string('email', 50)->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('address', 255)->nullable();
+            $table->string('city', 50)->nullable();
+            $table->string('zipcode', 20)->nullable();
+            $table->string('country', 50)->nullable();
+            $table->integer('default_question_count')->default(50);
             $table->string('password', 50);
             $table->tinyInteger('is_trial_used')->default(0);
             $table->tinyInteger('subscription_status')->default(0);

@@ -13,6 +13,16 @@
     @else
         <div class="centered-div mt-5" id="start_step">
             <h2 class="mb-5">Click the Start button below to start the test</h2>
+            <div class="row mb-3">
+                <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
+                <div class="col">
+                    <select class="form-select " style="max-width: 100px" id="question_count_sel">
+                        <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
+                        <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
+                        <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
+                    </select>
+                </div>
+            </div>
             <button class="btn btn-primary start-btn" style="width: 200px" id="">Start<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
             <p class="mt-4">To submit your responses, you may press enter or wait for the time to run out.</p>
         </div>
@@ -61,10 +71,20 @@
                 @else
                     <h1 class="mb-3">YOU'VE COMPLETED THE FREE TEST!</h1>
                 @endif
-                <h1><span class="your-score text-success"></span><small class="text-muted">/50</small></h1>
+                <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1>
                 <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
                 @if(Auth::user()->subscription_status == 1)
-                    <button class="btn btn-primary start-btn" style="width: 200px" id="">Start Again<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
+                    <div class="row mb-3">
+                        <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
+                        <div class="col">
+                            <select class="form-select" style="max-width: 100px" id="question_count_again_sel">
+                                <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
+                                <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
+                                <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary start-again-btn" style="width: 200px" id="">Start Again<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
                 @else
                     <p class="mt-5">If you would like to conduct more tests, please click the button below to subscribe.</p>
                     <a class="btn btn-primary" href="{{ route('pages-checkout') }}">Upgrade Account</a>

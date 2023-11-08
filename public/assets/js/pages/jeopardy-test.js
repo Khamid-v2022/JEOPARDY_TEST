@@ -2,11 +2,21 @@
 var question = [];
 var current_index = 0;
 var myInterval = null;
+var question_count = 50;
 
 var current_trial_test_header = null;
 
 (function () {
     $(".start-btn").on("click", function(){
+        question_count = $("#question_count_sel").val();
+        $(".question-count").html(question_count);
+        loadQuestions();
+    })
+
+    $(".start-again-btn").on("click", function(){
+        question_count = $("#question_count_again_sel").val();
+        $(".question-count").html(question_count);
+
         loadQuestions();
     })
 
@@ -48,10 +58,12 @@ function loadQuestionsTest() {
 }
 
 function loadQuestions() {
-    $("#start_btn").attr("disabled", true);
-    $("#start_btn fa-spinner").removeClass("d-none");
+    $(".start-btn").attr("disabled", true);
+    $(".start-btn fa-spinner").removeClass("d-none");  
+    $(".start-again-btn").attr("disabled", true);
+    $(".start-again-btn fa-spinner").removeClass("d-none");    
 
-    const _url = '/jeopardy-test/get-questions';
+    const _url = '/jeopardy-test/get-questions/' + question_count;
     $.ajax({
         url: _url,
         type: "GET",
@@ -63,6 +75,11 @@ function loadQuestions() {
                 $("#complete_step").addClass("d-none");
                 $("#begin_step").removeClass("d-none");
                 startCountDownForStartTest();
+
+                $(".start-btn").removeAttr("disabled");
+                $(".start-btn fa-spinner").addClass("d-none");
+                $(".start-again-btn").removeAttr("disabled");
+                $(".start-again-btn fa-spinner").addClass("d-none");
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 
@@ -93,7 +110,7 @@ function startCountDownForStartTest() {
 
 function ask_question(){
     $(".count-down").html("15");
-    $("#question_index").html((current_index + 1) + "/50");
+    $("#question_index").html((current_index + 1) + "/" + question_count);
 
     $(".question-wrapper .category").html(question[current_index].category);
     $(".question-wrapper .question").html(question[current_index].question);

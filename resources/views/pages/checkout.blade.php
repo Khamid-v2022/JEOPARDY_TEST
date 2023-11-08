@@ -61,22 +61,27 @@
                                 </div>
                                 <div class="form-group mb-1 col-md-12">
                                     <label for="address" class="form-label">Street Address</label>
-                                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" maxlength="255" />
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" maxlength="255" value="{{ Auth::user()->address }}" />
                                 </div>
                                 <div class="form-group mb-1 col-md-12">
                                     <label for="city" class="form-label">City</label>
-                                    <input type="text" class="form-control" id="city" name="city" placeholder="City" maxlength="50" />
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="City" maxlength="50" value="{{ Auth::user()->city }}" />
                                 </div>
                                 <div class="form-group mb-1 col-md-12">
                                     <label for="zipCode" class="form-label">Zip Code</label>
-                                    <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="" maxlength="15" />
+                                    <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="" maxlength="15" value="{{ Auth::user()->zipcode }}" />
                                 </div>
                                 <div class="form-group mb-1 col-md-12">
                                     <label class="form-label" for="country">Country</label>
-                                    <select id="country" name="country" class="select2 form-select" value="">
+                                    <select id="country" name="country" class="select2 form-select" value="{{ Auth::user()->country }}" >
                                         <option value="">Select</option>
+                                      
                                         @foreach(config('variables.countries') as $country)
-                                            <option value="{{ $country }}">{{ $country }}</option>
+                                            @if($country == Auth::user()->country)
+                                                <option value="{{ $country }}" selected>{{ $country }}</option>
+                                            @else
+                                                <option value="{{ $country }}">{{ $country }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
