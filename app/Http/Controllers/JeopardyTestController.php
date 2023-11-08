@@ -84,10 +84,29 @@ class JeopardyTestController extends MyController {
     }
 
     public function view_detail($header_id) {
+        $header = UserAnswerHeader::where('id', $header_id)->first();
         $details = UserAnswer::where('user_id', $this->user->id)->where('header_id', $header_id)->get();
 
         return view('pages.view-detail', [
+            'header' => $header,
             'details' => $details
         ]);
+    }
+
+    public function fix_answer(Request $request) {
+        $answer = UserAnswer::where('id', $request->detail_id)->first();
+        $answer->is_correct = $request->is_correct;
+        $answer->save();
+
+        // recalculate the score
+        $header = UserAnswerHeader::where('id', $answer->header_id)->first();
+        if($request->is_correct == 1){
+            $header->score++;
+        } else {
+            $header->score--;
+        }
+        $header->save();
+
+        return response()->json(['code'=>200, 'message'=>$answer], 200);
     }
 }

@@ -35,4 +35,41 @@ $(function() {
         }
     });
 
+    $(".delete-record").on("click", function() {
+        const id = $(this).attr("data-id");
+        const parent_row_el = $(this).parents("tr");
+        Swal.fire({
+            text: 'Are you sure you would like to delete this test record?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+        }).then(function (result) {
+            if (result.value) {
+                let _url = "/my-tests/delete-test/" + id;
+                $.ajax({
+                    url: _url,
+                    type: "DELETE",
+                    success: function (response) {
+                        if (response.code == 200) {
+                            parent_row_el.remove();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '',
+                                text: 'Something went wrong. Please try again later',
+                            })
+                        }
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '',
+                            text: 'Something went wrong. Please try again later',
+                        })
+                    },
+                });
+            } 
+        });
+    })
+
 })

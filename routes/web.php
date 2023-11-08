@@ -29,14 +29,16 @@ Route::post('register', [AuthController::class, 'do_register']);
 
 Route::group(['middleware' => ['user']], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');
-    Route::get('/read-csv', [DashboardController::class, 'read_csv']);
-    Route::get('/structure-question', [DashboardController::class, 'structure_question']);
+    Route::delete('/my-tests/delete-test/{id}', [DashboardController::class, 'delete_test_record'])->where('id', '[0-9]+');
+    // Route::get('/read-csv', [DashboardController::class, 'read_csv']);
+    // Route::get('/structure-question', [DashboardController::class, 'structure_question']);
     
     Route::get('/jeopardy-test', [JeopardyTestController::class, 'index'])->name('pages-jeopardy-test');
     Route::get('/jeopardy-test/get-questions', [JeopardyTestController::class, 'get_questions']);
     Route::post('/jeopardy-test/submit-response', [JeopardyTestController::class, 'submit_response']);
 
     Route::get('/jeopardy-test/view-detail/{id}', [JeopardyTestController::class, 'view_detail'])->where('id', '[0-9]+')->name('pages-view-detail');
+    Route::post('/jeopardy-test/fix-answer', [JeopardyTestController::class, 'fix_answer']);
 
     Route::get('/pages-billing', [BillingController::class, 'index'])->name('pages-billing');
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');

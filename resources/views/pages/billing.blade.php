@@ -20,29 +20,6 @@
                         <p>We will send you a notification upon Subscription expiration</p>
                     </div>
                 </div>
-                <div class="col-md-6 mb-1">
-                    @if($remain_days < 7)
-                        <div class="alert alert-warning mb-4 d-flex justify-content-between" role="alert">
-                            <div>
-                                <h6 class="alert-heading fw-bold mb-1">We need your attention!</h6>
-                                <span>Your plan requires update</span>
-                            </div>
-                            <a class="btn btn-primary" href="{{ route('pages-checkout') }}" style="height: fit-content">Extend Now</a>
-                        </div>
-                    @endif
-                    @if($total_days > 0)
-                        <div class="plan-statistics">
-                            <div class="d-flex justify-content-between">
-                                <span class="fw-semibold mb-2">Days</span>
-                                <span class="fw-semibold mb-2">{{ $total_days - $remain_days }} of {{ $total_days }} Days</span>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ round(($total_days - $remain_days) / $total_days * 100) }}%" aria-valuenow="{{ round(($total_days - $remain_days) / $total_days * 100) }}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <p class="mt-1 mb-0">{{ $remain_days }} days remaining until your plan requires update</p>
-                        </div>
-                    @endif
-                </div>
             </div>
         </div>
         <!-- /Current Plan -->

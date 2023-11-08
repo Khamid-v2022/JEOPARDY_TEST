@@ -29,6 +29,8 @@
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}"></script>
         <link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/toastr/toastr.css')}}" />
+        <link rel="stylesheet" href="{{asset('assets/vendor/libs/animate-css/animate.css')}}" />
         
         @yield('vendor-style')
 
@@ -58,6 +60,7 @@
 
         <!-- Vendors JS -->
         <script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
+        <script src="{{asset('assets/vendor/libs/toastr/toastr.js')}}"></script>
         @yield('vendor-script')
 
 

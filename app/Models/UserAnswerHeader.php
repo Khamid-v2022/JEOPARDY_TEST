@@ -23,5 +23,21 @@ class UserAnswerHeader extends Model
 
         return $questions;
     }
+
+    public function get_test_time() {
+        $from = strtotime($this->started_at);
+        $to = strtotime($this->ended_at);
+
+        $diff = abs($to - $from);
+
+        $minutes = floor($diff / 60);
+        $seconds = $diff % 60;
+
+        $total_second = $diff;
+
+        $timeDifference = $minutes > 0 ? "{$minutes}min {$seconds}s" : "{$seconds}s";
+
+        return array('formated' => $timeDifference, 'second' => $total_second);
+    }
     
 }

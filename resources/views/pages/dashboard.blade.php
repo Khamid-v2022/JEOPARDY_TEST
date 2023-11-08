@@ -1,6 +1,6 @@
 @extends('layouts/mainLayout')
 
-@section('title', 'Dashboard page')
+@section('title', 'My Test Results')
 
 @section('vendor-style')
 @endsection
@@ -23,7 +23,7 @@
                         <th>Ended At</th>
                         <th>Progress Time</th>
                         <th>Score</th>
-                        <th></th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,7 +33,10 @@
                         <td>{{ $item->ended_at }}</td>
                         <td>{{ $item->progress_time }}<span class="d-none sort-value">{{ $item->progress_time_second }}</span></td>
                         <td>{{ $item->score }} <small class="text-muted">/{{ count($item->get_questions()) }}</small></td>
-                        <td><a href="{{ route('pages-view-detail', [$item->id]) }}"  data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-clipboard'></i></a></td>
+                        <td>
+                            <a href="{{ route('pages-view-detail', [$item->id]) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-show'></i></a>
+                            <a href="javascript:;" class="ms-2 delete-record" data-id="{{ $item->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class='bx bx-trash'></i></a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
