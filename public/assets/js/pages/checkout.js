@@ -138,6 +138,9 @@ $(function() {
                     return;
                 }
 
+                $("#checkout_form .payment-button").attr("disabled", true);
+                $("#checkout_form .payment-button .fa-spinner").css("display", "inline-block");
+
                 // use manuall input card
                 const card_number = $("#stripe_number").val();
                 const cvc = $("#stripe_cvv").val()
@@ -239,6 +242,7 @@ function stripeResponseHandler(status, response) {
             data: data,
             success: function (response) {
                 if (response.code == 200) {
+                    // console.log(response);
                     Swal.fire({
                         icon: 'success',
                         title: '',

@@ -27,6 +27,15 @@ class AuthController extends Controller {
         if(!$user)
             return response()->json(['code' => 401, 'message' => "We couldn't verify your account with that information"], 401);
 
+        // check expire date
+        // if($user->subscription_status == 1) {
+        //     $today = date("Y-m-d");
+        //     if(strtotime($user->expire_at) < strtotime($today)){
+        //         $user->subscription_status = 0;
+        //         $user->save();
+        //     }
+        // }
+
         if($user->is_delete == 1) {
             return response()->json(['code' => 401, 'message' => "This account is not activated"], 401);
         }
