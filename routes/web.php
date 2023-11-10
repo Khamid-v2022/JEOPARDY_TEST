@@ -45,6 +45,7 @@ Route::group(['middleware' => ['user']], function() {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');
     // Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account']);
     Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account_with_subscription']);
+    Route::post('/checkout/downgrade-account', [CheckoutController::class, 'cancel_subscription']);
     
 
     Route::get('/my-profile', [UserSettingController::class, 'index'])->name('my-profile');

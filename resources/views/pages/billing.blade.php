@@ -19,6 +19,10 @@
                         <h6 class="fw-semibold mb-2">Active until {{ date("F jS, Y", strtotime(Auth::user()->expire_at)) }}</h6>
                         <p>We will send you a notification upon Subscription expiration</p>
                     </div>
+                    <div class="col-12">
+                        <button class="btn btn-secondary" id="cancel_subscription">Cancel Subscription</button>
+                    </div>
+
                 </div>
             </div>
         </div>

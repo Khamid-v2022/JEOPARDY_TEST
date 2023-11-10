@@ -94,7 +94,7 @@ class CheckoutController extends MyController {
             return response()->json(['code'=>400, 'message'=> "You are already subscribed"], 200);
         }
 
-        $subscriper = UserSubscription::where('customer_email', $this->user->email)->latest()->first();
+        $subscriper = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
         if($subscriper) {
             if(strtotime($subscriper->plan_period_end) > strtotime(date('Y-m-d H:i:s'))){
                 return response()->json(['code'=>400, 'message'=> "You are already subscribed"], 200);
@@ -171,9 +171,41 @@ class CheckoutController extends MyController {
         }
 
         // failed
-        return response()->json(['code'=>400, 'message'=> $customer], 200);
+        return response()->json(['code'=>400, 'message'=>''], 200);
         
     }
+
+    public function cancel_subscription() {
+        // get subscrition_id
+        $subscriber = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
+        if($subscriber) {
+            try { 
+                // Creates a new subscription 
+                $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_SECRET_KEY'));
+    
+                $response = $stripe->subscriptions->cancel(
+                    $subscriber->stripe_subscription_id,
+                    ['prorate' => 'true']
+                );
+
+                if($response) {
+                    $subscriber->status = 'canceled';
+                    $subscriber->save();
+
+                    $this->user->subscription_status = 0;
+                    $this->user->save();
+
+                    return response()->json(['code'=>200, 'message'=>'success'], 200);
+                }
+            } catch(Exception $e) { 
+                $this->api_error = $e->getMessage(); 
+            } 
+        }
+
+        return response()->json(['code'=>400, 'message'=>'Something went wrong'], 200);
+        
+    }
+
 
     private function addCustomer($name, $email, $token) {
         try {
