@@ -105,19 +105,21 @@ function drawingChart(scores) {
     let dates = [];
     let total_scores = [];
     let number_of_questions = [];
+    let avg_scores = [];
     
     scores.forEach((item) => {
         dates.push(item.date);
         total_scores.push(item.score);
         number_of_questions.push(item.number_of_questions);
+        avg_scores.push((item.score / item.number_of_questions).toFixed(2) * 100);
     })
 
     option = {
         legend: {
-            data: ['Total Score', 'Number of Questions']
+            data: ['AVG Score(%)', 'Total Score', 'Number of Questions']
         },
         tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
         },
         grid: {
             left: '3%',
@@ -132,8 +134,15 @@ function drawingChart(scores) {
         yAxis: {
             type: 'value'
         },
-        color: ['#ee6666', '#5470c6'],
+        color: ['#ee6666', '#5470c6', '#91cc75',],
         series: [
+            {
+                name: 'AVG Score(%)',
+                data: avg_scores,
+                type: 'line',
+                tack: 'Total',
+                smooth: true
+            },
             {
                 name: 'Total Score',
                 data: total_scores,
