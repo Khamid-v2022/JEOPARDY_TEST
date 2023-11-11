@@ -37,7 +37,7 @@ class DashboardController extends MyController {
     public function get_scores_for_chart() {
         // get last 7 days
         $results =  UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')
-        ->select(DB::raw('DATE(ended_at) AS date'), DB::raw('SUM(score) AS total'))->groupBy('date')
+        ->select(DB::raw('DATE(ended_at) AS date'), DB::raw('SUM(score) AS score'), DB::raw('SUM(number_of_questions) AS number_of_questions'))->groupBy('date')
         ->orderBy('date', 'DESC')->take(7)->get();
         
         return response()->json(['code'=>200, 'scores'=>$results], 200);

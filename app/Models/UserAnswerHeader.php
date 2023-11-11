@@ -13,6 +13,7 @@ class UserAnswerHeader extends Model
     protected $fillable = [
         'user_id',
         'score',
+        'number_of_questions',
         'is_trial_test',
         'started_at',
         'ended_at'

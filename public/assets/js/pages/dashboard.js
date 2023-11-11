@@ -87,7 +87,6 @@ function loadChartInfomation() {
             if(response.code == 200) {
                 // array_reverse 
                 let scores = response.scores.reverse();
-                console.log(scores);
                 drawingChart(scores);
             }
         },
@@ -104,13 +103,28 @@ function drawingChart(scores) {
     var option;
 
     let dates = [];
-    let data = [];
+    let total_scores = [];
+    let number_of_questions = [];
+    
     scores.forEach((item) => {
         dates.push(item.date);
-        data.push(item.total);
+        total_scores.push(item.score);
+        number_of_questions.push(item.number_of_questions);
     })
 
     option = {
+        legend: {
+            data: ['Total Score', 'Number of Questions']
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
         xAxis: {
             type: 'category',
             data: dates
@@ -118,16 +132,24 @@ function drawingChart(scores) {
         yAxis: {
             type: 'value'
         },
+        color: ['#ee6666', '#5470c6'],
         series: [
             {
-                data: data,
+                name: 'Total Score',
+                data: total_scores,
                 type: 'line',
+                tack: 'Total',
+                smooth: true
+            },
+            {
+                name: 'Number of Questions',
+                data: number_of_questions,
+                type: 'line',
+                stack: 'Total',
                 smooth: true
             }
         ],
-        tooltip: {
-            trigger: 'axis'
-        },
+        
     };
 
     option && myChart.setOption(option);

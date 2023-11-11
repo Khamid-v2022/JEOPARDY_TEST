@@ -28,6 +28,7 @@ class JeopardyTestController extends MyController {
         // create Header
         $header = UserAnswerHeader::create([
             'user_id' => $this->user->id,
+            'number_of_questions' => $count,
             'is_trial_test' => $is_trial_test,
             'started_at' => date("Y-m-d H:i:s")
         ]);

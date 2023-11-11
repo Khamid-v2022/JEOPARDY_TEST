@@ -8,7 +8,7 @@
         <h5 class="card-header">My Test Result</h5>
         <div class="card-body pb-0">
             <span class="ms-2">{{ $header->started_at }}</span>
-            <span id="my_score" class="text-success ms-4">{{ $header->score }}</span><span class="text-muted"> /{{ count($header->get_questions()) }}</span>
+            <span id="my_score" class="text-success ms-4">{{ $header->score }}</span><span class="text-muted"> /{{ $header->number_of_questions }}</span>
             <label class="ms-4">Examination time: </label><span class="ms-2">{{ $header->get_test_time()['formated'] }}</span>
         </div>
         <div class="card-datatable table-responsive">

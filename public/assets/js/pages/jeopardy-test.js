@@ -34,29 +34,6 @@ var current_trial_test_header = null;
     })
 })();
 
-function loadQuestionsTest() {
-    $("#start_btn").attr("disabled", true);
-    $("#start_btn fa-spinner").removeClass("d-none");
-
-    const _url = '/jeopardy-test/get-questions';
-    $.ajax({
-        url: _url,
-        type: "GET",
-        success: function(response) {
-            if(response.code == 200) {
-                question = response.questions;
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) { 
-            Swal.fire({
-                icon: 'error',
-                title: '',
-                text: XMLHttpRequest.responseJSON.message,
-            })
-        }       
-    })
-}
-
 function loadQuestions() {
     $(".start-btn").attr("disabled", true);
     $(".start-btn fa-spinner").removeClass("d-none");  
