@@ -70,6 +70,7 @@
         <!-- Vendors JS -->
         <script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
         <script src="{{asset('assets/vendor/libs/toastr/toastr.js')}}"></script>
+        <script src="{{asset('assets/vendor/libs/echart/echarts.min.js')}}"></script>
         @yield('vendor-script')
 
 

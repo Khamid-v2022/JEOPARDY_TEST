@@ -54,12 +54,27 @@ $(function() {
             confirmButtonText: 'Yes',
         }).then(function (result) {
             if (result.value) {
-                let _url = "/my-profile/delete";
+                // cancel subscription
+                let _url = "/checkout/downgrade-account";
                 $.ajax({
                     url: _url,
-                    type: "DELETE",
+                    type: "POST",
                     success: function (response) {
-                        location.reload();
+                        _url = "/my-profile/delete";
+                        $.ajax({
+                            url: _url,
+                            type: "DELETE",
+                            success: function (response) {
+                                location.reload();
+                            },
+                            error: function (response) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '',
+                                    text: 'Something went wrong. Please try again later',
+                                })
+                            },
+                        });
                     },
                     error: function (response) {
                         Swal.fire({
@@ -69,6 +84,8 @@ $(function() {
                         })
                     },
                 });
+
+                
             } 
         });
     })

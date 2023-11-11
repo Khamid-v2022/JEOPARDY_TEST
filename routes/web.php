@@ -30,6 +30,8 @@ Route::post('register', [AuthController::class, 'do_register']);
 
 Route::group(['middleware' => ['user']], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');
+    Route::get('/my-tests/get-myscores', [DashboardController::class, 'get_scores_for_chart']);
+    
     Route::delete('/my-tests/delete-test/{id}', [DashboardController::class, 'delete_test_record'])->where('id', '[0-9]+');
     // Route::get('/read-csv', [DashboardController::class, 'read_csv']);
     // Route::get('/structure-question', [DashboardController::class, 'structure_question']);

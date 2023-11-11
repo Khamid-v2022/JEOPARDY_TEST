@@ -72,4 +72,64 @@ $(function() {
         });
     })
 
+    loadChartInfomation();
+    
+
 })
+
+function loadChartInfomation() {
+
+    const _url = "/my-tests/get-myscores";
+    $.ajax({
+        url: _url,
+        type: "GET",
+        success: function(response) {
+            if(response.code == 200) {
+                // array_reverse 
+                let scores = response.scores.reverse();
+                console.log(scores);
+                drawingChart(scores);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        }       
+    })
+
+}
+
+function drawingChart(scores) {
+    
+    var chartDom = document.getElementById('score_chart');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    let dates = [];
+    let data = [];
+    scores.forEach((item) => {
+        dates.push(item.date);
+        data.push(item.total);
+    })
+
+    option = {
+        xAxis: {
+            type: 'category',
+            data: dates
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: data,
+                type: 'line',
+                smooth: true
+            }
+        ],
+        tooltip: {
+            trigger: 'axis'
+        },
+    };
+
+    option && myChart.setOption(option);
+    window.addEventListener('resize', myChart.resize);
+}

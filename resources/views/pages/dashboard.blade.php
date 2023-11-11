@@ -43,6 +43,15 @@
             </table>
         </div>
     </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            My Scores(Last 7 days)
+        </div>
+        <div class="card-body" id="score_chart" style="height: 400px">
+
+        </div>
+    </div>
 </div>
 @endsection
 
