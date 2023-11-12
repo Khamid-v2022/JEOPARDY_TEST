@@ -111,7 +111,7 @@ function drawingChart(scores) {
         dates.push(item.date);
         total_scores.push(item.score);
         number_of_questions.push(item.number_of_questions);
-        avg_scores.push((item.score / item.number_of_questions).toFixed(2) * 100);
+        avg_scores.push(parseInt((item.score / item.number_of_questions).toFixed(2) * 100));
     })
 
     option = {
