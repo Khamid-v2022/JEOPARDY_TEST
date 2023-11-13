@@ -44,7 +44,12 @@ Route::group(['middleware' => ['user']], function() {
     Route::post('/jeopardy-test/fix-answer', [JeopardyTestController::class, 'fix_answer']);
 
     Route::get('/pages-billing', [BillingController::class, 'index'])->name('pages-billing');
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('pages-checkout');
+
+    Route::get('/pricing', [CheckoutController::class, 'pricing_page'])->name('pages-pricing');
+
+    Route::get('/checkout/{plan}', [CheckoutController::class, 'index'])->name('pages-checkout');
+
+    // one time payment
     // Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account']);
     Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account_with_subscription']);
     Route::post('/checkout/downgrade-account', [CheckoutController::class, 'cancel_subscription']);

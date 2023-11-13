@@ -47,7 +47,7 @@
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             @if(Auth::user()->subscription_status == 0)
                             <li>
-                                <a class="btn btn-primary me-3" href="{{ route('pages-checkout') }}">Upgrade Account</a>
+                                <a class="btn btn-primary me-3" href="{{ route('pages-pricing') }}">Upgrade Account</a>
                             </li>
                             @endif
                             <!-- User -->

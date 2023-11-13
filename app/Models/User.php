@@ -28,6 +28,7 @@ class User extends Authenticatable
         'password',
         'is_trial_used',
         'subscription_status',
+        'subscription_plan',
         'subscribed_at',
         'expire_at',
         'is_delete',

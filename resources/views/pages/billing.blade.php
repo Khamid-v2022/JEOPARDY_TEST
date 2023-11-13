@@ -12,12 +12,12 @@
             <div class="row">
                 <div class="col-md-6 mb-1">
                     <div class="mb-4">
-                        <h6 class="fw-semibold mb-2">Your Current Plan is Premium: ${{ env('BASIC_PLAN_PRICE') }} Per Month</h6>
+                        <h6 class="fw-semibold mb-2">Your Current Plan is {{ Auth::user()->subscription_plan }}</h6>
+                        @if(Auth::user()->subscription_plan == "Monthly")
+                        <p>You can do 10 tests per month.</p>
+                        @else if(Auth::user()->subscription_plan == "Annually")
                         <p>You can do unlimited tests.</p>
-                    </div>
-                    <div class="mb-4">
-                        <h6 class="fw-semibold mb-2">Active until {{ date("F jS, Y", strtotime(Auth::user()->expire_at)) }}</h6>
-                        <p>We will send you a notification upon Subscription expiration</p>
+                        @endif
                     </div>
                     <div class="col-12">
                         <button class="btn btn-secondary" id="cancel_subscription">Cancel Subscription</button>
@@ -53,13 +53,13 @@
                 </div>
                 <div class="col-md-6 mb-1">
                     <div class="mb-4">
-                        <h6 class="fw-semibold mb-2"><span class="me-2">${{ env('BASIC_PLAN_PRICE') }} Per Month</span> <span class="badge bg-label-primary">Popular</span></h6>
-                        <p>Unlimit test access feature</p>
-                        
+                        <h6 class="fw-semibold mb-2"><span class="me-2">${{ env('MONTHLY_PLAN_PRICE') }} Per Month</span></h6>
+                        <h6 class="fw-semibold mb-2"><span class="me-2">${{ env('ANNUALLY_PLAN_PRICE') }} Per Year</span> <span class="badge bg-label-primary">Popular</span></h6>
+                        <p>Unlock a unlimit test access feature</p>
                     </div>
                 </div>
                 <div class="col-12">
-                    <a class="btn btn-primary" href="{{ route('pages-checkout') }}" style="height: fit-content">Upgrade Account</a>
+                    <a class="btn btn-primary" href="{{ route('pages-pricing') }}" style="height: fit-content">Upgrade Account</a>
                 </div>
             </div>
         </div>

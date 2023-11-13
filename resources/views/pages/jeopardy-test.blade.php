@@ -8,7 +8,7 @@
         <div class="centered-div mt-5">
             <h3>You have already completed the FREE test.</h3>
             <p>If you would like to access more tests, please click the button below to subscribe.</p>
-            <a class="btn btn-primary" href="{{ route('pages-checkout') }}">Upgrade Account</a>
+            <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
         </div>
     @else
         <div class="centered-div mt-5" id="start_step">
@@ -87,7 +87,7 @@
                     <button class="btn btn-primary start-again-btn" style="width: 200px" id="">Start Again<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
                 @else
                     <p class="mt-5">If you would like to conduct more tests, please click the button below to subscribe.</p>
-                    <a class="btn btn-primary" href="{{ route('pages-checkout') }}">Upgrade Account</a>
+                    <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
                 @endif
             </div>
         </div>

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('password', 50);
             $table->tinyInteger('is_trial_used')->default(0);
             $table->tinyInteger('subscription_status')->default(0);
+            $table->enum('subscription_plan', ['Monthly', 'Annually'])->default('Annually');
             $table->timestamp('subscribed_at')->nullable();
             $table->timestamp('expire_at')->nullable();
             $table->tinyInteger('is_delete')->default(0);

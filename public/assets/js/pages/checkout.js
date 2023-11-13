@@ -229,7 +229,8 @@ function stripeResponseHandler(status, response) {
             exp_date,
             expiration_month,
             expiration_year,
-            token
+            token,
+            period: $("#billing_period").attr("data-billing_period")
         };
 
 

@@ -12,82 +12,108 @@ class CheckoutController extends MyController {
 
     public $api_error = '';
 
-    public function index() {
+    public function index($plan) {
         if($this->user->subscription_status == 1){
             return redirect('/');
         }
-        return view('pages.checkout');
-    }
 
-    public function upgrade_account(Request $request) {
-        $pack_name = 'Premium';        
-        
-        Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
-        $charge = null;
-        $amount = env('BASIC_PLAN_PRICE');
-        $period = 1;
-
-        try {
-            $charge = Stripe\Charge::create ([
-                "amount" => $amount * 100,
-                "currency" => env('STRIPE_CURRENCY'),
-                "source" => $request->token,
-                "description" => "Subscription free for " . $request->name,
-            ]);
-        } catch (Exception $e) {
-            $charge['error'] = $e->getMessage();
-        }
-        
-        if (!empty($charge) && $charge['status'] == 'succeeded') {
-
-            // success
-            // calculate expire date from today
-            $today = date("Y-m-d");
-            if($this->user->subscription_status == 1 && strtotime($this->user->expire_at) > strtotime($today)){
-                // calculate from expire_at
-                $start_date = $this->user->expire_at;
-            } else {
-                $start_date = $today;
-            }
-
-            $expire_date = date('Y-m-d', strtotime("+" . $period  . " months", strtotime($start_date))); 
-
-            // active account
-            $this->user->subscription_status = 1;
-            $this->user->subscribed_at =  $start_date;
-            $this->user->expire_at = $expire_date;
-            $this->user->save();
-
-            BillingHistory::create([
-                'user_id' => $this->user->id,
-                'card_number' => '',
-                'method' => 'Stripe',
-                'package' => $pack_name,
-                'amount' => $amount,
-                'period' => $period . " Month",
-                'reference' => json_encode($charge),
-                'transaction_id' => $charge->id,
-                'status' => 1,
-                'detail_name' => $request->full_name,
-                'detail_address' => $request->address,
-                'detail_city' => $request->city,
-                'detail_zipcode' => $request->zip_code,
-                'detail_country' => $request->country
-            ]);
-            return response()->json(['code'=>200, 'message'=>''], 200);
+        if($plan == "monthly") {
+            $price = env('MONTHLY_PLAN_PRICE');
+            $plan = 'Monthly';
+        } else if($plan == "annually") {
+            $price = env('ANNUALLY_PLAN_PRICE');
+            $plan = 'Annually';
         } else {
-            // failed
-            return response()->json(['code'=>400, 'message'=>'Payment failed.'], 200);
+            return redirect('/');
         }
+       
+        return view('pages.checkout', [
+            'price' => $price,
+            'plan' => $plan
+        ]);
     }
+
+    public function pricing_page() {
+        return view('pages.pricing');
+    }
+
+    // One time payment
+    // public function upgrade_account(Request $request) {
+    //     $pack_name = 'Premium';        
+        
+    //     Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
+    //     $charge = null;
+    //     $amount = env('MONTHLY_PLAN_PRICE');
+    //     $period = 1;
+
+    //     try {
+    //         $charge = Stripe\Charge::create ([
+    //             "amount" => $amount * 100,
+    //             "currency" => env('STRIPE_CURRENCY'),
+    //             "source" => $request->token,
+    //             "description" => "Subscription free for " . $request->name,
+    //         ]);
+    //     } catch (Exception $e) {
+    //         $charge['error'] = $e->getMessage();
+    //     }
+        
+    //     if (!empty($charge) && $charge['status'] == 'succeeded') {
+
+    //         // success
+    //         // calculate expire date from today
+    //         $today = date("Y-m-d");
+    //         if($this->user->subscription_status == 1 && strtotime($this->user->expire_at) > strtotime($today)){
+    //             // calculate from expire_at
+    //             $start_date = $this->user->expire_at;
+    //         } else {
+    //             $start_date = $today;
+    //         }
+
+    //         $expire_date = date('Y-m-d', strtotime("+" . $period  . " months", strtotime($start_date))); 
+
+    //         // active account
+    //         $this->user->subscription_status = 1;
+    //         $this->user->subscribed_at =  $start_date;
+    //         $this->user->expire_at = $expire_date;
+    //         $this->user->save();
+
+    //         BillingHistory::create([
+    //             'user_id' => $this->user->id,
+    //             'card_number' => '',
+    //             'method' => 'Stripe',
+    //             'package' => $pack_name,
+    //             'amount' => $amount,
+    //             'period' => $period . " Month",
+    //             'reference' => json_encode($charge),
+    //             'transaction_id' => $charge->id,
+    //             'status' => 1,
+    //             'detail_name' => $request->full_name,
+    //             'detail_address' => $request->address,
+    //             'detail_city' => $request->city,
+    //             'detail_zipcode' => $request->zip_code,
+    //             'detail_country' => $request->country
+    //         ]);
+    //         return response()->json(['code'=>200, 'message'=>''], 200);
+    //     } else {
+    //         // failed
+    //         return response()->json(['code'=>400, 'message'=>'Payment failed.'], 200);
+    //     }
+    // }
 
     public function upgrade_account_with_subscription(Request $request) {
-        $pack_name = 'Premium';        
+        $pack_name = 'Annually';
+        $amount = env('ANNUALLY_PLAN_PRICE');
+
+        if($request->period == "month"){
+            $pack_name = 'Monthly'; 
+            $amount = env('MONTHLY_PLAN_PRICE');    
+        }
+          
         
         Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
         $charge = null;
-        $amount = env('BASIC_PLAN_PRICE');
-        $period = 1;
+       
+        $period = "1 " . $request->period;
 
         // check User is in subscribers...
         if($this->user->subscription_status == 1) {
@@ -108,7 +134,7 @@ class CheckoutController extends MyController {
             return response()->json(['code'=>400, 'message'=> $customer], 200);
         }
         
-        $plan = $this->createPlan('Basic Plan', $amount, 'month');
+        $plan = $this->createPlan($pack_name . ' Plan', $amount, $request->period);
             
         if(!$plan){ 
             return response()->json(['code'=>400, 'message'=> $customer], 200);
@@ -123,6 +149,7 @@ class CheckoutController extends MyController {
             // success
             $this->user->subscription_status = 1;
             $this->user->subscribed_at = date("Y-m-d H:i:s", $subscription['current_period_start']);
+            $this->user->subscription_plan = $pack_name;
             $this->user->save();                    
 
             UserSubscription::create([
@@ -134,7 +161,7 @@ class CheckoutController extends MyController {
                 'stripe_subscription_id' => $subscription['id'],
                 'default_payment_method' => $subscription['default_payment_method'],
                 'default_source' => $subscription['default_source'],
-                'paid_amount' => env('BASIC_PLAN_PRICE'),
+                'paid_amount' => $amount,
                 'paid_amount_currency' => env('STRIPE_CURRENCY'),
                 'plan_interval' => $subscription['plan']['interval'],
                 'plan_interval_count' => $subscription['plan']['interval_count'],
@@ -151,7 +178,7 @@ class CheckoutController extends MyController {
                 'method' => 'Stripe',
                 'package' => $pack_name,
                 'amount' => $amount,
-                'period' => $period . " Month",
+                'period' => $period,
                 'reference' => json_encode($subscription),
                 'transaction_id' => $subscription['id'],
                 'status' => 1,

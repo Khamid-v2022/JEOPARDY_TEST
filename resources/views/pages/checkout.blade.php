@@ -97,22 +97,26 @@
                 <h5 class="card-header gray-background">Your Purchase</h5>
                 <div class="card-body">
                     <h4 class="fw-bold page-heading">
-                        <span class="">Premium Package</span>
+                        <span class="">{{ $plan }} Package</span>
                     </h4>
                     <p>Payment details for {{Auth::user()->name}}</p>
                     <div class="price-detail my-3">
                         <dl class="row mb-0">
                             <dt class="col-6 fw-semibold">Price:</dt>
-                            <dd class="col-6 fw-semibold text-end">$<span class="total-price">{{ env('BASIC_PLAN_PRICE') }}</span></dd>
+                            <dd class="col-6 fw-semibold text-end">$<span class="total-price">{{ $price }}</span></dd>
 
                             <dt class="col-6 fw-semibold">Billing Method:</dt>
                             <dd class="col-6 fw-semibold text-end" id="billing_method">Credit Card</dd>
 
                             <dt class="col-6 fw-semibold">Billing Period:</dt>
-                            <dd class="col-6 text-end" id="billing_period" data-billing_period="1">1 Month</dd>
+                            @if($plan == "Monthly")
+                            <dd class="col-6 text-end" id="billing_period" data-billing_period="month">Every Month</dd>
+                            @elseif($plan == "Annually")
+                            <dd class="col-6 text-end" id="billing_period" data-billing_period="year">Every Year</dd>
+                            @endif
                             <hr class="mt-2">
                             <dt class="col-6 fw-bold" style="font-size:18px">Subtotal</dt>
-                            <dd class="col-6 fw-bold text-end text-primary mb-0" style="font-size:18px">$<span class="total-price" id="total_price">{{ env('BASIC_PLAN_PRICE') }}</span></dd>
+                            <dd class="col-6 fw-bold text-end text-primary mb-0" style="font-size:18px">$<span class="total-price" id="total_price">{{ $price }}</span></dd>
                         </dl>
                         <div class="payment-btns">
                             <!-- Credit Card - Stripe -->
@@ -120,12 +124,12 @@
                                 <div class="col-12 mt-5">
                                     <form id="checkout_form" data-stripe-publishable-key="{{ env('STRIPE_TEST_PUBLIC_KEY') }}">
                                         <button class="btn btn-primary w-100 payment-button d-none" type="submit">
-                                            Pay $<span class="total-price">{{ env('BASIC_PLAN_PRICE') }}</span>
+                                            Subscribe</span>
                                             <i class="fas fa-spinner fa-spin" style="display:none"></i>
                                         </button>
                                         <div class="payment-fake-button" title="Fill in the details" data-bs-toggle="tooltip" data-bs-placement="top">
                                             <button class="btn btn-primary w-100" type="button" disabled>
-                                                Pay $<span class="total-price">{{ env('BASIC_PLAN_PRICE') }}</span>
+                                                Subscribe</span>
                                             </button>
                                         </div>
                                     </form>
