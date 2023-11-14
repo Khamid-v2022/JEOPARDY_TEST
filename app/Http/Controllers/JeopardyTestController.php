@@ -13,10 +13,51 @@ use App\Models\UserAnswerHeader;
 class JeopardyTestController extends MyController {
 
     public function index() {
-        return view('pages.jeopardy-test');
+        // calculate remain test count if user have subscribed with Monthly
+        $tested_count = 0;
+        if($this->user->subscription_status == 1 && $this->user->subscription_plan == "Monthly") {
+            $subscribed_date = date('d', strtotime($this->user->subscribed_at));
+
+            $today_date = date('d');
+            $today_month = date('Y-m');
+
+            $compare_date = $today_month . '-' . $subscribed_date;
+            if($today_date < $subscribed_date) {
+                // get 1 month before
+                $compare_date = date('Y-m-d', strtotime("-1 month", strtotime($compare_date))); 
+            }
+
+            // get count
+            $tested_count = count(UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>=', $compare_date)->get());
+        }
+
+
+        return view('pages.jeopardy-test', [
+            'tested_count' => $tested_count
+        ]);
     }
 
     public function get_questions($count) {
+        // check user have reach out the Mothly limit
+        if($this->user->subscription_status == 1 && $this->user->subscription_plan == "Monthly") {
+            $subscribed_date = date('d', strtotime($this->user->subscribed_at));
+
+            $today_date = date('d');
+            $today_month = date('Y-m');
+
+            $compare_date = $today_month . '-' . $subscribed_date;
+            if($today_date < $subscribed_date) {
+                // get 1 month before
+                $compare_date = date('Y-m-d', strtotime("-1 month", strtotime($compare_date))); 
+            }
+
+            // get count
+            $tested_count = count(UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>=', $compare_date)->get());
+            if($tested_count >= env('MONTHLY_PLAN_TEST_COUNT')) {
+                return response()->json(['code'=>400, 'message'=>'Exceeded monthly limit.'], 200);
+            }
+        }
+
         $questions = OriginalQuestion::inRandomOrder()->take($count)->get();
         // $questions = OriginalQuestion::where('id', "<", 6)->take(5)->get();
 

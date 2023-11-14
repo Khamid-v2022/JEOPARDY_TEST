@@ -3,36 +3,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BillingHistory;
+use App\Models\UserAnswerHeader;
 
 
 class BillingController extends MyController {
 
     public function index() {
-        $remain_days = 0;
-        $total_days = 0;
-        if($this->user->subscription_status == 1) {
-            $today = strtotime(date("Y-m-d"));
-            $sebscribed_date = strtotime($this->user->subscribed_at);
-            $expire_date = strtotime($this->user->expire_at);
+        $tested_count = 0;
+        $compare_date = '';
+        if($this->user->subscription_status == 1 && $this->user->subscription_plan == "Monthly") {
+            $subscribed_date = date('d', strtotime($this->user->subscribed_at));
 
-            $datediff = $expire_date - $today;
-            $remain_days = round($datediff / (60 * 60 * 24));
+            $today_date = date('d');
+            $today_month = date('Y-m');
 
-            if($today > $sebscribed_date) {
-                $total_diff = $expire_date - $sebscribed_date;
-            } else {
-                $total_diff = $expire_date - $today;
+            $compare_date = $today_month . '-' . $subscribed_date;
+            if($today_date < $subscribed_date) {
+                // get 1 month before
+                $compare_date = date('Y-m-d', strtotime("-1 month", strtotime($compare_date))); 
             }
 
-            $total_days = round($total_diff / (60 * 60 * 24));
+            // get count
+            $tested_count = count(UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>=', $compare_date)->get());
         }
 
         $histories = BillingHistory::where('user_id', $this->user->id)->orderBy('created_at', 'DESC')->get();
 
         return view('pages.billing', [
-            'remain_days' => $remain_days,
-            'total_days' => $total_days,
-            'histories' => $histories
+            'histories' => $histories,
+            'tested_count' => $tested_count,
+            'started_this_month' => $compare_date
         ]);
     }
 

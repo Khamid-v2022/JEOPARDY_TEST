@@ -57,6 +57,14 @@ function loadQuestions() {
                 $(".start-btn fa-spinner").addClass("d-none");
                 $(".start-again-btn").removeAttr("disabled");
                 $(".start-again-btn fa-spinner").addClass("d-none");
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '',
+                    text: response.message,
+                }).then(function(){
+                    location.reload();
+                })
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 

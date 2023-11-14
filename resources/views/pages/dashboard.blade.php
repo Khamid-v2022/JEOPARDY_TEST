@@ -35,7 +35,10 @@
                         <td>{{ $item->score }} <small class="text-muted">/{{ $item->number_of_questions }}</small></td>
                         <td>
                             <a href="{{ route('pages-view-detail', [$item->id]) }}" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-show'></i></a>
+
+                            @if(Auth::user()->subscription_status == 1 && Auth::user()->subscription_plan == "Annually")
                             <a href="javascript:;" class="delete-record" data-id="{{ $item->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class='bx bx-trash'></i></a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

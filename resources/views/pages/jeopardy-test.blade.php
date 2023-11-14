@@ -11,86 +11,94 @@
             <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
         </div>
     @else
-        <div class="centered-div mt-5" id="start_step">
-            <h2 class="mb-5">Click the Start button below to start the test</h2>
-            <div class="row mb-3">
-                <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
-                <div class="col">
-                    <select class="form-select " style="max-width: 100px" id="question_count_sel">
-                        <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
-                        <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
-                        <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
-                    </select>
-                </div>
+        @if(Auth::user()->subscription_status == 1 && Auth::user()->subscription_plan == "Monthly" && $tested_count >= env('MONTHLY_PLAN_TEST_COUNT') )
+            <div class="centered-div mt-5">
+                <h3>Exceeded monthly limit.</h3>
+                <p>If you would like to unlock unlimit test, please click the button below and upgrade your account with Annually plan.</p>
+                <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
             </div>
-            <button class="btn btn-primary start-btn" style="width: 200px" id="">Start<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
-            <p class="mt-4">To submit your responses, you may press enter or wait for the time to run out.</p>
-        </div>
-
-        <div class="centered-div mt-5 d-none" id="begin_step">
-            <h3 class="mb-3">THE TEST WILL BEGIN IN:</h3>
-            <div class="text-center begin-count-down">0:10</div>
-            <p>To submit your responses, you may press enter or wait for the time to run out.</p>
-        </div>
-
-        <!-- question step -->
-        <div class="centered-div d-none" id="question_form">
-            <div class="question-wrapper card">
-                <div class="category category-title">
-                    IT BORDERS JUST ONE OTHER COUNTRY
+        @else
+            <div class="centered-div mt-5" id="start_step">
+                <h2 class="mb-5">Click the Start button below to start the test</h2>
+                <div class="row mb-3">
+                    <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
+                    <div class="col">
+                        <select class="form-select " style="max-width: 100px" id="question_count_sel">
+                            <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
+                            <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
+                            <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="question-scene">
-                    <div class="card-header category category-subtitle">
+                <button class="btn btn-primary start-btn" style="width: 200px" id="">Start<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
+                <p class="mt-4">To submit your responses, you may press enter or wait for the time to run out.</p>
+            </div>
+
+            <div class="centered-div mt-5 d-none" id="begin_step">
+                <h3 class="mb-3">THE TEST WILL BEGIN IN:</h3>
+                <div class="text-center begin-count-down">0:10</div>
+                <p>To submit your responses, you may press enter or wait for the time to run out.</p>
+            </div>
+
+            <!-- question step -->
+            <div class="centered-div d-none" id="question_form">
+                <div class="question-wrapper card">
+                    <div class="category category-title">
                         IT BORDERS JUST ONE OTHER COUNTRY
                     </div>
-                    <div class="card-body question mt-3">
-                        Tonight we sup on this animal's jowls, used to flavor stews as a southern delicacy; it's a motorcycle term, too, my love
+                    <div class="question-scene">
+                        <div class="card-header category category-subtitle">
+                            IT BORDERS JUST ONE OTHER COUNTRY
+                        </div>
+                        <div class="card-body question mt-3">
+                            Tonight we sup on this animal's jowls, used to flavor stews as a southern delicacy; it's a motorcycle term, too, my love
+                        </div>
+                        <div class="text-center mt-3 answer-count-down">0:<span class="count-down">15</span></div>
                     </div>
-                    <div class="text-center mt-3 answer-count-down">0:<span class="count-down">15</span></div>
+                </div>
+                <div class="text-end" id="question_index"></div>
+                <div class="submit-form text-center">
+                    <form id="submit_form" autocomplete="off">
+                        <p class="mt-3">Responses do NOT need to be in the form of a question.<br>
+                        To submit your responses, you may press enter or wait for the time to run out
+                        </p>
+                        <input type="text" class="form-control" id="answer_input" autocomplete="off">
+                    </form>
                 </div>
             </div>
-            <div class="text-end" id="question_index"></div>
-            <div class="submit-form text-center">
-                <form id="submit_form" autocomplete="off">
-                    <p class="mt-3">Responses do NOT need to be in the form of a question.<br>
-                    To submit your responses, you may press enter or wait for the time to run out
-                    </p>
-                    <input type="text" class="form-control" id="answer_input" autocomplete="off">
-                </form>
-            </div>
-        </div>
 
-        <!-- result step -->
-        <div class="centered-div mt-5 d-none" id="complete_step">
-            <div class="submitting-wrapper text-center">
-                <h3>Your response is being transmitted.<i class="fas fa-spinner fa-spin ms-2"></i></h3>
-            </div>
-            <div class="result-wrapper d-none">
-                @if(Auth::user()->subscription_status == 1)
-                    <h1 class="mb-3">YOU'VE COMPLETED THE TEST!</h1>
-                @else
-                    <h1 class="mb-3">YOU'VE COMPLETED THE FREE TEST!</h1>
-                @endif
-                <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1>
-                <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
-                @if(Auth::user()->subscription_status == 1)
-                    <div class="row mb-3">
-                        <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
-                        <div class="col">
-                            <select class="form-select" style="max-width: 100px" id="question_count_again_sel">
-                                <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
-                                <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
-                                <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
-                            </select>
+            <!-- result step -->
+            <div class="centered-div mt-5 d-none" id="complete_step">
+                <div class="submitting-wrapper text-center">
+                    <h3>Your response is being transmitted.<i class="fas fa-spinner fa-spin ms-2"></i></h3>
+                </div>
+                <div class="result-wrapper d-none">
+                    @if(Auth::user()->subscription_status == 1)
+                        <h1 class="mb-3">YOU'VE COMPLETED THE TEST!</h1>
+                    @else
+                        <h1 class="mb-3">YOU'VE COMPLETED THE FREE TEST!</h1>
+                    @endif
+                    <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1>
+                    <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
+                    @if(Auth::user()->subscription_status == 1)
+                        <div class="row mb-3">
+                            <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
+                            <div class="col">
+                                <select class="form-select" style="max-width: 100px" id="question_count_again_sel">
+                                    <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
+                                    <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
+                                    <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <button class="btn btn-primary start-again-btn" style="width: 200px" id="">Start Again<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
-                @else
-                    <p class="mt-5">If you would like to conduct more tests, please click the button below to subscribe.</p>
-                    <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
-                @endif
+                        <button class="btn btn-primary start-again-btn" style="width: 200px" id="">Start Again<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
+                    @else
+                        <p class="mt-5">If you would like to conduct more tests, please click the button below to subscribe.</p>
+                        <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
+                    @endif
+                </div>
             </div>
-        </div>
+        @endif
     @endif
 
 </div>

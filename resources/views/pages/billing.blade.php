@@ -14,9 +14,11 @@
                     <div class="mb-4">
                         <h6 class="fw-semibold mb-2">Your Current Plan is {{ Auth::user()->subscription_plan }}</h6>
                         @if(Auth::user()->subscription_plan == "Monthly")
-                        <p>You can do 10 tests per month.</p>
-                        @else if(Auth::user()->subscription_plan == "Annually")
-                        <p>You can do unlimited tests.</p>
+                            <p class="">You can do {{ env('MONTHLY_PLAN_TEST_COUNT') }} tests per month.</p>
+                            <label>Started This Month at:</label> <strong>{{ $started_this_month }}</strong>
+                            <p>And you have used {{ $tested_count }} out of {{ env('MONTHLY_PLAN_TEST_COUNT') }} attempts.</p>
+                        @elseif(Auth::user()->subscription_plan == "Annually")
+                            <p>You can do unlimited tests.</p>
                         @endif
                     </div>
                     <div class="col-12">
