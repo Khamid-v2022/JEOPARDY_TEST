@@ -122,7 +122,7 @@
                             <!-- Credit Card - Stripe -->
                             <div class="payment-form row stripe-form" id="stripe_form">
                                 <div class="col-12 mt-5">
-                                    <form id="checkout_form" data-stripe-publishable-key="{{ env('STRIPE_TEST_PUBLIC_KEY') }}">
+                                    <form id="checkout_form" data-stripe-publishable-key="{{ env('STRIPE_PUBLICK_KEY') }}">
                                         <button class="btn btn-primary w-100 payment-button d-none" type="submit">
                                             Subscribe</span>
                                             <i class="fas fa-spinner fa-spin" style="display:none"></i>

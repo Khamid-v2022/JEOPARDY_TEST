@@ -41,7 +41,7 @@ class CheckoutController extends MyController {
     // public function upgrade_account(Request $request) {
     //     $pack_name = 'Premium';        
         
-    //     Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
+    //     Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
     //     $charge = null;
     //     $amount = env('MONTHLY_PLAN_PRICE');
     //     $period = 1;
@@ -110,7 +110,7 @@ class CheckoutController extends MyController {
         }
           
         
-        Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
         $charge = null;
        
         $period = "1 " . $request->period;
@@ -208,7 +208,7 @@ class CheckoutController extends MyController {
         if($subscriber) {
             try { 
                 // Creates a new subscription 
-                $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_SECRET_KEY'));
+                $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
     
                 $response = $stripe->subscriptions->cancel(
                     $subscriber->stripe_subscription_id,
