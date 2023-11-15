@@ -21,7 +21,7 @@ use App\Http\Controllers\UserSettingController;
 */
 
 
-Route::get('login', [AuthController::class, 'index'])->name('pages-login');
+Route::get('login', [AuthController::class, 'index'])->name('pages-login')->middleware('guest');
 Route::post('login', [AuthController::class, 'do_login']);
 Route::get('logout', [AuthController::class, 'do_logout'])->name('logout');
 
@@ -59,4 +59,5 @@ Route::group(['middleware' => ['user']], function() {
     Route::post('/my-profile/update', [UserSettingController::class, 'update_profile']);
     Route::delete('/my-profile/delete', [UserSettingController::class, 'delete_profile']);
 });
+
 
