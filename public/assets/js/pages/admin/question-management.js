@@ -19,7 +19,7 @@ $(function() {
         e.preventDefault();
 
         const _url = '/admin/question-management/create-update-question';
-         $.ajax({
+        $.ajax({
             url: _url,
             data: {
                 sel_id:  $("#m_selected_q_id").val(),

@@ -7,8 +7,14 @@
                 <ul class="menu-inner" style="margin-left: 0px;">
                     <li class="menu-item">
                         <a href="{{ route('question-management-page') }}" class="menu-link">
-                            <!-- <i class="menu-icon tf-icons bx bx-home-circle"></i> -->
-                            <div>Question Management</div>
+                            <i class='bx bx-chat'></i>
+                            <div>Questions</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('user-management-page') }}" class="menu-link">
+                            <i class='bx bx-user-check' ></i>
+                            <div>Users</div>
                         </a>
                     </li>
                 </ul>

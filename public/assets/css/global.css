@@ -8,6 +8,14 @@
   margin-top: 12px;
 }
 
+.menu-item {
+  padding: 10px 16px;
+}
+.menu-item i {
+  margin-right: 8px;
+}
+
+
 .app-brand-logo.demo svg {
   width: 22px;
   height: 38px;
