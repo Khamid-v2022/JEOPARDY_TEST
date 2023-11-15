@@ -11,19 +11,35 @@ class QuestionManageController extends Controller
 {
     public function index()
     {
-        return "Question Management page";
-        // return view('pages.admin.question-management');
+        return view('pages.admin.question-management');
     }
 
 
-    public function loadHistoryServerside(Request $request) {
-        // $result = OriginalQuestion::getHistoryListForAdmin($request->length, $request->start, $request->order_by, $request->search_keys);
-                
-        // $result_total_count = $result['total_record_count'];
-        $result_total_count = 0;
-        $list = [];
+    public function loadQuestions(Request $request) {
+        $questionObj = OriginalQuestion::where('category', 'like', '%' . $request->search_key . '%')
+                                        ->orWhere('question', 'like', '%' . $request->search_key . '%')
+                                        ->orWhere('answer', 'like', '%' . $request->search_key . '%');
+        $result_total_count = $questionObj->count();
+
+        $list = $questionObj->limit($request->length)->offset($request->start)->get();
+       
 
         return response()->json(['code'=>200, 'list'=>$list, 'total_record'=> $result_total_count], 200);
+    }
+
+    public function createOrUpdateQuestion(Request $request) {
+        OriginalQuestion::updateOrCreate(['id' => $request->sel_id], [
+                                                            'category' => $request->category,
+                                                            'question' => $request->question,
+                                                            'answer' => $request->answer]);
+
+        return response()->json(['code'=>200, 'message'=>'success'], 200);
+    }
+
+    public function deleteQuestion($id) {
+        OriginalQuestion::where('id', $id)->delete();
+        
+        return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
 
 }

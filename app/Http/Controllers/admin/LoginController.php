@@ -36,10 +36,12 @@ class LoginController extends Controller
     }
 
     public function signout(){
+        Auth::guard('admin')->logout();
         Session::flush();
         if (Auth::check()) {
             Auth::logout();
         }
+
         return Redirect(route('admin-login-page'));
     }
 

@@ -10,8 +10,12 @@ Route::namespace('admin')->prefix('admin')->group(function(){
         Route::post('/login', [LoginController::class, 'signin']);
     });
 
-    Route::middleware('auth.admin:admin')->group(function(){
+    Route::middleware(['auth.admin:admin'])->group(function(){
         Route::get('/', [QuestionManageController::class, 'index'])->name('question-management-page');
+        Route::get('/question-management/load-question', [QuestionManageController::class, 'loadQuestions']);
+        Route::post('/question-management/create-update-question', [QuestionManageController::class, 'createOrUpdateQuestion']);
+        Route::delete('/question-management/delete-question/{id}', [QuestionManageController::class, 'deleteQuestion'])->where('id', '[0-9]+');
+
         Route::get('/logout', [LoginController::class, 'signout'])->name('admin-logout');
     });
 });
