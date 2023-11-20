@@ -40,7 +40,7 @@
                                 <li class="mb-0"><span class="badge badge-center w-px-20 h-px-20 rounded-pill bg-label-primary me-2"><i class="bx bx-check bx-xs"></i></span> New questions added every month</li>
                             </ul>
 
-                            <a href="{{ route('pages-checkout', ['monthly'])}}" class="btn btn-label-primary d-grid w-100">Upgrade</a>
+                            <a href="{{ route('pages-checkout', ['monthly'])}}" class="btn btn-primary d-grid w-100">Upgrade</a>
                         </div>
                     </div>
                 </div>

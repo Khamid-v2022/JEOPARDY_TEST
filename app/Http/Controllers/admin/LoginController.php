@@ -14,7 +14,7 @@ use Session;
 class LoginController extends Controller
 {
     public function __construct(){
-        $this->middleware('guest:admin')->except('logout');
+        $this->middleware('guest:admin')->except('signout');
     }
     
     public function index() {

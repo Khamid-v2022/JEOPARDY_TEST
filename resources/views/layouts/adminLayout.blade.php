@@ -24,14 +24,14 @@
                 <ul class="navbar-nav flex-row align-items-center ms-2">
                     <!-- User -->
                     <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                        <!-- <a class="dropdown-item" href="{{route('admin-logout')}}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="bx bx-power-off me-2"></i>
-                            <span class="align-middle">Logout</span>
-                        </a> -->
-                        <a class="dropdown-item" href="/admin/logout">
+                        <a class="dropdown-item" href="{{route('admin-logout')}}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">Logout</span>
                         </a>
+                        <!-- <a class="dropdown-item" href="/admin/logout">
+                            <i class="bx bx-power-off me-2"></i>
+                            <span class="align-middle">Logout</span>
+                        </a> -->
                         <form method="GET" id="logout-form" action="{{route('admin-logout')}}" style="margin: 0px">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         </form>
