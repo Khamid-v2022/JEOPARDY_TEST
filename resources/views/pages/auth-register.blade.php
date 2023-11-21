@@ -12,7 +12,10 @@
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="#" class="app-brand-link gap-2">
-                            <span class="app-brand-text demo text-body fw-bolder">Jeopardy Test Simulator</span>
+                            <span class="app-brand-logo demo">
+                                <img src="{{asset('assets/img/icons/brands/brand.png')}}">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bolder">{{ env('APP_NAME') }}</span>
                         </a>
                     </div>
                     <!-- /Logo -->

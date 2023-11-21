@@ -7,7 +7,11 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">Questions</h5>
-            <button class="btn btn-primary me-4" type="button" id="add_question_btn"><i class='bx bx-plus me-1'></i>Add Question</button>
+            <div>
+                <button class="btn btn-secondary me-2" type="button" data-bs-toggle="modal" data-bs-target="#import_modal"><i class='bx bx-upload me-1'></i>Add From CSV</button>
+                <button class="btn btn-primary me-4" type="button" id="add_question_btn"><i class='bx bx-plus me-1'></i>Add</button>
+            </div>
+            
         </div>
         <div class="card-datatable table-responsive">
             <table class="dt-responsive table border-top" id="questions_table">
@@ -61,6 +65,35 @@
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="import_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Questions From CSV</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="pt-0 row g-2" id="form_import_file" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <small class="px-3">Import files should be .csv extension</small><br>
+                    <small class="px-3 mt-3">Required Fields: (The order of the fields is important)<br>
+                    <span class="px-3">category, value, question, answer</span></small>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <label for="formFile" class="form-label">Select CSV File</label>
+                            <input class="form-control" type="file" id="formFile" name="formFile[]" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import<i class="fas fa-spinner ms-2 fa-spin d-none"></i></button>
                 </div>
             </form>
         </div>

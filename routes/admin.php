@@ -15,6 +15,7 @@ Route::namespace('admin')->prefix('admin')->group(function(){
         Route::get('/', [QuestionManageController::class, 'index'])->name('question-management-page');
         Route::get('/question-management/load-question', [QuestionManageController::class, 'loadQuestions']);
         Route::post('/question-management/create-update-question', [QuestionManageController::class, 'createOrUpdateQuestion']);
+        Route::post('/question-management/import-question', [QuestionManageController::class, 'importQuestion']);
         Route::delete('/question-management/delete-question/{id}', [QuestionManageController::class, 'deleteQuestion'])->where('id', '[0-9]+');
 
         Route::get('/users', [UserManageController::class, 'index'])->name('user-management-page');

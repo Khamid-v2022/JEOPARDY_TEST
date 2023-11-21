@@ -1,6 +1,10 @@
 var dt_questions = null;
 
 $(function() {
+    $('#import_file_modal').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+    })
+
     loadQuestions();
 
     $("#add_question_btn").on("click", function() {
@@ -41,6 +45,107 @@ $(function() {
             error: function (response) {
             },
         });
+    })
+
+
+    $("#form_import_file").on("submit", function(e) {
+        e.preventDefault();
+
+        var fileUpload = document.getElementById("formFile");
+    
+        //Validate whether File is valid Excel file.
+        var regex = /^([a-zA-Z0-9\s_\\.\-:()])+(.csv)$/;
+        
+        if (!regex.test(fileUpload.value.toLowerCase())) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please upload a valid CSV file.',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                },
+                buttonsStyling: false
+            })
+            return;
+        }
+
+        // Get the selected file
+        var files = $('#formFile')[0].files;
+
+        if(files.length > 0){
+            $("#m_add_file_btn").attr("disabled", true);
+            $("#m_add_file_btn .fa-spinner").removeClass("d-none");
+
+            var fd = new FormData();
+
+            // Append data 
+            for(let i = 0; i < files.length; i++)
+                fd.append('files' + i, files[i]);
+            
+            $.ajax({
+                url: "/admin/question-management/import-question",
+                method: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(response){
+                    if(response.code == 200){
+                        const toastPlacementExample = document.querySelector('.toast-placement-ex');
+                        $(".toast-body").html("Uploaded");
+                        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+                        toastPlacement.show();
+
+                        // reload table
+                        dt_questions.ajax.reload( null, false );
+
+                        $("#form_import_file").trigger('reset');
+
+                        // close the modal
+                        $("#import_modal").modal("toggle");
+                        $("#m_add_file_btn .fa-spinner").addClass("d-none");
+                        $("#m_add_file_btn").removeAttr("disabled");
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '',
+                            text: response.message,
+                            customClass: {
+                                confirmButton: 'btn btn-primary'
+                            },
+                            buttonsStyling: false
+                        })
+                        $("#m_add_file_btn .fa-spinner").addClass("d-none");
+                        $("#m_add_file_btn").removeAttr("disabled");
+                    }
+                },
+                error: function(response){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: response.responseJSON.message,
+                        text: "Something went wrong. Please try again later",
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    })
+                    $("#m_add_file_btn .fa-spinner").addClass("d-none");
+                    $("#m_add_file_btn").removeAttr("disabled");
+                }
+            });
+        } else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please select a valid Excel file.',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                },
+                buttonsStyling: false
+            })
+            return;
+        }
     })
 })
 

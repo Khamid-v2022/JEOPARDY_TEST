@@ -42,4 +42,70 @@ class QuestionManageController extends Controller
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
 
+    public function importQuestion(Request $request) {
+        // set 2 hours
+        set_time_limit(7200);
+          
+        // $validatedData = $request->validate([
+        //     'files' => 'required',
+        //     'files.*' => 'mimes:csv'
+        // ]);
+
+        $validatedData = $request->validate([
+            'files.*' => 'mimes:csv'
+        ]);
+        
+        
+        if($request->hasFile('files0')){
+            $file = $request->file('files0');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            // File extension
+            $extension = $file->getClientOriginalExtension();
+
+            // File upload location
+            $location = 'files';
+            // Upload file
+            $file->move($location, $filename);
+            // File path
+            $filepath = public_path() . '/files/' . $filename;
+
+            // insert questions from file
+            $this->read_csv($filepath);
+
+            unlink($filepath);
+        }
+        return response()->json(['code'=>200, 'message'=>'File uploaded.'], 200);
+       
+    }
+
+    private function read_csv($filepath){
+        set_time_limit(3000);
+
+        $file = fopen($filepath, 'r');
+    
+        $header = fgetcsv($file);
+    
+        $rows = [];
+        while ($row = fgetcsv($file)) {
+            // $rows[] = array_combine($header, $row);
+            $rows[] = $row;
+
+            OriginalQuestion::updateOrCreate(
+                [
+                    'category' => $row[0],
+                    'question' => $row[2],
+                    'answer' => $row[3]
+                ], 
+                [
+                    'category' => $row[0],
+                    'value' => $row[1],
+                    'question' => $row[2],
+                    'answer' => $row[3]
+                ]);
+        }
+    
+        fclose($file);
+
+    }
+
 }
