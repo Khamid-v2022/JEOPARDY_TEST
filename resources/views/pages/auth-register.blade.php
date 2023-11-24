@@ -5,12 +5,12 @@
 @section('content')
 <div class="container-xxl">
     <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner">
+        <div class="authentication-inner mt-5">
             <!-- Register -->
             <div class="card">
                 <div class="card-body">
                     <!-- Logo -->
-                    <div class="app-brand justify-content-center">
+                    <div class="app-brand justify-content-center mb-3">
                         <a href="#" class="app-brand-link gap-2">
                             <span class="app-brand-logo demo">
                                 <img src="{{asset('assets/img/icons/brands/brand.png')}}">
@@ -19,22 +19,19 @@
                         </a>
                     </div>
                     <!-- /Logo -->
-                    <h4 class="mb-2">Welcome to our platform! 👋</h4>
-                    <p class="mb-4">Make your app management easy and fun!</p>
+                    <h4 class="mb-2">Welcome to your Jeopardy Online Trivia Test Sim 👋</h4>
+                    <p class="mb-4">Train daily with practice tests to pass the real thing!</p>
 
                     <form id="formAuthentication" class="mb-3" autocomplete="off" method="POST">
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
                             <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus autocomplete="off" required />
                         </div>
 
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" autocomplete="off" required/>
                         </div>
 
                         <div class="mb-3 form-password-toggle">
-                            <label class="form-label" for="password">Password</label>
                             <div class="input-group input-group-merge">
                                 <input type="password" class="form-control" id="password" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" autocomplete="off" required />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
@@ -63,6 +60,13 @@
                 </div>
             </div>
             <!-- /Register -->
+        </div>
+
+        <div class="login-footer text-center mt-5">
+            <p>Copyright JStudyGuide <script>document.write(new Date().getFullYear())</script>. All Rights Reserved</p>
+            <p>J!Study is a product of loyal fans to our favorite game show. <br>
+            The Jeopardy! game show and all elements thereof, including but not limited to copyright and trademark thereto, are the property of Jeopardy Productions, Inc. / Sony Inc. and are protected under law.</p> 
+            This website is not affiliated with, sponsored by, or operated by Jeopardy Productions, Inc. or Sony Inc.
         </div>
     </div>
 </div>
