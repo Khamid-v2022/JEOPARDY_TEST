@@ -214,7 +214,7 @@ function stripeResponseHandler(status, response) {
         const expiration_month = exp_date.split("/")[0];
         const expiration_year = exp_date.split("/")[1];
 
-        const _url = "/checkout/upgrade-account";
+        const _url = "/checkout/subscription";
 
         let data = {
             full_name: $("#full_name").val(),

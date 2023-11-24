@@ -22,7 +22,12 @@
                         @endif
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-secondary" id="cancel_subscription">Cancel Subscription</button>
+                        <button class="btn btn-danger" id="cancel_subscription">Cancel Subscription</button>
+                        @if(Auth::user()->subscription_plan == "Monthly")
+                        <button class="btn btn-primary" id="upgrade_annually">Upgrade to Annually</button>
+                        @elseif(Auth::user()->subscription_plan == "Annually")
+                        <button class="btn btn-secondary" id="downgrade_monthly">Downgrade to Monthly</button>
+                        @endif
                     </div>
 
                 </div>

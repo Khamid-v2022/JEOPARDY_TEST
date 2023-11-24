@@ -51,8 +51,12 @@ Route::group(['middleware' => ['user']], function() {
 
     // one time payment
     // Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account']);
-    Route::post('/checkout/upgrade-account', [CheckoutController::class, 'upgrade_account_with_subscription']);
-    Route::post('/checkout/downgrade-account', [CheckoutController::class, 'cancel_subscription']);
+    Route::post('/checkout/subscription', [CheckoutController::class, 'subscription']);
+    Route::post('/checkout/upgrade-account-annually', [CheckoutController::class, 'upgrade_account_to_annually']);
+    Route::post('/checkout/downgrade-account-monthly', [CheckoutController::class, 'downgrade_account_to_monthly']);
+    
+    
+    Route::post('/checkout/cancel-subscription', [CheckoutController::class, 'cancel_subscription']);
     
 
     Route::get('/my-profile', [UserSettingController::class, 'index'])->name('my-profile');

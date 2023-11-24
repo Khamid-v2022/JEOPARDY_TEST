@@ -41,7 +41,7 @@ class CheckoutController extends MyController {
     // public function upgrade_account(Request $request) {
     //     $pack_name = 'Premium';        
         
-    //     Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+    //     Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
     //     $charge = null;
     //     $amount = env('MONTHLY_PLAN_PRICE');
     //     $period = 1;
@@ -100,7 +100,7 @@ class CheckoutController extends MyController {
     //     }
     // }
 
-    public function upgrade_account_with_subscription(Request $request) {
+    public function subscription(Request $request) {
         $pack_name = 'Annually';
         $amount = env('ANNUALLY_PLAN_PRICE');
 
@@ -110,7 +110,7 @@ class CheckoutController extends MyController {
         }
           
         
-        Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
         $charge = null;
        
         $period = "1 " . $request->period;
@@ -120,9 +120,9 @@ class CheckoutController extends MyController {
             return response()->json(['code'=>400, 'message'=> "You are already subscribed"], 200);
         }
 
-        $subscriper = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
-        if($subscriper) {
-            if(strtotime($subscriper->plan_period_end) > strtotime(date('Y-m-d H:i:s'))){
+        $subscriber = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
+        if($subscriber) {
+            if(strtotime($subscriber->plan_period_end) > strtotime(date('Y-m-d H:i:s'))){
                 return response()->json(['code'=>400, 'message'=> "You are already subscribed"], 200);
             }
         }
@@ -202,13 +202,208 @@ class CheckoutController extends MyController {
         
     }
 
+    public function upgrade_account_to_annually() {
+        $pack_name = 'Annually';
+        $amount = env('ANNUALLY_PLAN_PRICE');
+        $period = "1 year";
+
+        $subscriber = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
+        if(!$subscriber) {
+            return response()->json(['code'=>400, 'message'=>'You did not subscribed yet.'], 200);
+        }
+
+        // Client
+        Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
+
+        $my_subscription = \Stripe\Subscription::all(['customer' => $subscriber->stripe_customer_id]);
+        
+        // var_dump( $my_subscription);
+        if(!$my_subscription) {
+            return response()->json(['code'=>400, 'message'=>"Can't find your subscription ID. Please contact to the Admin"], 200);
+        }
+
+        if(!isset($my_subscription['data'][0]['id']) || !isset($my_subscription['data'][0]['items']['data'][0]['id'])) {
+            return response()->json(['code'=>400, 'message'=>"Can't find your subscription ID. Please contact to the Admin"], 200);
+        }
+
+        $subscription_id = $my_subscription['data'][0]['id'];
+        $item_id = $my_subscription['data'][0]['items']['data'][0]['id'];
+
+        $plan = $this->createPlan($pack_name . ' Plan', $amount, "year");
+        if(!$plan){ 
+            return response()->json(['code'=>400, 'message'=> "Can't create a Annuall plan"], 200);
+        }
+        
+        try { 
+            $update_subscription = \Stripe\Subscription::update(
+                $subscription_id,
+                [
+                    'items' => [
+                        [
+                            'id' => $item_id,
+                            'plan' => $plan->id,
+                        ],
+                    ],
+                ]
+            );
+        }catch(Exception $e) { 
+            $this->api_error = $e->getMessage(); 
+        } 
+
+        if($update_subscription){ 
+            // success
+            $this->user->subscription_status = 1;
+            $this->user->subscribed_at = date("Y-m-d H:i:s");
+            $this->user->subscription_plan = $pack_name;
+            $this->user->save();                    
+
+            $subscriber->status = 'Updated to Annually';
+            $subscriber->save();
+
+            $newSub = UserSubscription::create([
+                'user_id' => $this->user->id,
+                'plan_id' => $plan->id,
+                'stripe_customer_id' => $subscriber->stripe_customer_id,
+                'stripe_plan_price_id' => $update_subscription['plan']['id'],
+                'stripe_payment_intent_id' => '',
+                'stripe_subscription_id' => $update_subscription['id'],
+                'default_payment_method' => $update_subscription['default_payment_method'],
+                'default_source' => $update_subscription['default_source'],
+                'paid_amount' => $amount,
+                'paid_amount_currency' => env('STRIPE_CURRENCY'),
+                'plan_interval' => $update_subscription['plan']['interval'],
+                'plan_interval_count' => $update_subscription['plan']['interval_count'],
+                'customer_name' => $this->user->name,
+                'customer_email' => $this->user->email,
+                'plan_period_start' => date("Y-m-d H:i:s", $update_subscription['current_period_start']),
+                'plan_period_end' => date("Y-m-d H:i:s", $update_subscription['current_period_end']),
+                'status' => $update_subscription['status']
+            ]);
+
+            BillingHistory::create([
+                'user_id' => $this->user->id,
+                'card_number' => '',
+                'method' => 'Stripe',
+                'package' => $pack_name,
+                'amount' => $amount,
+                'period' => $period,
+                'reference' => json_encode($update_subscription),
+                'transaction_id' => $update_subscription['id'],
+                'status' => 1,
+            ]);
+
+            return response()->json(['code'=>200, 'message'=>'success'], 200);
+        }
+
+        // failed
+        return response()->json(['code'=>400, 'message'=>''], 200);
+    }
+
+    public function downgrade_account_to_monthly() {
+        $pack_name = 'Monthly';
+        $amount = env('MONTHLY_PLAN_PRICE');
+        $period = "1 month";
+
+        $subscriber = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
+        if(!$subscriber) {
+            return response()->json(['code'=>400, 'message'=>'You did not subscribed yet.'], 200);
+        }
+
+        // Client
+        Stripe\Stripe::setApiKey(env('STRIPE_TEST_SECRET_KEY'));
+
+        $my_subscription = \Stripe\Subscription::all(['customer' => $subscriber->stripe_customer_id]);
+        
+        if(!$my_subscription) {
+            return response()->json(['code'=>400, 'message'=>"Can't find your subscription ID. Please contact to the Admin"], 200);
+        }
+
+        if(!isset($my_subscription['data'][0]['id']) || !isset($my_subscription['data'][0]['items']['data'][0]['id'])) {
+            return response()->json(['code'=>400, 'message'=>"Can't find your subscription ID. Please contact to the Admin"], 200);
+        }
+
+        $subscription_id = $my_subscription['data'][0]['id'];
+        $item_id = $my_subscription['data'][0]['items']['data'][0]['id'];
+
+        $plan = $this->createPlan($pack_name . ' Plan', $amount, "month");
+        if(!$plan){ 
+            return response()->json(['code'=>400, 'message'=> "Can't create a Monthly plan"], 200);
+        }
+        
+        try { 
+            $update_subscription = \Stripe\Subscription::update(
+                $subscription_id,
+                [
+                    'items' => [
+                        [
+                            'id' => $item_id,
+                            'plan' => $plan->id,
+                        ],
+                    ],
+                ]
+            );
+        }catch(Exception $e) { 
+            $this->api_error = $e->getMessage(); 
+        } 
+
+        if($update_subscription){ 
+            // success
+            $this->user->subscription_status = 1;
+            $this->user->subscribed_at = date("Y-m-d H:i:s");
+            $this->user->subscription_plan = $pack_name;
+            $this->user->save();                    
+
+            $subscriber->status = 'Downgrade to Monthly';
+            $subscriber->save();
+
+            $newSub = UserSubscription::create([
+                'user_id' => $this->user->id,
+                'plan_id' => $plan->id,
+                'stripe_customer_id' => $subscriber->stripe_customer_id,
+                'stripe_plan_price_id' => $update_subscription['plan']['id'],
+                'stripe_payment_intent_id' => '',
+                'stripe_subscription_id' => $update_subscription['id'],
+                'default_payment_method' => $update_subscription['default_payment_method'],
+                'default_source' => $update_subscription['default_source'],
+                'paid_amount' => $amount,
+                'paid_amount_currency' => env('STRIPE_CURRENCY'),
+                'plan_interval' => $update_subscription['plan']['interval'],
+                'plan_interval_count' => $update_subscription['plan']['interval_count'],
+                'customer_name' => $this->user->name,
+                'customer_email' => $this->user->email,
+                'plan_period_start' => date("Y-m-d H:i:s", $update_subscription['current_period_start']),
+                'plan_period_end' => date("Y-m-d H:i:s", $update_subscription['current_period_end']),
+                'status' => $update_subscription['status']
+            ]);
+
+            BillingHistory::create([
+                'user_id' => $this->user->id,
+                'card_number' => '',
+                'method' => 'Stripe',
+                'package' => $pack_name,
+                'amount' => $amount,
+                'period' => $period,
+                'reference' => json_encode($update_subscription),
+                'transaction_id' => $update_subscription['id'],
+                'status' => 1,
+            ]);
+
+            return response()->json(['code'=>200, 'message'=>'success'], 200);
+        }
+
+        // failed
+        return response()->json(['code'=>400, 'message'=>''], 200);
+    }
+
     public function cancel_subscription() {
         // get subscrition_id
         $subscriber = UserSubscription::where('customer_email', $this->user->email)->where('status', 'active')->latest()->first();
         if($subscriber) {
+            $subscriber->status = 'canceled';
+            $subscriber->save();
             try { 
-                // Creates a new subscription 
-                $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+                // Client
+                $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_SECRET_KEY'));
     
                 $response = $stripe->subscriptions->cancel(
                     $subscriber->stripe_subscription_id,
@@ -216,9 +411,6 @@ class CheckoutController extends MyController {
                 );
 
                 if($response) {
-                    $subscriber->status = 'canceled';
-                    $subscriber->save();
-
                     $this->user->subscription_status = 0;
                     $this->user->save();
 
@@ -228,7 +420,9 @@ class CheckoutController extends MyController {
                 $this->api_error = $e->getMessage(); 
             } 
         }
-
+        
+        $this->user->subscription_status = 0;
+        $this->user->save();
         return response()->json(['code'=>400, 'message'=>'Something went wrong'], 200);
         
     }
