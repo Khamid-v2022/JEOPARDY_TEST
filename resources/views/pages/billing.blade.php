@@ -8,9 +8,10 @@
     <div class="card mb-4">
         <!-- Current Plan -->
         <h5 class="card-header">Current Plan</h5>
+        <input type="hidden" id="annual_price" value="{{ env('ANNUALLY_PLAN_PRICE') }}">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6 mb-1">
+                <div class="col-md-12 mb-1">
                     <div class="mb-4">
                         <h6 class="fw-semibold mb-2">Your Current Plan is {{ Auth::user()->subscription_plan }}</h6>
                         @if(Auth::user()->subscription_plan == "Monthly")
@@ -22,11 +23,20 @@
                         @endif
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-danger" id="cancel_subscription">Cancel Subscription</button>
+                        <button class="btn btn-danger mt-2" id="cancel_subscription">
+                            Cancel Subscription
+                            <i class="fas fa-spinner fa-spin ms-2 d-none"></i>
+                        </button>
                         @if(Auth::user()->subscription_plan == "Monthly")
-                        <button class="btn btn-primary" id="upgrade_annually">Upgrade to Annually</button>
+                        <button class="btn btn-primary mt-2" id="upgrade_annually">
+                            Upgrade to Annual for Unlimited Tests
+                            <i class="fas fa-spinner fa-spin ms-2 d-none"></i>
+                        </button>
                         @elseif(Auth::user()->subscription_plan == "Annually")
-                        <button class="btn btn-secondary" id="downgrade_monthly">Downgrade to Monthly</button>
+                        <button class="btn btn-secondary mt-2" id="downgrade_monthly">
+                            Downgrade to Monthly
+                            <i class="fas fa-spinner fa-spin ms-2 d-none"></i>
+                        </button>
                         @endif
                     </div>
 

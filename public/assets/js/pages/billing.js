@@ -7,6 +7,7 @@ $(function() {
     })
 
     $("#cancel_subscription").on("click", function() {
+       
         Swal.fire({
             text: 'Would you like to cancel your subscription?',
             icon: 'warning',
@@ -14,6 +15,8 @@ $(function() {
             confirmButtonText: 'Yes',
         }).then(function (result) {
             if (result.value) {
+                $("#cancel_subscription").attr("disabled", true);
+                $("#cancel_subscription").find(".fa-spinner").removeClass("d-none");
                 let _url = "/checkout/cancel-subscription";
                 $.ajax({
                     url: _url,
@@ -22,6 +25,8 @@ $(function() {
                         location.reload();
                     },
                     error: function (response) {
+                        $("#cancel_subscription").removeAttr("disabled");
+                        $("#cancel_subscription").find(".fa-spinner").addClass("d-none");
                         Swal.fire({
                             icon: 'error',
                             title: '',
@@ -37,12 +42,16 @@ $(function() {
 
     $("#upgrade_annually").on("click", function() {
         Swal.fire({
-            text: 'Would you like to upgrade your subscription plan to Annually?',
+            title: "Upgrade to Annual?",
+            text: 'Your card on file will be charged for 12 months ($' + $("#annual_price").val() + ') and you will be credited for your current month.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes',
         }).then(function (result) {
             if (result.value) {
+                $("#upgrade_annually").attr("disabled", true);
+                $("#upgrade_annually").find(".fa-spinner").removeClass("d-none");
+
                 let _url = "/checkout/upgrade-account-annually";
                 $.ajax({
                     url: _url,
@@ -56,6 +65,8 @@ $(function() {
                             title: '',
                             text: 'Something went wrong. Please try again later',
                         })
+                        $("#upgrade_annually").removeAttr("disabled");
+                        $("#upgrade_annually").find(".fa-spinner").addClass("d-none");
                     },
                 });
             } 
@@ -70,13 +81,14 @@ $(function() {
             confirmButtonText: 'Yes',
         }).then(function (result) {
             if (result.value) {
+                $("#downgrade_monthly").attr("disabled", true);
+                $("#downgrade_monthly").find(".fa-spinner").removeClass("d-none");
                 let _url = "/checkout/downgrade-account-monthly";
                 $.ajax({
                     url: _url,
                     type: "POST",
                     success: function (response) {
-                        console.log(response);
-                        // location.reload();
+                        location.reload();
                     },
                     error: function (response) {
                         Swal.fire({
@@ -84,6 +96,8 @@ $(function() {
                             title: '',
                             text: 'Something went wrong. Please try again later',
                         })
+                        $("#downgrade_monthly").removeAttr("disabled");
+                        $("#downgrade_monthly").find(".fa-spinner").addClass("d-none");
                     },
                 });
             } 
