@@ -41,11 +41,11 @@ $(function() {
             success: function (response) {
                 const user = response.user;
                 $("#m_name").val(user.name);
-                $("#m_email").val(user.name);
-                $("#m_address").val(user.name);
-                $("#m_city").val(user.name);
-                $("#m_zipcode").val(user.name);
-                $("#m_country").val(user.name);
+                $("#m_email").val(user.email);
+                $("#m_address").val(user.address);
+                $("#m_city").val(user.city);
+                $("#m_zipcode").val(user.zipcode);
+                $("#m_country").val(user.country);
 
                 let badge_html = '<span class="badge rounded-pill bg-label-secondary">Free</span>';
                 if(user.subscription_status == 1){
