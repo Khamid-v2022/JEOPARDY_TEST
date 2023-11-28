@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\OriginalQuestion;
+use App\Models\UserAnswer;
 
 class QuestionManageController extends Controller
 {
@@ -41,6 +42,7 @@ class QuestionManageController extends Controller
 
     public function deleteQuestion($id) {
         OriginalQuestion::where('id', $id)->delete();
+        UserAnswer::where('question_id', $id)->delete();
         
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
