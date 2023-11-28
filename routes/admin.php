@@ -22,5 +22,9 @@ Route::namespace('admin')->prefix('admin')->group(function(){
         Route::get('/users/get-info/{id}', [UserManageController::class, 'getUserInfo'])->where('id', '[0-9]+');
 
         Route::get('/logout', [LoginController::class, 'signout'])->name('admin-logout');
+
+
+        // Route::get('/question-management/structure-question', [QuestionManageController::class, 'structure_question']);
+        // Route::get('/question-management/update_questions_remove_html', [QuestionManageController::class, 'update_questions_remove_html']);
     });
 });

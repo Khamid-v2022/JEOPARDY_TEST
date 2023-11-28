@@ -14,7 +14,7 @@
                             <span class="app-brand-logo demo">
                                 <img src="{{asset('assets/img/icons/brands/brand.png')}}">
                             </span>
-                            <span class="app-brand-text demo text-body fw-bolder">J!Study - Admin Panel</span>
+                            <span class="app-brand-text demo text-body fw-bolder">Study - Admin Panel</span>
                         </a>
                     </div>
 

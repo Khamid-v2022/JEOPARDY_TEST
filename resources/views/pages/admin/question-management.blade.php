@@ -10,6 +10,8 @@
             <div>
                 <button class="btn btn-secondary me-2" type="button" data-bs-toggle="modal" data-bs-target="#import_modal"><i class='bx bx-upload me-1'></i>Add From CSV</button>
                 <button class="btn btn-primary me-4" type="button" id="add_question_btn"><i class='bx bx-plus me-1'></i>Add</button>
+                <!-- <a href="/admin/question-management/structure-question" class="btn btn-primary">Make as structure questions</a>  -->
+                <!-- <a href="/admin/question-management/update_questions_remove_html" class="btn btn-primary d-none">Remove HTML tag</a>  -->
             </div>
             
         </div>

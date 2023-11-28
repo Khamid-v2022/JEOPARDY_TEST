@@ -22,7 +22,7 @@
                             <span class="app-brand-logo demo">
                                 <img src="{{asset('assets/img/icons/brands/brand.png')}}">
                             </span>
-                            <span class="app-brand-text demo text-body fw-bolder">{{ env('APP_NAME') }}</span>
+                            <span class="app-brand-text demo text-body fw-bolder">{{ env('APP_SHORT_NAME') }}</span>
                         </a>
                     </div>
                     <!-- /Logo -->

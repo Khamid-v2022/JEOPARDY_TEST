@@ -29,9 +29,9 @@ class QuestionManageController extends Controller
 
     public function createOrUpdateQuestion(Request $request) {
         OriginalQuestion::updateOrCreate(['id' => $request->sel_id], [
-                                                            'category' => $request->category,
-                                                            'question' => $request->question,
-                                                            'answer' => $request->answer]);
+                                                            'category' => strip_tags($request->category),
+                                                            'question' => strip_tags($request->question),
+                                                            'answer' => strip_tags($request->answer)]);
 
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
@@ -45,16 +45,10 @@ class QuestionManageController extends Controller
     public function importQuestion(Request $request) {
         // set 2 hours
         set_time_limit(7200);
-          
-        // $validatedData = $request->validate([
-        //     'files' => 'required',
-        //     'files.*' => 'mimes:csv'
-        // ]);
 
         $validatedData = $request->validate([
             'files.*' => 'mimes:csv'
         ]);
-        
         
         if($request->hasFile('files0')){
             $file = $request->file('files0');
@@ -74,8 +68,8 @@ class QuestionManageController extends Controller
 
             unlink($filepath);
         }
+
         return response()->json(['code'=>200, 'message'=>'File uploaded.'], 200);
-       
     }
 
     private function read_csv($filepath){
@@ -92,20 +86,70 @@ class QuestionManageController extends Controller
 
             OriginalQuestion::updateOrCreate(
                 [
-                    'category' => $row[0],
-                    'question' => $row[2],
-                    'answer' => $row[3]
+                    'category' => strip_tags($row[0]),
+                    'question' => strip_tags($row[2]),
+                    'answer' => strip_tags($row[3])
                 ], 
                 [
-                    'category' => $row[0],
-                    'value' => $row[1],
-                    'question' => $row[2],
-                    'answer' => $row[3]
+                    'category' => strip_tags($row[0]),
+                    'value' => strip_tags($row[1]),
+                    'question' => strip_tags($row[2]),
+                    'answer' => strip_tags($row[3])
                 ]);
         }
     
         fclose($file);
 
     }
+
+    
+    // public function update_questions_remove_html() {
+    //     $questions = OriginalQuestion::get();
+    //     foreach($questions as $question) {
+    //         OriginalQuestion::where(['id' => $question->id])->update([
+    //             'question' => strip_tags($question->question)
+    //         ]);
+    //     }
+    //     return response()->json(['code'=>200, 'message'=>'success'], 200);
+    // }
+
+    // public function structure_question(){
+    //     set_time_limit(3000);
+    //     // $this->make_category_from_origin();
+    //     // $this->make_query_from_origin();
+    // }
+
+    // private function make_category_from_origin() {
+    //     $categories = OriginalQuestion::distinct('category')->get('category');
+        
+    //     foreach($categories as $category){
+    //         Category::create(['category' => $category['category']]);
+    //     }
+    //     echo "Category END";
+    // }
+
+    // private function make_query_from_origin() {
+    //     $questions = OriginalQuestion::get();
+        
+    //     foreach($questions as $question){
+    //         $category = Category::where('category', $question->category)->first();
+    //         $value = $this->getIntegerFromStr($question->value);
+    //         if($category){
+    //             Question::create([
+    //                 'category_id' => $category->id,
+    //                 'question' => trim($question->question),
+    //                 'answer' => trim($question->answer),
+    //                 'value' => $value
+    //             ]);
+    //         }
+    //     }
+    //     echo "Question END";
+    // }
+
+    // private function getIntegerFromStr($str) {
+    //     $numberWithoutCommas = (int)str_replace('$', '', str_replace(',', '', $str));
+
+    //     return $numberWithoutCommas; 
+    // }
 
 }
