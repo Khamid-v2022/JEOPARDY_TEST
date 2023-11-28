@@ -28,10 +28,13 @@ class QuestionManageController extends Controller
     }
 
     public function createOrUpdateQuestion(Request $request) {
-        OriginalQuestion::updateOrCreate(['id' => $request->sel_id], [
-                                                            'category' => strip_tags($request->category),
-                                                            'question' => strip_tags($request->question),
-                                                            'answer' => strip_tags($request->answer)]);
+        if(!str_contains(strtolower($request->question), "the clue") && !str_contains(strtolower($request->category), "the clue") && $request->question == strip_tags($request->question)){
+            OriginalQuestion::updateOrCreate(['id' => $request->sel_id], [
+                'category' => strip_tags($request->category),
+                'question' => strip_tags($request->question),
+                'answer' => strip_tags($request->answer)]);
+        }
+        
 
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
@@ -81,27 +84,40 @@ class QuestionManageController extends Controller
     
         $rows = [];
         while ($row = fgetcsv($file)) {
-            // $rows[] = array_combine($header, $row);
             $rows[] = $row;
 
-            OriginalQuestion::updateOrCreate(
-                [
-                    'category' => strip_tags($row[0]),
-                    'question' => strip_tags($row[2]),
-                    'answer' => strip_tags($row[3])
-                ], 
-                [
-                    'category' => strip_tags($row[0]),
-                    'value' => strip_tags($row[1]),
-                    'question' => strip_tags($row[2]),
-                    'answer' => strip_tags($row[3])
-                ]);
+            if($row[2] == strip_tags($row[2])) {
+                if(!str_contains(strtolower($row[2]), "the clue") && !str_contains(strtolower($row[0]), "the clue")) {
+                    OriginalQuestion::updateOrCreate(
+                        [
+                            'category' => strip_tags($row[0]),
+                            'question' => $row[2],
+                            'answer' => strip_tags($row[3])
+                        ], 
+                        [
+                            'category' => strip_tags($row[0]),
+                            'value' => strip_tags($row[1]),
+                            'question' => $row[2],
+                            'answer' => strip_tags($row[3])
+                        ]
+                    );
+                }
+            }
         }
     
         fclose($file);
 
     }
 
+    public function remove_questions_have_html() {
+        $questions = OriginalQuestion::get();
+        foreach($questions as $question) {
+            if($question->question != strip_tags($question->question)) {
+                OriginalQuestion::where(['id' => $question->id])->delete();
+            }
+        }
+        return response()->json(['code'=>200, 'message'=>'success'], 200);
+    }
     
     // public function update_questions_remove_html() {
     //     $questions = OriginalQuestion::get();
