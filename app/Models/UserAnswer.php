@@ -14,6 +14,9 @@ class UserAnswer extends Model
         'header_id',
         'user_id',
         'question_id',
+        'question',
+        'answer',
+        'value',
         'user_answer',
         'answer_time',
         'is_correct'

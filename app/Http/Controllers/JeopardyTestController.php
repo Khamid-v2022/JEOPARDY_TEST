@@ -106,6 +106,9 @@ class JeopardyTestController extends MyController {
                 'header_id' => $header->id,
                 'user_id' => $this->user->id,
                 'question_id' => $question->id,
+                'question' => $question->question,
+                'answer' => $question->answer,
+                'value' => $question->value,
                 'user_answer' => strip_tags($answer->user_answer),
                 'answer_time' => $answer->answer_time
             ]);
