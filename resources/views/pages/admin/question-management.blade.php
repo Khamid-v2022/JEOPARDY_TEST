@@ -13,6 +13,7 @@
                 <!-- <a href="/admin/question-management/structure-question" class="btn btn-primary">Make as structure questions</a>  -->
                 <!-- <a href="/admin/question-management/update_questions_remove_html" class="btn btn-primary d-none">Remove HTML tag</a>  -->
                 <!-- <a href="/admin/question-management/remove_questions_have_html" class="btn btn-primary">Remove Questions have HTML tags</a> -->
+                <!-- <a href="/admin/question-management/insert_question_info_to_answer_table" class="btn btn-primary">Insert Questions Info to Answer Table</a> -->
             </div>
             
         </div>

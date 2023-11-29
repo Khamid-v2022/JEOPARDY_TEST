@@ -42,7 +42,7 @@ class QuestionManageController extends Controller
 
     public function deleteQuestion($id) {
         OriginalQuestion::where('id', $id)->delete();
-        UserAnswer::where('question_id', $id)->delete();
+        // UserAnswer::where('question_id', $id)->delete();
         
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
@@ -111,15 +111,28 @@ class QuestionManageController extends Controller
 
     }
 
-    public function remove_questions_have_html() {
-        $questions = OriginalQuestion::get();
-        foreach($questions as $question) {
-            if($question->question != strip_tags($question->question)) {
-                OriginalQuestion::where(['id' => $question->id])->delete();
-            }
-        }
-        return response()->json(['code'=>200, 'message'=>'success'], 200);
-    }
+
+    // public function insert_question_info_to_answer_table() {
+    //     $answers = UserAnswer::whereNull("question")->get();
+    //     foreach($answers as $answer) {
+    //         $question = OriginalQuestion::where(['id' => $answer->question_id])->first();
+    //         UserAnswer::where(['id' => $answer->id])->update([
+    //             'question' => $question->question,
+    //             'answer' => $question->answer,
+    //             'value' => $question->value
+    //         ]);
+    //     }
+    // }
+
+    // public function remove_questions_have_html() {
+    //     $questions = OriginalQuestion::get();
+    //     foreach($questions as $question) {
+    //         if($question->question != strip_tags($question->question)) {
+    //             OriginalQuestion::where(['id' => $question->id])->delete();
+    //         }
+    //     }
+    //     return response()->json(['code'=>200, 'message'=>'success'], 200);
+    // }
     
     // public function update_questions_remove_html() {
     //     $questions = OriginalQuestion::get();

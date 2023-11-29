@@ -27,8 +27,8 @@
                     @foreach($details as $detail)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ strip_tags($detail->get_question()->question) }}</td>
-                        <td>{{ $detail->get_question()->answer }}</td>
+                        <td>{{ strip_tags($detail->question) }}</td>
+                        <td>{{ $detail->answer }}</td>
                         <td>{{ $detail->user_answer }}</td>
                         <td class="text-end">{{ $detail->answer_time }} s</td>
                         <td class="text-center">

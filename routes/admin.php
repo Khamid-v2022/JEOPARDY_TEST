@@ -26,7 +26,8 @@ Route::namespace('admin')->prefix('admin')->group(function(){
 
         // Route::get('/question-management/structure-question', [QuestionManageController::class, 'structure_question']);
         // Route::get('/question-management/update_questions_remove_html', [QuestionManageController::class, 'update_questions_remove_html']);
-        Route::get('/question-management/remove_questions_have_html', [QuestionManageController::class, 'remove_questions_have_html']);
+        // Route::get('/question-management/remove_questions_have_html', [QuestionManageController::class, 'remove_questions_have_html']);
+        // Route::get('/question-management/insert_question_info_to_answer_table', [QuestionManageController::class, 'insert_question_info_to_answer_table']);
         
     });
 });
