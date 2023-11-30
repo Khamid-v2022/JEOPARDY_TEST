@@ -1,13 +1,6 @@
 @extends('layouts/blankLayout')
 
-@section('title', 'Login')
-
-@section('vendor-style')
-@endsection
-
-@section('page-style')
-@endsection
-
+@section('title', 'Reset New Password')
 
 @section('content')
 <div class="container-xxl">
@@ -26,41 +19,33 @@
                         </a>
                     </div>
                     <!-- /Logo -->
-                    <h4 class="mb-2">Welcome back! 👋</h4>
-                    <p class="mb-4">Please sign-in to your account</p>
+                    <h4 class="mb-2">Reset Password 🔒</h4>
+                    <p class="mb-4">for <span class="fw-bold">{{ $user->name }}</span></p>
 
-                    <form id="formAuthentication" class="mb-3" method="POST" autocomplete="off">
+                    <form id="resetPasswordForm" class="mb-3" method="POST" autocomplete="off">
+                        <input type="hidden" id="email" value="{{ $user->email }}">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus autocomplete="off"/>
+                            <label class="form-label" for="password">New Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" required />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
                         </div>
                         <div class="mb-3 form-password-toggle">
-                            <div class="d-flex justify-content-between">
-                                <label class="form-label" for="password">Password</label>
-                                <a href="{{route('pages-forgot-password')}}">
-                                    <small>Forgot Password?</small>
-                                </a>
-                            </div>
+                            <label class="form-label" for="confirm-password">Confirm Password</label>
                             <div class="input-group input-group-merge">
-                                <input type="password" id="password" class="form-control" autocomplete="off" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                                <input type="password" id="confirm-password" class="form-control" name="confirm-password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" required />
                                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-me" />
-                                <label class="form-check-label" for="remember-me"> Remember Me </label>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <button class="btn btn-primary w-100" id="submit_btn" type="submit">Sign in<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
+                            <button class="btn btn-primary w-100" id="submit_btn" type="submit">Set new password <i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
                         </div>
                     </form>
 
                     <p class="text-center">
-                        <span>New on our platform?</span>
-                        <a href="{{route('pages-register')}}">
-                            <span>Create an account</span>
+                        <a href="{{route('pages-login')}}">
+                            <span>Back to login</span>
                         </a>
                     </p>
                 </div>
@@ -77,10 +62,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-
-@section('vendor-script')
 @endsection
 
 @section('page-script')

@@ -11,6 +11,9 @@ use App\Models\User;
 use Hash;
 use Session;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\JStudyAppSupportEmail;
+
 class AuthController extends Controller {
 
     public function index() {
@@ -88,4 +91,92 @@ class AuthController extends Controller {
 
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
+
+    public function forgot_password_page() {
+        return view('pages.forgot-password');
+    }
+
+    public function sendEmailToResetPassword(Request $request) {
+        $request->validate([
+			'email' => 'required',
+		]);
+
+        $user = User::where('email', $request->email)->first();
+		if(!$user)
+			return response()->json(['code'=>401, 'message'=>'This is an unregistered email.'], 401);
+
+        $verify_code = $this->randomString(99);
+        $user->verify_code = $verify_code;
+        $user->save();
+
+        $active_link = route('reset-password', ['unique_str' => $verify_code]);
+
+        $subject = "🔒 Password Reset Request for J!StudyApp: Regain Access to Your Account";
+		$html = "<h2 class='email-title'>Password Reset Request</h2>";
+		$html .= "<p>Dear {$user->name},</p>";
+		$html .= "<p>We received a request to reset the password for your J!StudyApp account. To regain access and set a new password, please follow the simple steps below:</p>";
+		$html .= '<p>Click the button below to initiate the password reset process:</p>';
+
+		$html .= "<div class='two-step-code-wrapper'>";
+			$html .= '<a class="link-type-button" href="' . $active_link . '" style="color: white;
+            padding: 12px 24px;
+            background: #3869D4;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 7px;
+            text-decoration: none;">Reset Password</a>';
+		$html .= "</div>";
+
+		$html .= "<p>If the button above doesn't work, you can copy and paste the following URL into your web browser: </p>";
+		$html .= '<p><a href="' . $active_link . '">' . $active_link . '</a></p></li>';
+			
+		$html .= '<p>By clicking the button or accessing the provided URL, you will be directed to a secure page where you can create a new password.</p>';
+		$html .= "<p>Best regards,<br>
+		jstudy.app</p>";
+
+        $details = [
+			'body' => $html 
+		];
+		
+		try {
+			Mail::to($user->email) -> send(new JStudyAppSupportEmail($subject, $details));
+		} catch (Exception $e) {
+			if (count(Mail::failures()) > 0) {
+				// return redirect('/pages/misc-error');
+                return response()->json(['code'=>500, 'message'=>'Email send failed'], 500);
+			}
+		}
+
+		return response()->json(['code'=>200, 'message'=>'Please check your email box'], 200);
+    }
+
+    public function reset_password_page($verify_code){
+		$user = User::where('verify_code', $verify_code)->first();
+		
+		if(!$user){
+			// return redirect('/pages/misc-error');
+            echo "Verify code expired";
+		}
+		return view('pages.reset-password', ['user' => $user]);
+	}
+
+    public function reset_password(Request $request){
+		$request->validate([
+			'email' => 'required',
+			'password' => 'required',
+		]);
+
+		$user = User::where('email', strtolower($request->email))->first();
+		if(!$user){
+			return response()->json(['code'=>400, 'message'=>'Invalid email address'], 400);
+		}
+
+		$user->password = Hash::make($request->password);
+        $user->verify_code = NULL;
+		$user->save();
+
+		return response()->json(['code'=>200, 'message'=>'Success', 'data'=>$user], 200);
+	}
+
+    
 }

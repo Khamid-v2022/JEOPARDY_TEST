@@ -21,9 +21,16 @@ use App\Http\Controllers\UserSettingController;
 */
 
 
-Route::get('login', [AuthController::class, 'index'])->name('pages-login')->middleware('guest');
-Route::post('login', [AuthController::class, 'do_login']);
-Route::get('logout', [AuthController::class, 'do_logout'])->name('logout');
+Route::get('/login', [AuthController::class, 'index'])->name('pages-login')->middleware('guest');
+Route::post('/login', [AuthController::class, 'do_login']);
+Route::get('/logout', [AuthController::class, 'do_logout'])->name('logout');
+
+Route::get('/forgot-password', [AuthController::class, 'forgot_password_page'])->name('pages-forgot-password');
+Route::post('/forgot-password', [AuthController::class, 'sendEmailToResetPassword']);
+Route::get('/reset-password/{unique_str}',  [AuthController::class, 'reset_password_page'])->name('reset-password');
+Route::post('/reset-password', [AuthController::class, 'reset_password']);
+
+
 
 Route::get('register', [AuthController::class, 'register_page'])->name('pages-register');
 Route::post('register', [AuthController::class, 'do_register']);
