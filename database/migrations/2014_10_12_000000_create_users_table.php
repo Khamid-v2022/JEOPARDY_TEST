@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 30)->nullable();
             $table->string('email', 50)->unique();
+            $table->tinyInteger('is_email_verified')->default(0);
             $table->string('verify_code', 255)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('address', 255)->nullable();
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->tinyInteger('is_delete')->default(0);
             $table->timestamp('deleted_at')->nullable();
             $table->rememberToken();
+            $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
         });
     }

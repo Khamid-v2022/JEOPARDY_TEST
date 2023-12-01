@@ -25,6 +25,17 @@
             success: function(response) {
                 if(response.code == 200) {
                     location.href = "/";
+                } else if(response.code == 201) {
+                    // Need a email verify
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '',
+                        text: "Please verify your email",
+                    }).then(function(result){
+                        $("#verify_email").val(email);
+                        $("#emailVerifyForm").submit();
+                        // location.href = "/email-verify" + email;
+                    })
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) { 
@@ -144,5 +155,50 @@
                 $("#submit_btn").removeAttr("disabled");
             }       
         })
+    })
+
+    $("#resend_btn").on('click', function(){
+        $(this).css("display", "none");
+        $(".fa-spinner").removeClass("d-none");
+        
+        let _url = "/resend-verify-email/" + $("#email").val();
+        $.ajax({
+            url: _url,
+            type: "get",
+            success: function (response) {
+                if (response.code == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        buttonsStyling: false
+                    });
+                    $("#resend_btn").css("display", "inline");
+                    $(".fa-spinner").addClass("d-none");
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: response.message,
+                    })
+                    $("#resend_btn").css("display", "inline");
+                    $(".fa-spinner").addClass("d-none");
+                }
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: response.responseJSON.message,
+                    text: "Something went wrong. Please try again later",
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                })
+                $("#resend_btn").css("display", "inline");
+                $(".fa-spinner").addClass("d-none");
+            },  
+        });
     })
 })();
