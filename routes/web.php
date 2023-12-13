@@ -20,7 +20,6 @@ use App\Http\Controllers\UserSettingController;
 |
 */
 
-
 Route::get('/login', [AuthController::class, 'index'])->name('pages-login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'do_login']);
 Route::get('/logout', [AuthController::class, 'do_logout'])->name('logout');
@@ -39,8 +38,8 @@ Route::post('/reset-password', [AuthController::class, 'reset_password']);
 
 
 
-Route::get('register', [AuthController::class, 'register_page'])->name('pages-register');
-Route::post('register', [AuthController::class, 'do_register']);
+Route::get('/register', [AuthController::class, 'register_page'])->name('pages-register');
+Route::post('/register', [AuthController::class, 'do_register']);
 
 Route::group(['middleware' => ['user']], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');
@@ -75,4 +74,8 @@ Route::group(['middleware' => ['user']], function() {
     Route::delete('/my-profile/delete', [UserSettingController::class, 'delete_profile']);
 });
 
+Route::fallback(function () {
+    // return view('/pages/misc-error');
+    return redirect(route('pages-register'));
+});
 
