@@ -58,22 +58,22 @@
                                 <span class="me-2">Account</span>
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <img src="{{asset('assets/img/avatars/default.png')}}" alt class="w-px-40 h-auto rounded-circle" />
+                                        <img src="{{ Auth::user()->avatar ? Auth::user()->avatar : asset('assets/img/avatars/default.png') }}" alt class="rounded-circle" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <div class="d-flex">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar avatar-online">
-                                                <img src="{{asset('assets/img/avatars/default.png')}}" alt class="w-px-40 h-auto rounded-circle" />
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar avatar-online">
+                                                        <img src="{{ Auth::user()->avatar ? Auth::user()->avatar : asset('assets/img/avatars/default.png') }}" alt class="rounded-circle" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">{{Auth::user()->email}}</span>
-                                                <small class="text-muted">{{Auth::user()->name}}</small>
-                                            </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">{{Auth::user()->email}}</span>
+                                                    <small class="text-muted">{{Auth::user()->name}}</small>
+                                                </div>
                                             </div>
                                         </a>
                                     </li>

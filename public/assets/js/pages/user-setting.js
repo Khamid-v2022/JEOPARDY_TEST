@@ -1,4 +1,23 @@
 $(function() {
+
+    // Update/reset user image of account page
+    let accountUserImage = document.getElementById('uploadedAvatar');
+    const fileInput = document.querySelector('.account-file-input'),
+    resetFileInput = document.querySelector('.account-image-reset');
+    if (accountUserImage) {
+        const resetImage = accountUserImage.src;
+        fileInput.onchange = () => {
+            if (fileInput.files[0]) {
+                accountUserImage.src = window.URL.createObjectURL(fileInput.files[0]);
+            }
+        };
+        resetFileInput.onclick = () => {
+            fileInput.value = '';
+            accountUserImage.src = resetImage;
+        };
+    }
+
+
     $("#formAccountSettings").on("submit", function(e) {
         e.preventDefault();
 
@@ -13,15 +32,51 @@ $(function() {
         $("#submit_btn .fa-spinner").removeClass("d-none");
         $("#submit_btn").attr("disabled", true);
 
+       
+
+        let data = new FormData();
+        data.append('name', name);
+        data.append('email', email);
+        data.append('address', address);
+        data.append('city', city);
+        data.append('zipcode', zipcode);
+        data.append('country', country);
+        data.append('default_question_count', default_question_count);
+
+        if($('#upload')[0].files[0]){
+            data.append('file', $('#upload')[0].files[0]);
+            var imgname  =  $('#upload').val();
+            var size  =  $('#upload')[0].files[0].size;
+
+            var ext =  imgname.substr( (imgname.lastIndexOf('.') +1) );
+            if(ext != 'jpg' && ext != 'jpeg' && ext != 'png' && ext != 'gif' && ext != 'PNG' && ext != 'JPG' && ext != 'JPEG')
+            {
+                fileInput.value = '';
+                accountUserImage.src = resetImage;
+                $("#img-warning").css("color", "red");
+                return;
+            }
+            if(size > 800000) { 
+                fileInput.value = '';
+                accountUserImage.src = resetImage;
+                $("#img-warning").css("color", "red");
+                return;
+            }
+        }
+
+        $("#submit_btn").attr("disabled", true);
+        $("#submit_btn .fa-spinner").removeClass("d-none");
+        $("#img-warning").css("color", "#a1acb8 !important");
+
         const _url = '/my-profile/update';
-        const data = {
-            name, email, address, city, zipcode, country, default_question_count
-        };
 
         $.ajax({
             url: _url,
             type: "POST",
             data: data,
+            enctype: 'multipart/form-data',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,   // tell jQuery not to set contentType
             success: function(response) {
                 if(response.code == 200) {
                     const toastPlacementExample = document.querySelector('.toast-placement-ex');
