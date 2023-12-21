@@ -19,7 +19,7 @@ $(function() {
         displayLength: 50,
         lengthMenu: [50, 100, 150],
         ordering: true,
-        order: [[6, 'desc']],
+        order: [[7, 'desc']],
         searching: true,
         orderCellsTop: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',

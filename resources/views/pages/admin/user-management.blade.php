@@ -18,6 +18,7 @@
                         <th>Test Count</th>
                         <th>Plan</th>
                         <th>Subscribed At</th>
+                        <th>Last Login At</th>
                         <th>Created At</th>
                         <th>Action</th>
                     </tr>
@@ -50,6 +51,9 @@
                             @if($user->subscription_status == 1)
                             {{ date("Y-m-d", strtotime($user->subscribed_at)) }}
                             @endif
+                        </td>
+                        <td>
+                            {{ date("Y-m-d", strtotime($user->last_login_at)) }}
                         </td>
                         <td>
                             {{ date("Y-m-d", strtotime($user->created_at)) }}
