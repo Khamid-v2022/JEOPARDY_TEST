@@ -83,6 +83,7 @@ $(function() {
                     $(".toast-body").html("Updated");
                     toastPlacement = new bootstrap.Toast(toastPlacementExample);
                     toastPlacement.show();
+                    location.reload();
                 }
                 $("#submit_btn .fa-spinner").addClass("d-none");
                 $("#submit_btn").removeAttr("disabled");

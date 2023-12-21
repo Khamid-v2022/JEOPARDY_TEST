@@ -18,6 +18,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'avatar',
         'email',
         'is_email_verified',
         'verify_code',
@@ -57,4 +58,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function get_test_count() {
+        $tests = UserAnswerHeader::where('user_id', $this->id)->whereNotNull('ended_at')->get();
+
+        return $tests;
+    }
 }

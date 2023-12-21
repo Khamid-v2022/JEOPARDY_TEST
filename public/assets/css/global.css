@@ -290,3 +290,10 @@
     min-height: calc(100vh - (1.625rem * 2));
     text-align: center;
   }
+
+
+  /* Admin - side */
+  .avatar-img {
+    width: 40px;
+    height: 40px;
+  }

@@ -20,6 +20,11 @@ Route::namespace('admin')->prefix('admin')->group(function(){
 
         Route::get('/users', [UserManageController::class, 'index'])->name('user-management-page');
         Route::get('/users/get-info/{id}', [UserManageController::class, 'getUserInfo'])->where('id', '[0-9]+');
+        Route::get('/user/test-data/{id}', [UserManageController::class, 'viewUserTestInfo'])->where('id', '[0-9]+');
+        Route::get('/user/test-data/get-user-scores/{id}', [UserManageController::class, 'getUserScoreForChart'])->where('id', '[0-9]+');
+        Route::get('/user/test-data/view-detail/{id}', [UserManageController::class, 'viewTestDetail'])->where('id', '[0-9]+')->name('user-test-detail');
+
+        
 
         Route::get('/logout', [LoginController::class, 'signout'])->name('admin-logout');
 

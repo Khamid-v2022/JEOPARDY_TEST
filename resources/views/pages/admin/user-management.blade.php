@@ -12,8 +12,10 @@
             <table class="dt-responsive table border-top" id="users_table">
                 <thead>
                     <tr class="text-nowrap">
+                        <th></th>
                         <th>User Name</th>
                         <th>Email</th>
+                        <th>Test Count</th>
                         <th>Plan</th>
                         <th>Subscribed At</th>
                         <th>Created At</th>
@@ -23,8 +25,14 @@
                 <tbody>
                     @foreach($users as $user)
                     <tr>
-                        <td>{{ $user->name }}</td>
+                        <td><img src="{{ $user->avatar ? $user->avatar : asset('assets/img/avatars/default.png') }}" alt class="avatar-img rounded-circle" /></td>
+                        <td>
+                            <span class="">{{ $user->name }}</span>
+                        </td>
                         <td>{{ $user->email }}</td>
+                        <td>
+                            <a href="/admin/user/test-data/{{$user->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="View test result in detail">{{ count($user->get_test_count()) }}</a>
+                        </td>
                         <td>
                             @if($user->subscription_status == 1)
                                 @if($user->subscription_plan == "Annually")
@@ -47,7 +55,7 @@
                             {{ date("Y-m-d", strtotime($user->created_at)) }}
                         </td>
                         <td>
-                            <a href="javascript:;" class="me-2 view-detail" data-id="{{$user->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-show '></i></a>
+                            <a href="javascript:;" class="me-2 view-detail" data-id="{{$user->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="View profile"><i class='bx bx-show '></i></a>
                         </td>
                     </tr>
                     @endforeach

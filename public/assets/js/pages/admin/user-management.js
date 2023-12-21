@@ -4,7 +4,7 @@ $(function() {
     dt_questions = $('#users_table').DataTable({
         columnDefs: [
             {
-                targets: -1,
+                targets: [0, -1],
                 searchable: false,
                 orderable: false
             }
@@ -19,7 +19,7 @@ $(function() {
         displayLength: 50,
         lengthMenu: [50, 100, 150],
         ordering: true,
-        order: [[4, 'desc']],
+        order: [[6, 'desc']],
         searching: true,
         orderCellsTop: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -31,7 +31,6 @@ $(function() {
 
     $("#users_table tbody").on("click", ".view-detail", function(){
         const u_id = $(this).attr("data-id");
-        console.log(u_id);
 
         const _url = '/admin/users/get-info/' + u_id;
 
@@ -39,7 +38,9 @@ $(function() {
             url: _url,
             type: "GET",
             success: function (response) {
+                
                 const user = response.user;
+                console.log(user);
                 $("#m_name").val(user.name);
                 $("#m_email").val(user.email);
                 $("#m_address").val(user.address);
