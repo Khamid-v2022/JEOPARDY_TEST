@@ -27,11 +27,13 @@
                 if(response.code == 200) {
                     Swal.fire({
                         icon: 'success',
-                        title: '',
-                        text: 'Successfully added.',
-                    }).then(function(){
-                        location.href = "/login";
+                        title: 'Great!',
+                        text: 'Hit “Okay” and check your email to verify your account (subject line: “Activate Your Account”)',
+                    }).then(function() {
+                        $("#verify_email").val(email);
+                        $("#emailVerifyForm").submit();
                     })
+                    
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) { 

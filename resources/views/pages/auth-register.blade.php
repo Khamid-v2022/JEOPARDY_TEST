@@ -51,6 +51,12 @@
                         <button class="btn btn-primary w-100" id="submit_btn">Sign up<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
                     </form>
 
+                    
+                    <form id="emailVerifyForm" class="mb-3 d-none" method="POST" action="{{route('pages-email-verify')}}">
+                        @csrf
+                        <input type="text" id="verify_email" name="email"/>
+                    </form>
+
                     <p class="text-center">
                         <span>Already have an account?</span>
                         <a href="{{route('pages-login')}}">

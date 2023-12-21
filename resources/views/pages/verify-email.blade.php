@@ -19,7 +19,7 @@
                     </div>
                     <!-- /Logo -->
                     <h4 class="mb-2">Verify your email ✉️</h4>
-                    <p class="mb-4">Account activation link sent to your email address: {{ $email }} Please follow the link inside to continue.</p>
+                    <p class="mb-4">Account activation link sent to your email address: <b>{{ $email }}</b> Please follow the link inside to continue.</p>
                     <a class="btn btn-primary w-100 my-3" href="{{route('pages-login')}}">
                         Return to Sign In
                     </a>

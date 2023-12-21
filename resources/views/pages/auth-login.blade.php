@@ -64,11 +64,9 @@
                         </a>
                     </p>
 
-                    <form id="emailVerifyForm" class="mb-3 d-none" method="GET" action="{{route('pages-email-verify')}}">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" id="verify_email" name="email"/>
-                        </div>
+                    <form id="emailVerifyForm" class="mb-3 d-none" method="POST" action="{{route('pages-email-verify')}}">
+                        @csrf
+                        <input type="text" id="verify_email" name="email"/>
                     </form>
                 </div>
             </div>

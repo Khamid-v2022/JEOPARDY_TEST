@@ -28,14 +28,40 @@ class AuthController extends Controller {
 
         $user = User::where('email', strtolower(trim($request->email)))->first();
         if(!$user)
-            return response()->json(['code' => 401, 'message' => "We couldn't verify your account with that information"], 401);
+            return response()->json(['code' => 401, 'message' => "Please enter correct credentials"], 401);
     
         if($user->is_delete == 1) {
             return response()->json(['code' => 401, 'message' => "This account is not activated"], 401);
         }
 
         if(!Hash::check($request->password, $user->password)) {
-            return response()->json(['code' => 401, 'message' => "We couldn't verify your account with that information"], 401);
+            return response()->json(['code' => 401, 'message' => "Please enter correct credentials"], 401);
+        }
+
+        
+        if($user->is_email_verified == 0) {
+            // 
+            $verify_code = $this->randomString(99);
+            $user->verify_code = $verify_code;
+            $user->save();
+
+            $active_link = route('verify_email', ['unique_str' => $verify_code]);
+
+            $subject = "🚀 Activate Your Account";
+            $html = $this->verify_email_content($user, $active_link);
+
+            $details = [
+                'body' => $html 
+            ];
+            
+            try {
+                Mail::to($user->email) -> send(new JStudyAppSupportEmail($subject, $details));
+            } catch (Exception $e) {
+                if (count(Mail::failures()) > 0) {
+                    return response()->json(['code'=>400, 'message'=>'Failed verify your email'], 400);
+                }
+            }
+            return response()->json(['code' => 201, 'message' => "Need to verify an email"], 200);
         }
 
         // check expire date
@@ -47,10 +73,6 @@ class AuthController extends Controller {
         //     }
         // }
 
-        if($user->is_email_verified == 0) {
-            return response()->json(['code' => 201, 'message' => "Need to verify an email"], 200);
-        }
-
         $credentials = $request->only('email', 'password');
         if(Auth::attempt($credentials)) {
             $user->last_login_at = date("Y-m-d H:i:s");
@@ -58,7 +80,7 @@ class AuthController extends Controller {
             return response()->json(['code'=>200, 'message'=>'success'], 200);
         }
         
-        return response()->json(['code' => 401, 'message' => "We couldn't verify your account with that information"], 401);
+        return response()->json(['code' => 401, 'message' => "Please enter correct credentials"], 401);
     }
 
     public function do_logout() {
@@ -93,6 +115,29 @@ class AuthController extends Controller {
             'email' => $email,
             'password' => Hash::make($request->password)
         ]);
+
+
+        // Go to Email verify page
+        $verify_code = $this->randomString(99);
+        $user->verify_code = $verify_code;
+        $user->save();
+
+        $active_link = route('verify_email', ['unique_str' => $verify_code]);
+
+        $subject = "🚀 Activate Your Account";
+        $html = $this->verify_email_content($user, $active_link);
+
+        $details = [
+			'body' => $html 
+		];
+		
+		try {
+			Mail::to($user->email) -> send(new JStudyAppSupportEmail($subject, $details));
+		} catch (Exception $e) {
+			if (count(Mail::failures()) > 0) {
+                return response()->json(['code'=>400, 'message'=>'Failed verify your email'], 400);
+			}
+		}
 
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
@@ -185,39 +230,10 @@ class AuthController extends Controller {
 	}
 
     public function email_verify_page(Request $request) {
-        $email = $request->email;
-
-        $user = User::where('email', $email)->first();
-		if(!$user){
-            return redirect('/failed-email-verify');
-        }
-
-        if($user->is_email_verified) {
-			return view('pages.verify-success');
-		}
-
-        $verify_code = $this->randomString(99);
-        $user->verify_code = $verify_code;
-        $user->save();
-
-        $active_link = route('verify_email', ['unique_str' => $verify_code]);
-
-        $subject = "🚀 Activate Your Account";
-        $html = $this->verify_email_content($user, $active_link);
-
-        $details = [
-			'body' => $html 
-		];
-		
-		try {
-			Mail::to($user->email) -> send(new JStudyAppSupportEmail($subject, $details));
-		} catch (Exception $e) {
-			if (count(Mail::failures()) > 0) {
-                return redirect('/failed-email-verify');
-			}
-		}
-
-		return view('pages.verify-email', ['email'=> $user->email]);
+        if($request->email)
+		    return view('pages.verify-email', ['email'=> $request->email]);
+        else
+            return redirect('/');
     }
 
     public function resend_verify_email($email) {
@@ -281,19 +297,22 @@ class AuthController extends Controller {
 
     public function verify_email(Request $request, $verify_code) {
         $user = User::where('verify_code', $verify_code)->first();
-		
+
 		if(!$user){
 			return redirect('/failed-email-verify');
 		}
-        if($user->is_email_verified == 1) {
-            return view('pages.verify-success');
+
+        if($user->is_email_verified == 0) {
+            $user->is_email_verified = 1;
+            $user->email_verified_at = date("Y-m-d H:i:s");
+            $user->save();
         }
 
-		$user->is_email_verified = 1;
-		$user->email_verified_at = date("Y-m-d H:i:s");
-		$user->save();
+        Auth::login($user);
+        $user->last_login_at = date("Y-m-d H:i:s");
+        $user->save();
 
-		return view('pages.verify-success');
+        return redirect('/');
     }
 
     public function failed_email_verify_page() {

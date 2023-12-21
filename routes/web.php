@@ -24,7 +24,7 @@ Route::get('/login', [AuthController::class, 'index'])->name('pages-login')->mid
 Route::post('/login', [AuthController::class, 'do_login']);
 Route::get('/logout', [AuthController::class, 'do_logout'])->name('logout');
 
-Route::get('/email-verify', [AuthController::class, 'email_verify_page'])->name('pages-email-verify');
+Route::post('/email-verify', [AuthController::class, 'email_verify_page'])->name('pages-email-verify');
 Route::get('/resend-verify-email/{email}', [AuthController::class, 'resend_verify_email']);
 Route::get('/email-verify-code/{unique_str}',  [AuthController::class, 'verify_email'])->name('verify_email');
 Route::get('/failed-email-verify',  [AuthController::class, 'failed_email_verify_page'])->name('pages-failed-email-verify');
@@ -38,7 +38,7 @@ Route::post('/reset-password', [AuthController::class, 'reset_password']);
 
 
 
-Route::get('/register', [AuthController::class, 'register_page'])->name('pages-register');
+Route::get('/register', [AuthController::class, 'register_page'])->name('pages-register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'do_register']);
 
 Route::group(['middleware' => ['user']], function() {

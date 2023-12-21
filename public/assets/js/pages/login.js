@@ -25,16 +25,14 @@
             success: function(response) {
                 if(response.code == 200) {
                     location.href = "/";
-                } else if(response.code == 201) {
-                    // Need a email verify
+                } else {
                     Swal.fire({
                         icon: 'warning',
-                        title: '',
-                        text: "Please verify your email",
-                    }).then(function(result){
+                        title: 'Verify your account first.',
+                        text: 'Look for an email with “Activate Your Account” in the subject line.',
+                    }).then(function() {
                         $("#verify_email").val(email);
                         $("#emailVerifyForm").submit();
-                        // location.href = "/email-verify" + email;
                     })
                 }
             },
@@ -49,6 +47,7 @@
             }       
         })
     })
+    
 
     $("#forgotPasswordForm").on("submit", function(e) {
         e.preventDefault();
