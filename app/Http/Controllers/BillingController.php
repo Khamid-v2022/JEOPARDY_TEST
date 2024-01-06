@@ -33,7 +33,7 @@ class BillingController extends MyController {
             'histories' => $histories,
             'tested_count' => $tested_count,
             'started_this_month' => $compare_date
-        ]);
+        ])->with('streak_days', $this->streak_days);
     }
 
    

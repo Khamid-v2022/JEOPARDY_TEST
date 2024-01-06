@@ -46,7 +46,11 @@
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
+
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                        <div>
+                            <span data-bs-toggle="tooltip" data-bs-placement="right" title="Streak days">{{ $streak_days }} {{ $streak_days > 1 ? "Days" : "Day"}} ⚡️</span>
+                        </div>
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             @if(Auth::user()->subscription_status == 0)
                             <li>
@@ -55,7 +59,7 @@
                             @endif
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown d-flex align-items-center">
-                                <span class="me-2">Account</span>
+                                <span class="me-2 d-none d-md-block">Account</span>
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
                                         <img src="{{ Auth::user()->avatar ? Auth::user()->avatar : asset('assets/img/avatars/default.png') }}" alt class="rounded-circle" />

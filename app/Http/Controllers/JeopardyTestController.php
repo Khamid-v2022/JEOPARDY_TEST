@@ -34,7 +34,7 @@ class JeopardyTestController extends MyController {
 
         return view('pages.jeopardy-test', [
             'tested_count' => $tested_count
-        ]);
+        ])->with('streak_days', $this->streak_days);
     }
 
     public function get_questions($count) {
@@ -92,7 +92,7 @@ class JeopardyTestController extends MyController {
         if($this->user->subscription_status == 0) {
             $this->user->is_trial_used = 1;
             $this->user->last_tested_at = date("Y-m-d H:i:s");
-            
+
             $this->user->save();
 
             $is_trial_test = 1;
@@ -137,7 +137,7 @@ class JeopardyTestController extends MyController {
         return view('pages.view-detail', [
             'header' => $header,
             'details' => $details
-        ]);
+        ])->with('streak_days', $this->streak_days);
     }
 
     public function fix_answer(Request $request) {

@@ -9,7 +9,7 @@ use Session;
 class UserSettingController extends MyController {
 
     public function index() {
-        return view('pages.user-setting');
+        return view('pages.user-setting')->with('streak_days', $this->streak_days);
     }
 
     public function update_profile(Request $request) {

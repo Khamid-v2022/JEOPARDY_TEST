@@ -24,7 +24,7 @@ class DashboardController extends MyController {
         
         return view('pages.dashboard', [
             'history' => $my_tests
-        ]);
+        ])->with('streak_days', $this->streak_days);
     }
 
     public function delete_test_record($id) {

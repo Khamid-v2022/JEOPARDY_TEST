@@ -30,11 +30,11 @@ class CheckoutController extends MyController {
         return view('pages.checkout', [
             'price' => $price,
             'plan' => $plan
-        ]);
+        ])->with('streak_days', $this->streak_days);
     }
 
     public function pricing_page() {
-        return view('pages.pricing');
+        return view('pages.pricing')->with('streak_days', $this->streak_days);
     }
 
     // One time payment

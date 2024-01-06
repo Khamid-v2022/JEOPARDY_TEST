@@ -14,7 +14,7 @@
         global $conn;
 
         // get users
-        $sql_users = "SELECT `id`, `name`, `email`, `is_trial_used`, `last_reminder_emailed_at`, `last_tested_at`, `created_at` FROM `users` WHERE `is_email_verified` = 1 AND `subscription_status` = 0 AND `id` = 1";
+        $sql_users = "SELECT `id`, `name`, `email`, `is_trial_used`, `last_reminder_emailed_at`, `last_tested_at`, `created_at` FROM `users` WHERE `is_email_verified` = 1 AND `subscription_status` = 0";
         $result_users = $conn->query($sql_users);
 
         if($result_users->num_rows == 0){
