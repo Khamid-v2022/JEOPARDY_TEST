@@ -91,6 +91,8 @@ class JeopardyTestController extends MyController {
         $is_trial_test = 0;
         if($this->user->subscription_status == 0) {
             $this->user->is_trial_used = 1;
+            $this->user->last_tested_at = date("Y-m-d H:i:s");
+            
             $this->user->save();
 
             $is_trial_test = 1;

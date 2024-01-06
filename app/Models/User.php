@@ -37,7 +37,9 @@ class User extends Authenticatable
         'is_delete',
         'deleted_at',
         'remember_token',
-        'last_login_at'
+        'last_login_at',
+        'last_reminder_emailed_at',
+        'last_tested_at'
     ];
 
     /**

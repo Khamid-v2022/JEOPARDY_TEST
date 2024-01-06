@@ -6,7 +6,7 @@
 <div class="container-xxl flex-grow-1 container-p-y main-container">
     @if(Auth::user()->subscription_status == 0 && Auth::user()->is_trial_used == 1)
         <div class="centered-div mt-5">
-            <h3>You have already completed the FREE test.</h3>
+            <h3>You have already completed the today's FREE test.</h3>
             <p>If you would like to access more tests, please click the button below to subscribe.</p>
             <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
         </div>
@@ -23,11 +23,17 @@
                 <div class="row mb-3">
                     <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
                     <div class="col">
+                    @if(Auth::user()->subscription_status == 0)
+                        <select class="form-select " style="max-width: 100px" id="question_count_sel">
+                            <option value="10" selected>10</option>
+                        </select>
+                    @else
                         <select class="form-select " style="max-width: 100px" id="question_count_sel">
                             <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
                             <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
                             <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
                         </select>
+                    @endif
                     </div>
                 </div>
                 <button class="btn btn-primary start-btn" style="width: 200px" id="">Start<i class="fas fa-spinner fa-spin ms-2 d-none"></i></button>
@@ -76,7 +82,7 @@
                     @if(Auth::user()->subscription_status == 1)
                         <h1 class="mb-3">YOU'VE COMPLETED THE TEST!</h1>
                     @else
-                        <h1 class="mb-3">YOU'VE COMPLETED THE FREE TEST!</h1>
+                        <h1 class="mb-3">YOU'VE COMPLETED THE Today's FREE TEST!</h1>
                     @endif
                     <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1>
                     <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
