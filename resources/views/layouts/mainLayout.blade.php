@@ -38,7 +38,7 @@
                     </li>
                     <li class="menu-item {{ $currentRouteName == 'pages-my-tests' ? 'active' : ''}}">
                         <a href="/my-tests" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <i class="menu-icon tf-icons bx bx-notepad"></i>
                             <div data-i18n="Analytics">My Test Results</div>
                         </a>
                     </li>
