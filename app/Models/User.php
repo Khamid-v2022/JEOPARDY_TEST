@@ -39,7 +39,10 @@ class User extends Authenticatable
         'remember_token',
         'last_login_at',
         'last_reminder_emailed_at',
-        'last_tested_at'
+        'last_tested_at',
+        'lognest_streak_days',
+        'lognest_streak_started_at',
+        'lognest_streak_ended_at'
     ];
 
     /**

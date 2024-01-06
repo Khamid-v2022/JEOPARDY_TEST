@@ -27,13 +27,19 @@
                     <li class="menu-item {{ $currentRouteName == 'pages-dashboard' ? 'active' : ''}}">
                         <a href="/" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">My Test Results</div>
+                            <div data-i18n="Analytics">Dashboard</div>
                         </a>
                     </li>
                     <li class="menu-item {{ $currentRouteName == 'pages-jeopardy-test' ? 'active' : ''}}">
                         <a href="{{ route('pages-jeopardy-test') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Basic">Take New Test</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ $currentRouteName == 'pages-my-tests' ? 'active' : ''}}">
+                        <a href="/my-tests" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">My Test Results</div>
                         </a>
                     </li>
                 </ul>

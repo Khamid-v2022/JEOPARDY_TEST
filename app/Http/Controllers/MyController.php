@@ -12,6 +12,8 @@ use App\Models\UserAnswerHeader;
 class MyController extends Controller {
     protected $user;
     protected $streak_days = 0;
+    protected $streak_started_date = NULL;
+    protected $streak_end_date = NULL;
 
     public function __construct() {
         parent::__construct();
@@ -26,6 +28,9 @@ class MyController extends Controller {
                 $yesteday = date('Y-m-d', strtotime("-1 days"));
                 $compare_date = $yesteday;
 
+                $today = date("Y-m-d");
+                $this->streak_started_date = $today;
+                
                 $this->streak_days = 0;
                 while(1) {
                     $flag = 0;
@@ -38,6 +43,11 @@ class MyController extends Controller {
 
                     if($flag == 1) {
                         $this->streak_days++;
+                        $this->streak_started_date = $compare_date;
+                        
+                        if(!$this->streak_end_date)
+                            $this->streak_end_date = $compare_date;
+
                         $compare_date = date('Y-m-d', strtotime($compare_date . ' -1 day' ) );
                     } else {
                         break;
@@ -45,10 +55,10 @@ class MyController extends Controller {
                 }
 
                 // check today test as well
-                $today = date("Y-m-d");
                 foreach($test_histories as $history) {
                     if(date('Y-m-d', strtotime($history->ended_at)) == $today) {
                         $this->streak_days++;
+                        $this->streak_end_date = $today;
                         break;
                     }
                 }

@@ -1,6 +1,6 @@
 @extends('layouts/mainLayout')
 
-@section('title', 'My Test Results')
+@section('title', 'Dashboard')
 
 @section('vendor-style')
 @endsection
@@ -11,47 +11,59 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-        
-    <div class="card">
-        <h5 class="card-header">Recent Tests</h5>
-        <div class="card-datatable table-responsive">
-            <table class="dt-responsive table border-top" id="recent_history">
-                <thead>
-                    <tr class="text-nowrap">
-                        <th>Started At</th>
-                        <th>Ended At</th>
-                        <th>Progress Time</th>
-                        <th>Score</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($history as $item)
-                    <tr>
-                        <td>{{ $item->started_at }}</td>
-                        <td>{{ $item->ended_at }}</td>
-                        <td>{{ $item->progress_time }}<span class="d-none sort-value">{{ $item->progress_time_second }}</span></td>
-                        <td>{{ $item->score }} <small class="text-muted">/{{ $item->number_of_questions }}</small></td>
-                        <td>
-                            <a href="{{ route('pages-view-detail', [$item->id]) }}" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details"><i class='bx bx-show'></i></a>
+    <div class="card mt-4">
+        <div class="card-header">
+            Daily Reviews
+        </div>
+        <div class="card-body" id="daily_review_chart" style="height: 300px">
 
-                            @if(Auth::user()->subscription_status == 1 && Auth::user()->subscription_plan == "Annually")
-                            <a href="javascript:;" class="delete-record" data-id="{{ $item->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class='bx bx-trash'></i></a>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-header">
-            My Scores(Last 7 days)
+    <div class="row mt-4">   
+        <!-- Longest Streak All - time -->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>{{ Auth::user()->lognest_streak_days }} {{ Auth::user()->lognest_streak_days > 1 ? "Days" : "Day"}}</h3>
+                    <p class="mb-0">Longest Streak All-Time </p>
+                    <p class="mb-0">
+                        @if(Auth::user()->lognest_streak_started_at)
+                            {{date("M jS, Y", strtotime(Auth::user()->lognest_streak_started_at))}} ~ {{date("M jS, Y", strtotime(Auth::user()->lognest_streak_ended_at))}}
+                        @else
+                            -
+                        @endif
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="card-body" id="score_chart" style="height: 400px">
 
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>#{{ $rank }}</h3>
+                    <p class="mb-0">Currenct Streak Rank</p>
+                    <p class="mb-0">
+                        <a href="/my-tests">View My Test Results</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>{{ $streak_days }} {{ $streak_days > 1 ? "Days" : "Day"}}</h3>
+                    <p class="mb-0">Currenct Streak</p>
+                    <p class="mb-0">
+                        @if($streak_started_date)
+                            {{date("M jS, Y", strtotime($streak_started_date))}} ~ {{date("M jS, Y", strtotime($streak_end_date))}}
+                        @else
+                            -
+                        @endif
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

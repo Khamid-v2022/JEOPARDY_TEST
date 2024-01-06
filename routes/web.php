@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MyTestResultController;
 use App\Http\Controllers\JeopardyTestController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\BillingController;
@@ -43,8 +44,11 @@ Route::post('/register', [AuthController::class, 'do_register']);
 
 Route::group(['middleware' => ['user']], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');
-    Route::get('/my-tests/get-myscores', [DashboardController::class, 'get_scores_for_chart']);    
-    Route::delete('/my-tests/delete-test/{id}', [DashboardController::class, 'delete_test_record'])->where('id', '[0-9]+');
+    Route::get('/get-daily-review', [DashboardController::class, 'get_daily_review']);
+
+    Route::get('/my-tests', [MyTestResultController::class, 'index'])->name('pages-my-tests');
+    Route::get('/my-tests/get-myscores', [MyTestResultController::class, 'get_scores_for_chart']);    
+    Route::delete('/my-tests/delete-test/{id}', [MyTestResultController::class, 'delete_test_record'])->where('id', '[0-9]+');
 
     Route::get('/jeopardy-test', [JeopardyTestController::class, 'index'])->name('pages-jeopardy-test');
     Route::get('/jeopardy-test/get-questions/{count}', [JeopardyTestController::class, 'get_questions'])->where('count', '[0-9]+');

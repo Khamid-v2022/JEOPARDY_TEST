@@ -7,40 +7,44 @@ use App\Models\Category;
 use App\Models\Question;
 use App\Models\UserAnswerHeader;
 use App\Models\UserAnswer;
+use App\Models\User;
 
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends MyController {
 
     public function index() {
-        $my_tests = UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->orderBy('created_at', 'DESC')->get();
-        if(count($my_tests) > 0) {
-            for($index = 0; $index < count($my_tests); $index++) {
-                $diff = $my_tests[$index]->get_test_time();
-                $my_tests[$index]['progress_time'] = $diff['formated'];
-                $my_tests[$index]['progress_time_second'] = $diff['second'];
-            }
+        // update logest streak_days
+        if( $this->streak_days > $this->user->lognest_streak_days ) {
+            $this->user->lognest_streak_days = $this->streak_days;
+            $this->user->lognest_streak_started_at = $this->streak_started_date;
+            $this->user->lognest_streak_ended_at = $this->streak_end_date;
+            $this->user->save();
         }
-        
+
+        // get rank
+        $top_users_count = User::where("lognest_streak_days", ">", $this->user->lognest_streak_days)->count();
+
         return view('pages.dashboard', [
-            'history' => $my_tests
+            'streak_started_date' => $this->streak_started_date,
+            'streak_end_date' => $this->streak_end_date,
+            'rank' => $top_users_count + 1
         ])->with('streak_days', $this->streak_days);
     }
 
-    public function delete_test_record($id) {
-        UserAnswer::where('header_id', $id)->delete();
-        UserAnswerHeader::where('id', $id)->delete();
-        
-        return response()->json(['code'=>200, 'message'=>'success'], 200);
-    }
+    public function get_daily_review() {
+        // get last 6 months data
+        $months_ago = 3;
+        $test_histories = UserAnswerHeader::where("user_id", $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>', (new \Carbon\Carbon)->submonths($months_ago))->select(DB::raw('DATE(ended_at) AS date'), DB::raw('COUNT(id) AS test_count'))->groupBy('date')->get();
 
-    public function get_scores_for_chart() {
-        // get last 7 days
-        $results =  UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')
-        ->select(DB::raw('DATE(ended_at) AS date'), DB::raw('SUM(score) AS score'), DB::raw('SUM(number_of_questions) AS number_of_questions'))->groupBy('date')
-        ->orderBy('date', 'DESC')->take(7)->get();
-        
-        return response()->json(['code'=>200, 'scores'=>$results], 200);
+        $to_date = date("Y-m-d");
+        $from_date = date("Y-m-d", strtotime( $to_date . '-' . $months_ago . ' months'));
+        return response()->json([
+            'code' => 200, 
+            'histories' => $test_histories,
+            'from_date' => $from_date,
+            'to_date' => $to_date
+        ], 200);
     }
-
 }
