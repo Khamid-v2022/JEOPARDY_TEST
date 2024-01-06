@@ -115,7 +115,11 @@ class JeopardyTestController extends MyController {
                 'answer_time' => $answer->answer_time
             ]);
 
-            if(strtolower(trim($question->answer)) == strtolower(trim($answer->user_answer))){
+            if(
+                strtolower(trim($question->answer)) == strtolower(trim($answer->user_answer)) || 
+                strtolower(trim($question->answer)) == strtolower(trim("a " . $answer->user_answer)) ||
+                strtolower(trim($question->answer)) == strtolower(trim("the " . $answer->user_answer))
+            ) {
                 $correct_count++;
                 $answer->is_correct = 1;
                 $answer->save();

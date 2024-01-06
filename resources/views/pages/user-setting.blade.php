@@ -62,12 +62,18 @@
                         </select>
                     </div>
                     <div class="mb-3 col-md-6">
-                        <label for="default_question_count" class="form-label">Default Test Question Count</label>
+                        <label for="default_question_count" class="form-label">Default Test Question Count (Subscriber only)</label>
+                        @if(Auth::user()->subscription_status == 1)
                         <select id="default_question_count" class="form-select" name="default_question_count" value="{{ Auth::user()->default_question_count }}">
                             <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
                             <option value="25" {{ Auth::user()->default_question_count == 25? "selected":""}} >25</option>
                             <option value="50" {{ Auth::user()->default_question_count == 50? "selected":""}} >50</option>
                         </select>
+                        @else
+                        <select id="default_question_count" class="form-select" name="default_question_count" value="10" disabled>
+                            <option value="10" selected>10</option>
+                        </select>
+                        @endif
                     </div>
                 </div>
                 <div class="mt-2">

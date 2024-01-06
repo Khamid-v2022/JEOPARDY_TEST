@@ -69,7 +69,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     <h3>#{{ $rank }}</h3>
-                    <p class="mb-0">Currenct Streak Rank</p>
+                    <p class="mb-0">Longest Streak Rank</p>
                     <p class="mb-0">
                         <a href="/my-tests">View My Test Results</a>
                     </p>
