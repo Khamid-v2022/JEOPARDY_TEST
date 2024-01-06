@@ -23,13 +23,17 @@ class DashboardController extends MyController {
             $this->user->save();
         }
 
+        // get today test result
+        $today_last_test = UserAnswerHeader::where("user_id", $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>', date("Y-m-d 00:00:00"))->orderBy('ended_at', 'DESC')->first();
+
         // get rank
         $top_users_count = User::where("lognest_streak_days", ">", $this->user->lognest_streak_days)->count();
 
         return view('pages.dashboard', [
             'streak_started_date' => $this->streak_started_date,
             'streak_end_date' => $this->streak_end_date,
-            'rank' => $top_users_count + 1
+            'rank' => $top_users_count + 1,
+            'today_last_test' => $today_last_test
         ])->with('streak_days', $this->streak_days);
     }
 

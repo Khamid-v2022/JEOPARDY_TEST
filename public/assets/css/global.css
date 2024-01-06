@@ -291,9 +291,25 @@
     text-align: center;
   }
 
+  .daily-reivew-card {
+    background-color: #8aa5ed;
+    color: black;
+  }
+
+  .daily-reivew-card hr {
+    color: black;
+    height: 2px;
+  }
+
+  .daily-reivew-card h1, .daily-reivew-card h2, .daily-reivew-card h3 {
+    color: black;
+  }
+
 
   /* Admin - side */
   .avatar-img {
     width: 40px;
     height: 40px;
   }
+
+ 
