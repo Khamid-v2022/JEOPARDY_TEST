@@ -62,7 +62,7 @@
                         </select>
                     </div>
                     <div class="mb-3 col-md-6">
-                        <label for="default_question_count" class="form-label">Default Test Question Count (Subscriber only)</label>
+                        <label for="default_question_count" class="form-label">Default Test Question Count @if(Auth::user()->subscription_status == 0) (Subscriber only) @endif</label>
                         @if(Auth::user()->subscription_status == 1)
                         <select id="default_question_count" class="form-select" name="default_question_count" value="{{ Auth::user()->default_question_count }}">
                             <option value="10" {{ Auth::user()->default_question_count == 10? "selected":""}} >10</option>
@@ -75,6 +75,19 @@
                         </select>
                         @endif
                     </div>
+
+                    @if(Auth::user()->subscription_status == 0)
+                    <div class="mb-3 col-md-6">
+                        <div class="form-check form-switch">
+                            @if(Auth::user()->is_receive_email == 1)
+                            <input class="form-check-input" type="checkbox" role="switch" id="get_email" checked>
+                            @else
+                            <input class="form-check-input" type="checkbox" role="switch" id="get_email">
+                            @endif
+                            <label class="form-check-label" for="get_email">Would you like to receive daily free test notifications via email?</label>
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 <div class="mt-2">
                     <button type="submit" id="submit_btn" class="btn btn-primary me-2">

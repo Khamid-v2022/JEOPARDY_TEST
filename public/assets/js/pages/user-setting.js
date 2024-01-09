@@ -143,4 +143,35 @@ $(function() {
             } 
         });
     })
+
+    $("#get_email").on("click", function() {
+        let is_check = 1;
+        if($(this).prop("checked")) {
+            is_check = 1;
+        } else {
+            is_check = 0;
+        }
+
+        let _url = "/my-profile/update-email-notification";
+        $.ajax({
+            url: _url,
+            type: "POST",
+            data: {
+                is_check
+            },
+            success: function (response) {
+                const toastPlacementExample = document.querySelector('.toast-placement-ex');
+                $(".toast-body").html("Updated");
+                toastPlacement = new bootstrap.Toast(toastPlacementExample);
+                toastPlacement.show();
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '',
+                    text: 'Something went wrong. Please try again later',
+                })
+            },
+        });
+    })
 })

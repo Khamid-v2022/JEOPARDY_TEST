@@ -77,6 +77,8 @@ Route::group(['middleware' => ['user']], function() {
     Route::get('/my-profile', [UserSettingController::class, 'index'])->name('my-profile');
     Route::post('/my-profile/update', [UserSettingController::class, 'update_profile']);
     Route::delete('/my-profile/delete', [UserSettingController::class, 'delete_profile']);
+
+    Route::post('/my-profile/update-email-notification', [UserSettingController::class, 'update_email_notification']);
 });
 
 Route::fallback(function () {

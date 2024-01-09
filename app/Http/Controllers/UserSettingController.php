@@ -61,5 +61,12 @@ class UserSettingController extends MyController {
         }
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
+
+    public function update_email_notification(Request $request) {
+        $this->user->is_receive_email = $request->is_check;
+        $this->user->save();
+
+        return response()->json(['code'=>200, 'message'=>'success'], 200);
+    }
    
 }
