@@ -37,7 +37,8 @@ Route::post('/forgot-password', [AuthController::class, 'sendEmailToResetPasswor
 Route::get('/reset-password/{unique_str}',  [AuthController::class, 'reset_password_page'])->name('reset-password');
 Route::post('/reset-password', [AuthController::class, 'reset_password']);
 
-
+Route::get('/unsubscribe/{unique_str}',  [AuthController::class, 'unsubscribe_page']);
+Route::post('/unsubscribe', [AuthController::class, 'unsubscribe']);
 
 Route::get('/register', [AuthController::class, 'register_page'])->name('pages-register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'do_register']);

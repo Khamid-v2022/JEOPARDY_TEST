@@ -318,4 +318,29 @@ class AuthController extends Controller {
     public function failed_email_verify_page() {
         return view('pages.verify-failed');
     }
+
+
+    // unsubscrib 
+    public function unsubscribe_page($code) {
+        // 
+        $code = str_replace('-:-', '/', $code);
+		$email = $this->decrypt($code);
+        $user = User::where('email', $email)->first();
+		if(!$user){
+            return view('/pages/misc-error');;
+		}
+		return view('pages.unsubscribe', ['user' => $user]);
+    }
+
+    public function unsubscribe(Request $request) {
+        $user = User::where('email', $request->email)->first();
+        if(!$user){
+            return response()->json(['code'=>400, 'message'=>'Invalid email address'], 400);
+		}
+
+        $user->is_receive_email = 0;
+		$user->save();
+
+        return response()->json(['code'=>200, 'message'=>'Success', 'data'=>$user], 200);
+    }
 }

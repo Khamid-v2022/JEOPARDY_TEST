@@ -25,4 +25,16 @@ class Controller extends BaseController
         }
         return implode($pass);
     }
+
+    protected function decrypt($message) {
+        if(strpos($message, "-") !== false){
+            list($crypted_token, $enc_iv) = explode("-", $message);
+            $cipher_method = 'aes-128-ctr';
+            $token = openssl_decrypt($crypted_token, $cipher_method, env('ENCRYPT_KEY'), 0, hex2bin($enc_iv));
+            return $token;
+        }
+        
+        // return wrong API key
+        return "FALSE";
+    }
 }

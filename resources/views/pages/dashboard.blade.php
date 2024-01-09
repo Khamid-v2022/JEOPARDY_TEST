@@ -39,7 +39,7 @@
         <div class="col-sm-7">
             <div class="card mt-4">
                 <div class="card-header pb-2">
-                    Daily Reviews
+                    Number of Tests Per Day
                 </div>
                 <div class="card-body" id="daily_review_chart" style="height: 220px">
 

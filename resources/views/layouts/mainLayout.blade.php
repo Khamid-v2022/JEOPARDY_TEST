@@ -18,7 +18,7 @@
 
                 <div class="menu-inner-shadow"></div>
 
-                <ul class="menu-inner py-1">
+                <ul class="menu-inner mt-4 py-1">
                     @php
                     $currentRouteName = Route::currentRouteName();
                     @endphp
@@ -55,7 +55,7 @@
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <div>
-                            <span data-bs-toggle="tooltip" data-bs-placement="right" title="Streak days">{{ $streak_days }} {{ $streak_days > 1 ? "Days" : "Day"}} ⚡️</span>
+                            <span data-bs-toggle="tooltip" data-bs-placement="right" title="Currenct Streak" class="cursor-pointer">{{ $streak_days }} {{ $streak_days > 1 ? "Days" : "Day"}} ⚡️</span>
                         </div>
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             @if(Auth::user()->subscription_status == 0)

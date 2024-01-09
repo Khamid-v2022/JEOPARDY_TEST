@@ -152,6 +152,7 @@
     function encrypt($message) {
         $cipher_method = 'aes-128-ctr';
 
+        
         $enc_iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher_method));
         $crypted_key = openssl_encrypt($message, $cipher_method, $_ENV['ENCRYPT_KEY'], 0, $enc_iv) . "-" . bin2hex($enc_iv);
 

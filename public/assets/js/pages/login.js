@@ -200,4 +200,45 @@
             },  
         });
     })
+
+    $("#unsubscribeForm").on("submit", function(e) {
+        e.preventDefault();
+
+        $("#submit_btn .fa-spinner").removeClass("d-none");
+        $("#submit_btn").attr("disabled", true);
+
+        let _url = `/unsubscribe`;
+        let data = {
+            email: $("#email").val()
+        };
+
+        $.ajax({
+            url: _url,
+            type: "POST",
+            data: data,
+            success: function(response) {
+                if(response.code == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Unsubscribed!',
+                        text: '',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    }).then(function() {
+                        location.href = '/';
+                    });
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                Swal.fire({
+                    icon: 'error',
+                    title: '',
+                    text: XMLHttpRequest.responseJSON.message,
+                })
+                $("#submit_btn .fa-spinner").addClass("d-none");
+                $("#submit_btn").removeAttr("disabled");
+            }       
+        })
+    })
 })();

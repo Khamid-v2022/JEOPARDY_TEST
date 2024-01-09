@@ -25,8 +25,6 @@ function drawingChart(response) {
     var myChart = echarts.init(chartDom);
     var option;
 
-    // var data = getVirtualData(response);
-    // console.log(data);
     const data = [];
     response.histories.forEach((item) => {
         data.push([
@@ -37,7 +35,7 @@ function drawingChart(response) {
 
     option = {
         tooltip: {
-            formatter: '{b0}: {c0}'
+            // formatter: "Tested {b0} times on {c0} "
         },
         visualMap: {
             min: 0,
@@ -68,17 +66,3 @@ function drawingChart(response) {
     option && myChart.setOption(option);
     window.addEventListener('resize', myChart.resize);
 }
-
-// function getVirtualData(response) {
-//     const date = +echarts.time.parse(response.from_date);
-//     const end = +echarts.time.parse(response.to_date);
-//     const dayTime = 3600 * 24 * 1000;
-//     const data = [];
-//     for (let time = date; time < end; time += dayTime) {
-//         data.push([
-//             echarts.time.format(time, '{yyyy}-{MM}-{dd}', false),
-//             Math.floor(Math.random() * 10000)
-//         ]);
-//     }
-//     return data;
-// }
