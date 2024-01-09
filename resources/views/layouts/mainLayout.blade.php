@@ -122,6 +122,15 @@
                 </nav>
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
+                    @if(Auth::user()->subscription_status == 0 && Auth::user()->is_trial_used == 0 && Route::current()->getName() != 'pages-jeopardy-test')
+                        <div class="free-test-notification-wrapper mt-4 px-4">
+                            <div class="free-test-notification">
+                                <div class="message">You haven't completed today's test yet. Click <a href="/jeopardy-test">here</a> to take the test.</div>
+                                <a class="close-btn">✖</a>
+                            </div>
+                        </div>
+                    @endif
+
                     @yield('content')
 
                     <!-- Footer -->

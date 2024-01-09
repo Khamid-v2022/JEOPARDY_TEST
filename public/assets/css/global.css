@@ -296,6 +296,11 @@
     color: black;
   }
 
+  .daily-reivew-card a {
+    color: black;
+    text-decoration: underline;
+  }
+
   .daily-reivew-card hr {
     color: black;
     height: 2px;
@@ -305,6 +310,30 @@
     color: black;
   }
 
+
+  .free-test-notification {
+    padding: 16px 50px 16px 32px;
+    background-color: #8aa5ed;
+    border-radius: 8px;
+    color: black;
+    position: relative;
+  }
+
+  .free-test-notification a:not(.close-btn) {
+    color: black;
+    text-decoration: underline;
+  }
+
+  .free-test-notification  .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 50%;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
   /* Admin - side */
   .avatar-img {
