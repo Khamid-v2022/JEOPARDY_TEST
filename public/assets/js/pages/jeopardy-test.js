@@ -159,6 +159,9 @@ function end_question() {
                 $(".submitting-wrapper").addClass("d-none");
                 $(".your-score").html(response.score);
                 $(".result-wrapper").removeClass("d-none");
+
+                drawingShareMyScoreSection(response);
+
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 
@@ -174,5 +177,31 @@ function end_question() {
 function goto_detailPage() {
     if(current_trial_test_header)
         location.href = '/jeopardy-test/view-detail/' + current_trial_test_header;
+}
+
+function drawingShareMyScoreSection(response) {
+    $(".answer-check").html("");
+
+    let score_checks_html = ''; 
+    if(response.my_answers.length > 0) {
+        for(let index = 0; index < response.my_answers.length; index++) {
+            if(response.my_answers[index].is_correct == 1) {
+                score_checks_html += '✅';
+            } else {
+                score_checks_html += '❌';
+            }
+        }
+    }
+
+    $(".answer-check").html(score_checks_html);
+    $(".test-time").html(response.test_time);
+    $(".current-streak").html(response.streak_days);
+
+    let social_btns_html = "";
+    social_btns_html += "<li><a href='" + response.shareComponent.facebook + "' class='btn btn-sm btn-secondary' target='_blank'> <i class='bx bxl-facebook me-2'></i> Share </a></li>";
+    social_btns_html += "<li><a href='" + response.shareComponent.twitter + "' class='btn btn-sm btn-secondary' target='_blank'> <i class='bx bxl-twitter me-2'></i> Share </a></li>";
+
+    $(".share-btns-wrapper").html(social_btns_html);
+    $(".share-wrapper").removeClass("d-none");
 }
 

@@ -16,6 +16,7 @@
             <div class="card mt-4 daily-reivew-card">
                 <div class="card-body">
                     {{date("F jS, Y")}}
+                    <input type="hidden" value="{{date('Y-m-d H:i:s')}}">
                     <hr>
                     <h2><strong>Daily review</strong></h2>
                     <div class="d-flex justify-content-between" style="min-height: 120px;  flex-direction: column">
@@ -25,8 +26,13 @@
                             @endif
                         </div>
                         <div>
-                            @if($today_last_test)
-                            <p class="mb-0"><i class='bx bxs-badge-check'></i> You've completed today's test</p>
+                            @if(Auth::user()->is_trial_used == 1)
+                            <p class="mb-0">
+                                <i class='bx bxs-badge-check'></i> You've completed today's test.
+                                @if(Auth::user()->subscription_status == 0)
+                                Your new free test will be activated within {{ $next_test_hours }} {{$next_test_hours == 1 ? 'hour' : 'hours'}}.
+                                @endif
+                            </p>
                             @else
                             <p class="mb-0"> You haven't completed today's test yet. Click <a href="/jeopardy-test">here</a> to take the test </p>
                             @endif
@@ -81,7 +87,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     <h3>{{ $streak_days }} {{ $streak_days > 1 ? "Days" : "Day"}}</h3>
-                    <p class="mb-0">Currenct Streak</p>
+                    <p class="mb-0">Current Streak</p>
                     <p class="mb-0">
                         @if($streak_started_date)
                             {{date("M jS, Y", strtotime($streak_started_date))}} ~ {{date("M jS, Y", strtotime($streak_end_date))}}

@@ -335,6 +335,23 @@
     cursor: pointer;
   }
 
+  .share-wrapper {
+    max-width: fit-content;
+    text-align: left;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  ul.share-btns-wrapper {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding-left: 0px;
+  }
+  ul.share-btns-wrapper li:not(:last-of-type) {
+    margin-right: 12px;
+  }
   /* Admin - side */
   .avatar-img {
     width: 40px;

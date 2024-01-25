@@ -73,8 +73,6 @@ $(function() {
     })
 
     loadChartInfomation();
-    
-
 })
 
 function loadChartInfomation() {

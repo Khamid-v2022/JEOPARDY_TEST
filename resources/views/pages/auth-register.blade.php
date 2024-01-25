@@ -23,6 +23,7 @@
                     <p class="mb-4">Train daily with practice tests to pass the real thing!</p>
 
                     <form id="formAuthentication" class="mb-3" autocomplete="off" method="POST">
+                        <input type="hidden" value="{{isset($uniqu_str)?$uniqu_str:''}}" id="referral_str">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus autocomplete="off" required />
                         </div>

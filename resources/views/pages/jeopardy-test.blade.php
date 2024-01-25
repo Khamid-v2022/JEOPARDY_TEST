@@ -4,14 +4,14 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y main-container">
-    @if(Auth::user()->subscription_status == 0 && Auth::user()->is_trial_used == 1)
+    @if(Auth::user()->subscription_status == 0 && Auth::user()->is_trial_used == 1 && $free_count == 0)
         <div class="centered-div mt-5">
             <h3>You have already completed the today's FREE test.</h3>
             <p>If you would like to access more tests, please click the button below to subscribe.</p>
             <a class="btn btn-primary" href="{{ route('pages-pricing') }}">Upgrade Account</a>
         </div>
     @else
-        @if(Auth::user()->subscription_status == 1 && Auth::user()->subscription_plan == "Monthly" && $tested_count >= env('MONTHLY_PLAN_TEST_COUNT') )
+        @if(Auth::user()->subscription_status == 1 && Auth::user()->subscription_plan == "Monthly" && $tested_count >= env('MONTHLY_PLAN_TEST_COUNT') + $free_count )
             <div class="centered-div mt-5">
                 <h3>Exceeded monthly limit.</h3>
                 <p>If you would like to unlock unlimit test, please click the button below and upgrade your account with Annually plan.</p>
@@ -84,7 +84,28 @@
                     @else
                         <h1 class="mb-3">YOU'VE COMPLETED THE Today's FREE TEST!</h1>
                     @endif
-                    <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1>
+                    <!-- <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1> -->
+                    <!-- Share to socials -->
+
+                    <div class="share-wrapper mt-4 d-none">
+                        <div>
+                            <h5>My J!Study Score Today:</h5>
+                            <div class="score-wrapper d-flex">
+                                <div class="answer-check"></div>
+                                <span class="your-score text-success"></span> / <span class="question-count"></span>
+                            </div>
+                            <div class="mt-2">
+                                ⏳ <span class="test-time"></span>
+                            </div>
+                            <div class="mt-2">
+                                ⚡ <span class="current-streak"></span> Day Streak
+                            </div>
+                        </div>
+                        <ul class="share-btns-wrapper mt-3">
+
+                        </ul>
+                    </div>
+
                     <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
                     @if(Auth::user()->subscription_status == 1)
                         <div class="row mb-3">

@@ -42,6 +42,13 @@
                             <div data-i18n="Analytics">My Test Results</div>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="https://www.jstudyguide.com/" class="menu-link" target="_blank">
+                            <i class="menu-icon tf-icons bx bx-book-reader"></i>
+                            <div data-i18n="Analytics">Study Guides</div>
+                        </a>
+                    </li>
+                    
                 </ul>
             </aside>
 
@@ -55,7 +62,7 @@
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <div>
-                            <span data-bs-toggle="tooltip" data-bs-placement="right" title="Currenct Streak" class="cursor-pointer">{{ $streak_days }} {{ $streak_days > 1 ? "Days" : "Day"}} ⚡️</span>
+                            <span data-bs-toggle="tooltip" data-bs-placement="right" title="Current Streak" class="cursor-pointer"><span class="current-streak">{{ $streak_days }}</span> {{ $streak_days > 1 ? "Days" : "Day"}} ⚡️</span>
                         </div>
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             @if(Auth::user()->subscription_status == 0)
@@ -123,10 +130,12 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     @if(Auth::user()->subscription_status == 0 && Auth::user()->is_trial_used == 0 && Route::current()->getName() != 'pages-jeopardy-test')
-                        <div class="free-test-notification-wrapper mt-4 px-4">
-                            <div class="free-test-notification">
-                                <div class="message">You haven't completed today's test yet. Click <a href="/jeopardy-test">here</a> to take the test.</div>
-                                <a class="close-btn">✖</a>
+                        <div class="container-xxl">
+                            <div class="free-test-notification-wrapper mt-4">
+                                <div class="free-test-notification">
+                                    <div class="message">You haven't completed today's test yet. Click <a href="/jeopardy-test">here</a> to take the test.</div>
+                                    <a class="close-btn">✖</a>
+                                </div>
                             </div>
                         </div>
                     @endif

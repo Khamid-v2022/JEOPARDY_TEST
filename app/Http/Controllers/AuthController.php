@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\UserAnswerHeader;
+use App\Models\UserAnswer;
+use App\Models\AffiliateRegister;
 
 use Hash;
 use Session;
@@ -96,6 +99,12 @@ class AuthController extends Controller {
         return view('pages.auth-register');
     }
 
+    public function register_page_with_refferal($uniqu_str) {
+        return view('pages.auth-register', [
+            'uniqu_str' => $uniqu_str
+        ]);
+    }
+
     public function do_register(Request $request) {
         $request->validate([
             'name'      => 'required',
@@ -122,6 +131,24 @@ class AuthController extends Controller {
         $user->verify_code = $verify_code;
         $user->save();
 
+        // Refferral User
+        if($request->referral_str && $request->referral_str != '') {
+            // get reffer User ID
+            $refer_user_id = $this->decryptString($request->referral_str, env('SHORT_ENCRYPT_KEY'));
+
+            $aff_user = new AffiliateRegister;
+            $aff_user->refer_user_id = $refer_user_id;
+            $aff_user->refer_string = $request->referral_str;
+			$aff_user->user_id = $user->id;
+
+            // increase referral user count
+            $refer_user = User::where('id', $refer_user_id)->first();
+            $refer_user->referral_user_count = $refer_user->referral_user_count + 1;
+            $refer_user->save();
+        }
+
+
+        // Send Email
         $active_link = route('verify_email', ['unique_str' => $verify_code]);
 
         $subject = "🚀 Activate Your Account";
@@ -138,6 +165,8 @@ class AuthController extends Controller {
                 return response()->json(['code'=>400, 'message'=>'Failed verify your email'], 400);
 			}
 		}
+
+        
 
         return response()->json(['code'=>200, 'message'=>'success'], 200);
     }
@@ -343,4 +372,25 @@ class AuthController extends Controller {
 
         return response()->json(['code'=>200, 'message'=>'Success', 'data'=>$user], 200);
     }
+
+    // Share My Score page
+    public function share_myscore($header_id) {
+        $header = UserAnswerHeader::where('id', $header_id)->first();
+        $my_answers = UserAnswer::where('header_id', $header->id)->get();
+        $diff = $header->get_test_time();
+        $test_time = $diff['formated'];
+        $streak_days = $this->recalculateCurrentStreak($header->user_id);
+
+        // encrypt user_id for the refferral link
+        $ref_str = $this->encryptAndTruncate(strval($header->user_id), env('SHORT_ENCRYPT_KEY'));
+
+        return view('pages.share-myscore', [
+            'header' => $header,
+            'my_answers' => $my_answers,
+            'test_time' => $test_time,
+            'streak_days' => $streak_days,
+            'ref_str' => $ref_str
+        ]);
+    }
+
 }

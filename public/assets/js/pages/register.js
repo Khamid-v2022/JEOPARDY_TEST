@@ -10,13 +10,14 @@
         const name = $("#username").val();
         const email = $("#email").val();
         const password = $("#password").val();
+        const referral_str = $("#referral_str").val();
 
         $("#submit_btn .fa-spinner").removeClass("d-none");
         $("#submit_btn").attr("disabled", true);
 
-        const _url = 'register';
+        const _url = '/register';
         const data = {
-            name, email, password
+            name, email, password, referral_str
         };
 
         $.ajax({

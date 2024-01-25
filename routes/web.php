@@ -41,7 +41,10 @@ Route::get('/unsubscribe/{unique_str}',  [AuthController::class, 'unsubscribe_pa
 Route::post('/unsubscribe', [AuthController::class, 'unsubscribe']);
 
 Route::get('/register', [AuthController::class, 'register_page'])->name('pages-register')->middleware('guest');
+Route::get('/ref/{unique_str}', [AuthController::class, 'register_page_with_refferal'])->middleware('guest');
 Route::post('/register', [AuthController::class, 'do_register']);
+
+Route::get('/share-myscore/{id}', [AuthController::class, 'share_myscore'])->where('id', '[0-9]+');
 
 Route::group(['middleware' => ['user']], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('pages-dashboard');

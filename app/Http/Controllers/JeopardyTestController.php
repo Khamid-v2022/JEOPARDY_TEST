@@ -9,6 +9,8 @@ use App\Models\OriginalQuestion;
 use App\Models\UserAnswer;
 use App\Models\UserAnswerHeader;
 
+use Share;
+
 
 class JeopardyTestController extends MyController {
 
@@ -31,9 +33,12 @@ class JeopardyTestController extends MyController {
             $tested_count = count(UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>=', $compare_date)->get());
         }
 
+        $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;
+
 
         return view('pages.jeopardy-test', [
-            'tested_count' => $tested_count
+            'tested_count' => $tested_count,
+            'free_count' => $free_count
         ])->with('streak_days', $this->streak_days);
     }
 
@@ -88,14 +93,41 @@ class JeopardyTestController extends MyController {
         $answers = json_decode($request->data);
         $header_id = $request->header_id;
 
-        $is_trial_test = 0;
-        if($this->user->subscription_status == 0) {
-            $this->user->is_trial_used = 1;
-            $this->user->last_tested_at = date("Y-m-d H:i:s");
+        if($this->user->subscription_status == "0") {
+            if($this->user->is_trial_used == "0") {
+                $this->user->is_trial_used = 1;
+                $this->user->last_tested_at = date("Y-m-d H:i:s");
+    
+                $this->user->save();
+            } else {
+                $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;
+                if($free_count > 0) {
+                    $this->user->used_referrals_for_test = $this->user->used_referrals_for_test + 1;
+                    $this->user->save();
+                }
+            }
+        } else if($this->user->subscription_status == "1" && $this->user->subscription_plan == "Monthly") {
+            $subscribed_date = date('d', strtotime($this->user->subscribed_at));
 
-            $this->user->save();
+            $today_date = date('d');
+            $today_month = date('Y-m');
 
-            $is_trial_test = 1;
+            $compare_date = $today_month . '-' . $subscribed_date;
+            if($today_date < $subscribed_date) {
+                // get 1 month before
+                $compare_date = date('Y-m-d', strtotime("-1 month", strtotime($compare_date))); 
+            }
+
+            // get count
+            $tested_count = count(UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>=', $compare_date)->get());
+            $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;
+
+            if($tested_count >= env('MONTHLY_PLAN_TEST_COUNT')) {
+                if($tested_count < env('MONTHLY_PLAN_TEST_COUNT') + $free_count) {
+                    $this->user->used_referrals_for_test = $this->user->used_referrals_for_test + 1;
+                    $this->user->save();
+                }
+            }
         }
 
         // get Header
@@ -130,9 +162,54 @@ class JeopardyTestController extends MyController {
         $header->ended_at = date("Y-m-d H:i:s");
         $header->save();
 
+        $my_answers = UserAnswer::where('header_id', $header->id)->get();
+        $diff = $header->get_test_time();
+        $test_time = $diff['formated'];
 
-        return response()->json(['code'=>200, 'score'=>$correct_count], 200);
+        $this->streak_days = $this->recalculateCurrentStreak($this->user->id);
+
+        // $shareComponent = Share::page (
+        //     env('APP_URL') . "share-myscore/" . $header->id,
+        //     'My J!Study Score Today:',
+        // )
+        // ->facebook()
+        // ->twitter()->getRawLinks();
+
+        // generate Share string
+        $ref_str = $this->encryptAndTruncate(strval($this->user->id), env('SHORT_ENCRYPT_KEY'));
+
+        $score_part = '';
+        foreach($my_answers as $answer) {
+            if($answer->is_correct == 1) {
+                $score_part .= '✅';
+            } else {
+                $score_part .= '❌';
+            }
+        }
+        $score_part .= " " . $correct_count . '/' . count($my_answers);
+        
+        $time_part =  " ⏳ " . $test_time;
+        $streak_part = " ⚡ " . $this->streak_days . " Day Streak";
+        $link_part = " See how you do: https://jstudy.app/ref/" . $ref_str;
+
+        $shareComponent = Share::page (
+            env('APP_URL') . 'ref/' . $ref_str,
+            'My J!Study Score Today: ' . $score_part . $time_part . $streak_part . $link_part
+        )
+        ->facebook()
+        ->twitter()->getRawLinks();
+
+        return response()->json([
+            'code'=>200, 
+            'score'=>$correct_count,
+            'my_answers' => $my_answers,
+            'answer_summuary' => $header,
+            'test_time' => $test_time,
+            'streak_days' => $this->streak_days,
+            'shareComponent' => $shareComponent
+        ], 200);
     }
+
 
     public function view_detail($header_id) {
         $header = UserAnswerHeader::where('id', $header_id)->first();

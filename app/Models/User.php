@@ -42,7 +42,9 @@ class User extends Authenticatable
         'last_tested_at',
         'lognest_streak_days',
         'lognest_streak_started_at',
-        'lognest_streak_ended_at'
+        'lognest_streak_ended_at',
+        'referral_user_count',
+        'used_referrals_for_test'
     ];
 
     /**
