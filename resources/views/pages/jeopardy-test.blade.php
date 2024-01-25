@@ -82,7 +82,7 @@
                     @if(Auth::user()->subscription_status == 1)
                         <h1 class="mb-3">YOU'VE COMPLETED THE TEST!</h1>
                     @else
-                        <h1 class="mb-3">YOU'VE COMPLETED THE Today's FREE TEST!</h1>
+                        <h1 class="mb-3">You’ve completed today’s free test!</h1>
                     @endif
                     <!-- <h1><span class="your-score text-success"></span><small class="text-muted">/<span class="question-count"></span></small></h1> -->
                     <!-- Share to socials -->
@@ -92,7 +92,10 @@
                             <h5>My J!Study Score Today:</h5>
                             <div class="score-wrapper d-flex">
                                 <div class="answer-check"></div>
-                                <span class="your-score text-success"></span> / <span class="question-count"></span>
+                                <span class="your-score text-success ms-2"></span> / <span class="question-count"></span>
+                            </div>
+                            <div class="mt-2">
+                                <small>TIP: If the auto-grader mistakenly marked a correct response as incorrect, you can click “INCORRECT” to toggle the response to “CORRECT”.</small>
                             </div>
                             <div class="mt-2">
                                 ⏳ <span class="test-time"></span>

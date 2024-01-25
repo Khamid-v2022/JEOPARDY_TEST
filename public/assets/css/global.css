@@ -336,7 +336,7 @@
   }
 
   .share-wrapper {
-    max-width: fit-content;
+    max-width: 260px;
     text-align: left;
     position: relative;
     left: 50%;

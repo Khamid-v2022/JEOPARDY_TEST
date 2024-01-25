@@ -187,14 +187,17 @@ class JeopardyTestController extends MyController {
             }
         }
         $score_part .= " " . $correct_count . '/' . count($my_answers);
-        
-        $time_part =  " ⏳ " . $test_time;
-        $streak_part = " ⚡ " . $this->streak_days . " Day Streak";
-        $link_part = " See how you do: https://jstudy.app/ref/" . $ref_str;
+
+        $tip_part = "\nTIP: If the auto-grader mistakenly marked a correct response as incorrect, you can click “INCORRECT” to toggle the response to “CORRECT”.";
+
+        $time_part =  "\n⏳ " . $test_time;
+        $streak_part = "\n⚡ " . $this->streak_days . " Day Streak";
+        // $link_part = " See how you do: https://jstudy.app/ref/" . $ref_str;
+        $link_part = "\nSee how you do: ";
 
         $shareComponent = Share::page (
             env('APP_URL') . 'ref/' . $ref_str,
-            'My J!Study Score Today: ' . $score_part . $time_part . $streak_part . $link_part
+            'My J!Study Score Today: ' . $score_part . $tip_part . $time_part . $streak_part . $link_part
         )
         ->facebook()
         ->twitter()->getRawLinks();
