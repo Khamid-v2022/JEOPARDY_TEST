@@ -95,9 +95,6 @@
                                 <span class="your-score text-success ms-2"></span> / <span class="question-count"></span>
                             </div>
                             <div class="mt-2">
-                                <small>TIP: If the auto-grader mistakenly marked a correct response as incorrect, you can click “INCORRECT” to toggle the response to “CORRECT”.</small>
-                            </div>
-                            <div class="mt-2">
                                 ⏳ <span class="test-time"></span>
                             </div>
                             <div class="mt-2">
@@ -108,8 +105,11 @@
 
                         </ul>
                     </div>
-
-                    <p class="mt-3">Please click <a href="javascript:goto_detailPage();">here</a> so you can thoroughly examine your responses and compare them to the correct answers.<br> This will help you evaluate the accuracy of your replies.</p>
+                    <p class="mt-3">
+                    👆 Share your score and earn free tests when others sign up.<br>
+                    Click <a href="javascript:goto_detailPage();">here</a> to review your responses and compare them to the correct answers.<br>
+                    TIP: If the auto-grader mistakenly marked a correct response as incorrect, you can click “INCORRECT” to toggle the response to “CORRECT”
+                    </p>
                     @if(Auth::user()->subscription_status == 1)
                         <div class="row mb-3">
                             <label class="col ol-form-label d-flex justify-content-end align-items-center">Select the Number of Questions: </label>
