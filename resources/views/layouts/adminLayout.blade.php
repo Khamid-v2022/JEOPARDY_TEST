@@ -13,8 +13,8 @@ $currentRouteName = Route::currentRouteName();
                             <div>Questions</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ $currentRouteName == 'feature-question-page' ? 'active' : ''}}">
-                        <a href="{{ route('feature-question-page') }}" class="menu-link">
+                    <li class="menu-item {{ $currentRouteName == 'feature-task-page' ? 'active' : ''}}">
+                        <a href="{{ route('feature-task-page') }}" class="menu-link">
                             <i class='bx bx-chat'></i>
                             <div>Featured Tests</div>
                         </a>

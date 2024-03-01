@@ -116,9 +116,9 @@ class QuestionManageController extends Controller
     }
 
 
-    public function featuredQuestionsPage() {
+    public function featuredTasksPage() {
         $feature_tasks = FeatureTaskHeader::get();
-        return view('pages.admin.featured-questions', ['feature_tasks' => $feature_tasks]);
+        return view('pages.admin.featured-tasks', ['feature_tasks' => $feature_tasks]);
     }
 
     public function importFeaturedTask(Request $request) {
@@ -220,6 +220,51 @@ class QuestionManageController extends Controller
         FeatureTaskHeader::where('id', $task_id)->delete();
         return response()->json(['code'=>200, 'message'=>'Deleted'], 200);
     }
+
+    public function updateTaskTitle(Request $request) {
+        FeatureTaskHeader::where("id", $request->id)->update(["title" => $request->title]);
+        return response()->json(['code'=>200, 'message'=>'Updated'], 200);
+    }
+
+    // Task Question detail page
+    public function featuredQuestionsPage($task_id) {
+        $task = FeatureTaskHeader::where("id", $task_id)->first();
+        $questions = FeatureTaskQuestion::where('header_id', $task_id)->get();
+        return view('pages.admin.featured-questions', ['task' => $task, 'questions' => $questions]);
+    }
+
+    public function deleteFeatureQuestion($question_id) {
+        FeatureTaskQuestion::where('id', $question_id)->delete();
+        return response()->json(['code'=>200, 'message'=>'Deleted'], 200);
+    }
+
+    public function updateFeatureQustion(Request $request) {
+        $id = $request->id;
+        if($id) {
+            // update
+            FeatureTaskQuestion::where("id", $id )->update(
+                [
+                    "category" => $request->category,
+                    "question" => $request->question,
+                    "answer" => $request->answer,
+                ]
+            );
+            return response()->json(['code'=>200, 'message'=>'Updated'], 200);
+
+        } else {
+            // create
+            FeatureTaskQuestion::create(
+                [
+                    "header_id" => $request->header_id,
+                    "category" => $request->category,
+                    "question" => $request->question,
+                    "answer" => $request->answer,
+                ]
+            );
+            return response()->json(['code'=>200, 'message'=>'Added'], 200);
+        }
+    }
+
 
     // public function insert_question_info_to_answer_table() {
     //     $answers = UserAnswer::whereNull("question")->get();

@@ -5,6 +5,11 @@ $(function() {
         $(this).find('form').trigger('reset');
     })
 
+    $('#edit_title_modal').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+    })
+    
+
     dt_table = $('#feature_tasks_table').DataTable({
         columnDefs: [
             {
@@ -65,7 +70,7 @@ $(function() {
             }
             
             $.ajax({
-                url: "/admin/feature-question-management/import-featured-task",
+                url: "/admin/feature-task-management/import-featured-task",
                 method: 'post',
                 data: fd,
                 contentType: false,
@@ -131,7 +136,7 @@ $(function() {
             confirmButtonText: 'Yes',
         }).then(function (result) {
             if (result.value) {
-                const _url = '/admin/feature-question-management/delete-featured-task/' + task_id;
+                const _url = '/admin/feature-task-management/delete-featured-task/' + task_id;
 
                 $.ajax({
                     url: _url,
@@ -150,5 +155,64 @@ $(function() {
         });
 
         
+    })
+
+    $("#feature_tasks_table tbody").on("click", ".edit-title", function(){
+        let title = $(this).parents("tr").attr("data-task_title");
+        let task_id = $(this).parents("tr").attr("data-id");
+
+        $("#m_selected_id").val(task_id);
+        $("#m_edit_title").val(title);
+
+        $("#edit_title_modal").modal("show");
+    })
+
+    $("#m_task_form").on("submit", function(e) {
+        e.preventDefault();
+        let id = $("#m_selected_id").val();
+        let title = $("#m_edit_title").val();
+
+        $.ajax({
+            url: "/admin/feature-task-management/update-task-title",
+            method: 'post',
+            data: {
+                id,
+                title
+            },
+            success: function(response){
+                if(response.code == 200){
+                    const toastPlacementExample = document.querySelector('.toast-placement-ex');
+                    $(".toast-body").html("Updated");
+                    toastPlacement = new bootstrap.Toast(toastPlacementExample);
+                    toastPlacement.show();
+
+                    $("#edit_title_modal").modal("hide");
+                    $("tr[data-id=" + id + "]").attr("data-task_title", title);
+                    $("tr[data-id=" + id + "]").find("a.task-title").html(title);
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    })
+                }
+            },
+            error: function(response){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: response.responseJSON.message,
+                    text: "Something went wrong. Please try again later",
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                })
+            }
+        });
     })
 })

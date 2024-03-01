@@ -19,9 +19,18 @@ Route::namespace('admin')->prefix('admin')->group(function(){
         Route::post('/question-management/import-question', [QuestionManageController::class, 'importQuestion']);
         Route::delete('/question-management/delete-question/{id}', [QuestionManageController::class, 'deleteQuestion'])->where('id', '[0-9]+');
 
-        Route::get('/feature-question-management', [QuestionManageController::class, 'featuredQuestionsPage'])->name('feature-question-page');
-        Route::post('/feature-question-management/import-featured-task', [QuestionManageController::class, 'importFeaturedTask']);
-        Route::delete('/feature-question-management/delete-featured-task/{id}', [QuestionManageController::class, 'deleteFeaturedTask'])->where('id', '[0-9]+');
+        Route::get('/feature-task-management', [QuestionManageController::class, 'featuredTasksPage'])->name('feature-task-page');
+        Route::post('/feature-task-management/import-featured-task', [QuestionManageController::class, 'importFeaturedTask']);
+        Route::delete('/feature-task-management/delete-featured-task/{id}', [QuestionManageController::class, 'deleteFeaturedTask'])->where('id', '[0-9]+');
+        Route::post('/feature-task-management/update-task-title', [QuestionManageController::class, 'updateTaskTitle']);
+
+        // Detail page to add/delete questions
+        Route::get('/feature-question-management/task/{id}', [QuestionManageController::class, 'featuredQuestionsPage'])->where('id', '[0-9]+')->name('feature-questions-page');
+        Route::delete('/feature-question-management/delete-featured-question/{id}', [QuestionManageController::class, 'deleteFeatureQuestion'])->where('id', '[0-9]+');
+        Route::post('/feature-question-management/update-question', [QuestionManageController::class, 'updateFeatureQustion']);
+        
+
+        
         
         // Route::get('/feature-question-management/load_feature_tasks', [QuestionManageController::class, 'loadFeatureTasks']);
         
