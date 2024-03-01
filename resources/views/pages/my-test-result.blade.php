@@ -40,7 +40,7 @@
                                     $feature_test_info = $item->getFeatureTestInfo();
                                 @endphp
                                 @if($feature_test_info)
-                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Featured Test">
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Featured Test{{$feature_test_info->is_delete ? ' (Deleted) ' : '' }}">
                                     <img src="{{ asset($feature_test_info->thumbnail) }}" alt class="thumbnail-img me-2" />{{ $feature_test_info->title }}
                                 </span>
                                 @endif
