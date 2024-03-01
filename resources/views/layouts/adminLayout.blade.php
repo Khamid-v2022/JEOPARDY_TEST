@@ -1,17 +1,25 @@
 @extends('layouts/commonLayout')
-
+@php
+$currentRouteName = Route::currentRouteName();
+@endphp
 @section('layoutContent')
     <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
         <div class="container-xxl ">
             <div class="navbar-brand app-brand demo d-flex py-0 me-4">
                 <ul class="menu-inner" style="margin-left: 0px;">
-                    <li class="menu-item">
+                    <li class="menu-item {{ $currentRouteName == 'question-management-page' ? 'active' : ''}}">
                         <a href="{{ route('question-management-page') }}" class="menu-link">
                             <i class='bx bx-chat'></i>
                             <div>Questions</div>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item {{ $currentRouteName == 'feature-question-page' ? 'active' : ''}}">
+                        <a href="{{ route('feature-question-page') }}" class="menu-link">
+                            <i class='bx bx-chat'></i>
+                            <div>Featured Tests</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ $currentRouteName == 'user-management-page' ? 'active' : ''}}">
                         <a href="{{ route('user-management-page') }}" class="menu-link">
                             <i class='bx bx-user-check' ></i>
                             <div>Users</div>

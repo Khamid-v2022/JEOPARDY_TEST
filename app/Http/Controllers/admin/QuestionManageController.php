@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 
 use App\Models\OriginalQuestion;
 use App\Models\UserAnswer;
+use App\Models\FeatureTaskHeader;
+use App\Models\FeatureTaskQuestion;
+
+use Illuminate\Support\Facades\Validator;
 
 class QuestionManageController extends Controller
 {
@@ -111,6 +115,111 @@ class QuestionManageController extends Controller
 
     }
 
+
+    public function featuredQuestionsPage() {
+        $feature_tasks = FeatureTaskHeader::get();
+        return view('pages.admin.featured-questions', ['feature_tasks' => $feature_tasks]);
+    }
+
+    public function importFeaturedTask(Request $request) {
+        $validatedData = $request->validate([
+            'files.*' => 'mimes:csv'
+        ]);
+
+        $exist = FeatureTaskHeader::where('title', $request->title)->get();
+        if(count($exist)) {
+            return response()->json(['code'=>201, 'message'=>'Please use a different title. This title is already in use.'], 200);
+        }
+
+        $feature_task = FeatureTaskHeader::create([
+            'title' => $request->title
+        ]);
+
+        if($request->file('thumbnail')){
+            $validator = Validator::make($request->all(), [
+                'thumbnail' => 'required|mimes:png,jpg,jpeg,csv,txt,pdf|max:2048'
+            ]);
+            
+            if ($validator->fails()) {
+                return response()->json(['code'=>400, 'message'=> $validator->errors()->first('file')], 400);
+            } else {
+                $file = $request->file('thumbnail');
+                $filename = time() . '_' . $file->getClientOriginalName();
+        
+                // File extension
+                $extension = $file->getClientOriginalExtension();
+        
+                // File upload location
+                $location = 'assets/img/feature_task_thumbnails/';
+        
+                // Upload file
+                $file->move($location, $filename);
+                $filepath = url($location . $filename);
+            } 
+        } 
+
+        if(isset($filepath)){
+            $feature_task->thumbnail = $filepath;
+            $feature_task->save();
+        }
+            
+
+        if($request->hasFile('files0')){
+            $file = $request->file('files0');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            // File extension
+            $extension = $file->getClientOriginalExtension();
+
+            // File upload location
+            $location = 'files';
+            // Upload file
+            $file->move($location, $filename);
+            // File path
+            $filepath = public_path() . '/files/' . $filename;
+
+            // insert questions from file
+            $this->add_feature_questions_from_csv($feature_task->id, $filepath);
+
+            unlink($filepath);
+        }
+
+        return response()->json(['code'=>200, 'message'=>'File uploaded.'], 200);
+    }
+
+    private function add_feature_questions_from_csv($header_id, $filepath){
+        set_time_limit(3000);
+
+        $file = fopen($filepath, 'r');
+    
+        $header = fgetcsv($file);
+    
+        $rows = [];
+        while ($row = fgetcsv($file)) {
+            $rows[] = $row;
+
+            if($row[2] == strip_tags($row[2])) {
+                if(!str_contains(strtolower($row[2]), "the clue") && !str_contains(strtolower($row[0]), "the clue")) {
+                    FeatureTaskQuestion::create(
+                        [
+                            'header_id' => $header_id,
+                            'category' => strip_tags($row[0]),
+                            'question' => $row[2],
+                            'answer' => strip_tags($row[3])
+                        ]
+                    );
+                }
+            }
+        }
+    
+        fclose($file);
+
+    }
+
+    public function deleteFeaturedTask($task_id) {
+        FeatureTaskQuestion::where('header_id', $task_id)->delete();
+        FeatureTaskHeader::where('id', $task_id)->delete();
+        return response()->json(['code'=>200, 'message'=>'Deleted'], 200);
+    }
 
     // public function insert_question_info_to_answer_table() {
     //     $answers = UserAnswer::whereNull("question")->get();

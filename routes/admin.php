@@ -13,10 +13,18 @@ Route::namespace('admin')->prefix('admin')->group(function(){
 
     Route::middleware(['auth.admin:admin'])->group(function(){
         Route::get('/', [QuestionManageController::class, 'index'])->name('question-management-page');
+
         Route::get('/question-management/load-question', [QuestionManageController::class, 'loadQuestions']);
         Route::post('/question-management/create-update-question', [QuestionManageController::class, 'createOrUpdateQuestion']);
         Route::post('/question-management/import-question', [QuestionManageController::class, 'importQuestion']);
         Route::delete('/question-management/delete-question/{id}', [QuestionManageController::class, 'deleteQuestion'])->where('id', '[0-9]+');
+
+        Route::get('/feature-question-management', [QuestionManageController::class, 'featuredQuestionsPage'])->name('feature-question-page');
+        Route::post('/feature-question-management/import-featured-task', [QuestionManageController::class, 'importFeaturedTask']);
+        Route::delete('/feature-question-management/delete-featured-task/{id}', [QuestionManageController::class, 'deleteFeaturedTask'])->where('id', '[0-9]+');
+        
+        // Route::get('/feature-question-management/load_feature_tasks', [QuestionManageController::class, 'loadFeatureTasks']);
+        
 
         Route::get('/users', [UserManageController::class, 'index'])->name('user-management-page');
         Route::get('/users/get-info/{id}', [UserManageController::class, 'getUserInfo'])->where('id', '[0-9]+');
