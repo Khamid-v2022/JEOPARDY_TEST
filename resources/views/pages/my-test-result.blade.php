@@ -18,6 +18,7 @@
             <table class="dt-responsive table border-top" id="recent_history">
                 <thead>
                     <tr class="text-nowrap">
+                        <th>Test Type</th>
                         <th>Started At</th>
                         <th>Ended At</th>
                         <th>Progress Time</th>
@@ -27,7 +28,24 @@
                 </thead>
                 <tbody>
                     @foreach($history as $item)
+                    
                     <tr>
+                        <td>
+                            @if($item->test_type == 0)
+                                Random
+                            @elseif($item->test_type == 1)
+                                Daily Free
+                            @elseif($item->test_type == 2)
+                                @php
+                                    $feature_test_info = $item->getFeatureTestInfo();
+                                @endphp
+                                @if($feature_test_info)
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Featured Test">
+                                    <img src="{{ asset($feature_test_info->thumbnail) }}" alt class="thumbnail-img me-2" />{{ $feature_test_info->title }}
+                                </span>
+                                @endif
+                            @endif
+                        </td>
                         <td>{{ $item->started_at }}</td>
                         <td>{{ $item->ended_at }}</td>
                         <td>{{ $item->progress_time }}<span class="d-none sort-value">{{ $item->progress_time_second }}</span></td>

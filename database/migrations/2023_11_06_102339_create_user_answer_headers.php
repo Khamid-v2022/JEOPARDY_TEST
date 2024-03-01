@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('score')->default(0);
             $table->integer('number_of_questions')->default(50);
-            $table->tinyInteger('is_trial_test')->default(1);
+            $table->tinyInteger('test_type')->default(1);           // 0: general pricing test, 1: Free trial test, 2: Featured Test
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();

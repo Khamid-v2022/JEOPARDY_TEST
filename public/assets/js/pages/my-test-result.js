@@ -6,13 +6,13 @@ $(function() {
                 type: 'time'
             },
             {
-                targets: 4,
+                targets: -1,
                 searchable: false,
                 orderable: false
             }
         ],
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        order: [[0, 'desc']]
+        order: [[1, 'desc']]
     })
 
     $.extend( $.fn.dataTableExt.oSort, {

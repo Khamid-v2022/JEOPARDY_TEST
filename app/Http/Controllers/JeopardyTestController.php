@@ -8,6 +8,8 @@ use App\Models\Question;
 use App\Models\OriginalQuestion;
 use App\Models\UserAnswer;
 use App\Models\UserAnswerHeader;
+use App\Models\FeatureTaskHeader;
+use App\Models\FeatureTaskQuestion;
 
 use Share;
 
@@ -35,10 +37,13 @@ class JeopardyTestController extends MyController {
 
         $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;
 
+        $featured_tests = FeatureTaskHeader::get();
+
 
         return view('pages.jeopardy-test', [
             'tested_count' => $tested_count,
-            'free_count' => $free_count
+            'free_count' => $free_count,
+            'featured_tests' => $featured_tests
         ])->with('streak_days', $this->streak_days);
     }
 
@@ -66,21 +71,68 @@ class JeopardyTestController extends MyController {
         $questions = OriginalQuestion::inRandomOrder()->take($count)->get();
         // $questions = OriginalQuestion::where('id', "<", 6)->take(5)->get();
 
-        $is_trial_test = 0;
+        $test_type = 0;         // general test
         if($this->user->subscription_status == 0) {
-            $is_trial_test = 1;
+            $test_type = 1;     // Trial test
         }
 
         // create Header
         $header = UserAnswerHeader::create([
             'user_id' => $this->user->id,
             'number_of_questions' => $count,
-            'is_trial_test' => $is_trial_test,
+            'test_type' => $test_type,
             'started_at' => date("Y-m-d H:i:s")
         ]);
 
         $questions->makeHidden(['value', 'answer']);
        
+        // remove hyperlink from the question
+        for($index = 0; $index < count($questions); $index++) {
+            $questions[$index]->question = strip_tags($questions[$index]->question);
+        }
+
+        return response()->json(['code'=>200, 'questions'=>$questions, 'header_id' => $header->id], 200);
+    }
+
+    public function get_feature_test($test_id) {
+        if($this->user->subscription_status == 0)
+            return response()->json(['code'=>400, 'message'=>'This test is for Subscribers Only!'], 200);
+
+        // check user have reach out the Mothly limit
+        if($this->user->subscription_status == 1 && $this->user->subscription_plan == "Monthly") {
+            $subscribed_date = date('d', strtotime($this->user->subscribed_at));
+
+            $today_date = date('d');
+            $today_month = date('Y-m');
+
+            $compare_date = $today_month . '-' . $subscribed_date;
+            if($today_date < $subscribed_date) {
+                // get 1 month before
+                $compare_date = date('Y-m-d', strtotime("-1 month", strtotime($compare_date))); 
+            }
+
+            // get count
+            $tested_count = count(UserAnswerHeader::where('user_id', $this->user->id)->whereNotNull('ended_at')->where('ended_at', '>=', $compare_date)->get());
+            if($tested_count >= env('MONTHLY_PLAN_TEST_COUNT')) {
+                return response()->json(['code'=>400, 'message'=>'Exceeded monthly limit.'], 200);
+            }
+        }
+
+        $questions = FeatureTaskQuestion::where('header_id', $test_id)->get();
+       
+
+        $test_type = 2;         //Featured Test 
+        
+        // create Header
+        $header = UserAnswerHeader::create([
+            'user_id' => $this->user->id,
+            'number_of_questions' => count($questions),
+            'test_type' => $test_type,
+            'featured_test_id' => $test_id,
+            'started_at' => date("Y-m-d H:i:s")
+        ]);
+
+        $questions->makeHidden(['value', 'answer']);
         // remove hyperlink from the question
         for($index = 0; $index < count($questions); $index++) {
             $questions[$index]->question = strip_tags($questions[$index]->question);
@@ -134,8 +186,14 @@ class JeopardyTestController extends MyController {
         $header = UserAnswerHeader::where('id', $header_id)->first();
 
         $correct_count = 0;
-        foreach($answers as $answer) {
-            $question = OriginalQuestion::where('id', $answer->id)->first();
+        foreach($answers as $my_answer) {
+            // check this question is featured question
+            if($header->test_type == 2) {
+                $question = FeatureTaskQuestion::where('id', $my_answer->id)->first();
+            } else {
+                $question = OriginalQuestion::where('id', $my_answer->id)->first();
+            }
+           
             $answer = UserAnswer::create([
                 'header_id' => $header->id,
                 'user_id' => $this->user->id,
@@ -143,14 +201,14 @@ class JeopardyTestController extends MyController {
                 'question' => $question->question,
                 'answer' => $question->answer,
                 'value' => $question->value,
-                'user_answer' => strip_tags($answer->user_answer),
-                'answer_time' => $answer->answer_time
+                'user_answer' => strip_tags($my_answer->user_answer),
+                'answer_time' => $my_answer->answer_time
             ]);
 
             if(
-                strtolower(trim($question->answer)) == strtolower(trim($answer->user_answer)) || 
-                strtolower(trim($question->answer)) == strtolower(trim("a " . $answer->user_answer)) ||
-                strtolower(trim($question->answer)) == strtolower(trim("the " . $answer->user_answer))
+                strtolower(trim($question->answer)) == strtolower(trim($my_answer->user_answer)) || 
+                strtolower(trim($question->answer)) == strtolower(trim("a " . $my_answer->user_answer)) ||
+                strtolower(trim($question->answer)) == strtolower(trim("the " . $my_answer->user_answer))
             ) {
                 $correct_count++;
                 $answer->is_correct = 1;

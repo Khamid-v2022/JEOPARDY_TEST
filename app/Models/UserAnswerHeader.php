@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserAnswer;
+use App\Models\FeatureTaskHeader;
 
 class UserAnswerHeader extends Model
 {
@@ -14,7 +15,8 @@ class UserAnswerHeader extends Model
         'user_id',
         'score',
         'number_of_questions',
-        'is_trial_test',
+        'test_type',            // 0: general test, 1: free trial test, 2: featured test
+        'featured_test_id',
         'started_at',
         'ended_at'
     ];
@@ -39,6 +41,13 @@ class UserAnswerHeader extends Model
         $timeDifference = $minutes > 0 ? "{$minutes}min {$seconds}s" : "{$seconds}s";
 
         return array('formated' => $timeDifference, 'second' => $total_second);
+    }
+
+    public function getFeatureTestInfo() {
+        if($this->featured_test_id) {
+            return FeatureTaskHeader::where('id', $this->featured_test_id)->first();
+        }
+        return false;
     }
     
 }

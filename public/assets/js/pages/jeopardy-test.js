@@ -20,6 +20,17 @@ var current_trial_test_header = null;
         loadQuestions();
     })
 
+    $(".start-feature-test-btn").on("click", function(){
+        // question_count = $("#question_count_again_sel").val();
+        // $(".question-count").html(question_count);
+
+        // loadQuestions();
+        $(this).find("fa-spinner").removeClass("d-none"); 
+        
+        let test_id = $(this).attr("data-id");
+        loadFeaturedTestQuestions(test_id);
+    })
+
     $("#submit_form").on("submit", function(e){
         e.preventDefault();
         const answer = $("#answer_input").val();
@@ -40,6 +51,8 @@ function loadQuestions() {
     $(".start-again-btn").attr("disabled", true);
     $(".start-again-btn fa-spinner").removeClass("d-none");    
 
+    $(".start-feature-test-btn").attr("disabled", true);
+
     const _url = '/jeopardy-test/get-questions/' + question_count;
     $.ajax({
         url: _url,
@@ -48,8 +61,12 @@ function loadQuestions() {
             if(response.code == 200) {
                 current_trial_test_header = response.header_id;
                 question = response.questions;
+
+                
                 $("#start_step").addClass("d-none");
                 $("#complete_step").addClass("d-none");
+                $("#featured_tests_wrapper").addClass("d-none");
+
                 $("#begin_step").removeClass("d-none");
                 startCountDownForStartTest();
 
@@ -57,6 +74,55 @@ function loadQuestions() {
                 $(".start-btn fa-spinner").addClass("d-none");
                 $(".start-again-btn").removeAttr("disabled");
                 $(".start-again-btn fa-spinner").addClass("d-none");
+                $(".start-feature-test-btn").removeAttr("disabled");
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '',
+                    text: response.message,
+                }).then(function(){
+                    location.reload();
+                })
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            Swal.fire({
+                icon: 'error',
+                title: '',
+                text: XMLHttpRequest.responseJSON.message,
+            })
+        }       
+    })
+}
+
+function loadFeaturedTestQuestions(test_id) {
+    $(".start-btn").attr("disabled", true);
+    $(".start-again-btn").attr("disabled", true);  
+
+    $(".start-feature-test-btn").attr("disabled", true);
+
+    const _url = '/jeopardy-test/get-feature-test/' + test_id;
+    $.ajax({
+        url: _url,
+        type: "GET",
+        success: function(response) {
+            if(response.code == 200) {
+                current_trial_test_header = response.header_id;
+                question = response.questions;
+                question_count = question.length;
+                $(".question-count").html(question_count);
+
+                $("#start_step").addClass("d-none");
+                $("#complete_step").addClass("d-none");
+                $("#featured_tests_wrapper").addClass("d-none");
+
+                $("#begin_step").removeClass("d-none");
+                startCountDownForStartTest();
+
+                $(".start-btn").removeAttr("disabled");
+                $(".start-again-btn").removeAttr("disabled");
+                $(".start-feature-test-btn").removeAttr("disabled");
+                $(".start-feature-test-btn fa-spinner").addClass("d-none");
             } else {
                 Swal.fire({
                     icon: 'warning',
@@ -145,6 +211,7 @@ function ask_next(){
 function end_question() {
     $("#question_form").addClass("d-none");
     $("#complete_step").removeClass("d-none");
+    
 
     const _url = "/jeopardy-test/submit-response";
     $.ajax({
@@ -161,7 +228,8 @@ function end_question() {
                 $(".result-wrapper").removeClass("d-none");
 
                 drawingShareMyScoreSection(response);
-
+                
+                $("#featured_tests_wrapper").removeClass("d-none");
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) { 
