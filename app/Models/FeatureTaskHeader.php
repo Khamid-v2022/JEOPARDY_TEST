@@ -12,7 +12,8 @@ class FeatureTaskHeader extends Model
     
     protected $fillable = [
         'thumbnail',
-        'title'
+        'title',
+        'is_delete'
     ];
     
     public function get_question() {

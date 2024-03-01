@@ -117,7 +117,7 @@ class QuestionManageController extends Controller
 
 
     public function featuredTasksPage() {
-        $feature_tasks = FeatureTaskHeader::get();
+        $feature_tasks = FeatureTaskHeader::where('is_delete', 0)->get();
         return view('pages.admin.featured-tasks', ['feature_tasks' => $feature_tasks]);
     }
 
@@ -216,8 +216,11 @@ class QuestionManageController extends Controller
     }
 
     public function deleteFeaturedTask($task_id) {
-        FeatureTaskQuestion::where('header_id', $task_id)->delete();
-        FeatureTaskHeader::where('id', $task_id)->delete();
+        // FeatureTaskQuestion::where('header_id', $task_id)->delete();
+        // FeatureTaskHeader::where('id', $task_id)->delete();
+        FeatureTaskHeader::where('id', $task_id)->update([
+            'is_delete' => 1
+        ]);
         return response()->json(['code'=>200, 'message'=>'Deleted'], 200);
     }
 
