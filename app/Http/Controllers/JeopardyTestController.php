@@ -39,7 +39,7 @@ class JeopardyTestController extends MyController {
 
         $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;
 
-        $featured_tests = FeatureTaskHeader::where('is_delete', 0)->get();
+        $featured_tests = FeatureTaskHeader::where('is_delete', 0)->orderBy('ranking')->get();
         
 
         $max_scores = UserAnswerHeader::getMaxFeaturedTestScores($this->user->id);

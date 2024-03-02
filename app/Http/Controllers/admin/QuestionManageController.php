@@ -117,7 +117,7 @@ class QuestionManageController extends Controller
 
 
     public function featuredTasksPage() {
-        $feature_tasks = FeatureTaskHeader::where('is_delete', 0)->get();
+        $feature_tasks = FeatureTaskHeader::orderBy('ranking')->get();
         return view('pages.admin.featured-tasks', ['feature_tasks' => $feature_tasks]);
     }
 
@@ -131,8 +131,12 @@ class QuestionManageController extends Controller
             return response()->json(['code'=>201, 'message'=>'Please use a different title. This title is already in use.'], 200);
         }
 
+        // get last rank
+        $max_rank = FeatureTaskHeader::where("is_delete", 0)->max("ranking");
+
         $feature_task = FeatureTaskHeader::create([
-            'title' => $request->title
+            'title' => $request->title,
+            'ranking' => $max_rank + 1
         ]);
 
         if($request->file('thumbnail')){
@@ -226,6 +230,22 @@ class QuestionManageController extends Controller
 
     public function updateTaskTitle(Request $request) {
         FeatureTaskHeader::where("id", $request->id)->update(["title" => $request->title]);
+        return response()->json(['code'=>200, 'message'=>'Updated'], 200);
+    }
+
+    public function switchFeatureTestRank(Request $request) {
+        // get rank
+        $main = FeatureTaskHeader::where("id", $request->task_id)->first();
+        $target = FeatureTaskHeader::where("id", $request->target_task_id)->first();
+
+        $rank = $main->ranking;
+        $target_rank = $target->ranking;
+        
+        $main->ranking = $target_rank;
+        $main->save();
+
+        $target->ranking = $rank;
+        $target->save();
         return response()->json(['code'=>200, 'message'=>'Updated'], 200);
     }
 

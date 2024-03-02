@@ -13,6 +13,7 @@ class FeatureTaskHeader extends Model
     protected $fillable = [
         'thumbnail',
         'title',
+        'ranking',
         'is_delete'
     ];
     

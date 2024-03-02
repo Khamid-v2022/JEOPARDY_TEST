@@ -16,7 +16,7 @@
             <table class="dt-responsive table border-top" id="feature_tasks_table">
                 <thead>
                     <tr class="text-nowrap">
-                        <!-- <th>#</th> -->
+                        <th>Rank</th>
                         <th>Thumbnail</th>
                         <th>Test Title</th>
                         <th>Number of Questions</th>
@@ -25,20 +25,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($feature_tasks as $task)
-                    <tr data-id="{{$task->id}}" data-task_title="{{$task->title}}">
-                        <td>
-                            <img src="{{ asset($task->thumbnail) }}" alt class="thumbnail-img" />
-                        </td>
-                        <td><a href="/admin/feature-question-management/task/{{$task->id}}"  class="task-title">{{ $task->title }}</td>
-                        <td>{{ count($task->get_question())}}</td>
-                        <td>{{ $task->created_at }}</td>
-                        <td>
-                            <a href="javascript:;" class="edit-title" data-id="{{$task->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Title"><i class="bx bx-edit"></i></a>
-                            <a href="javascript:;" class="delete-task" data-id="{{$task->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Task"><i class="bx bx-trash"></i></a>
-                        </td>
-                    </tr>
-                    @endforeach
+                    @if(count($feature_tasks) > 0)
+                        @for($index = 0; $index < count($feature_tasks); $index++)
+                            @php
+                                $task = $feature_tasks[$index];
+                            @endphp
+                            <tr data-id="{{$task->id}}" data-task_title="{{$task->title}}">
+                                <!-- <td class="test-rank">{{ $task->ranking }}</td> -->
+                                <td class="test-rank">{{ $index + 1 }}</td>
+                                <td>
+                                    <img src="{{ asset($task->thumbnail) }}" alt class="thumbnail-img" />
+                                </td>
+                                <td><a href="/admin/feature-question-management/task/{{$task->id}}"  class="task-title">{{ $task->title }}</td>
+                                <td>{{ count($task->get_question())}}</td>
+                                <td>{{ $task->created_at }}</td>
+                                <td>
+                                    <a href="javascript:;" class="ranking-up {{$index == 0 ? 'd-none' : ''}}" data-id="{{$task->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Up"><i class='bx bx-up-arrow-alt'></i></a>
+                                    <a href="javascript:;" class="ranking-down {{ $index == count($feature_tasks) - 1 ? 'd-none' : ''}}" data-id="{{$task->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Down"><i class='bx bx-down-arrow-alt' ></i></a>
+                                    <a href="javascript:;" class="edit-title ms-3" data-id="{{$task->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Title"><i class="bx bx-edit"></i></a>
+                                    <a href="javascript:;" class="delete-task" data-id="{{$task->id}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Task"><i class="bx bx-trash"></i></a>
+                                </td>
+                            </tr>
+                        @endfor
+                    @endif
+                    
+                    
                 </tbody>
             </table>
         </div>

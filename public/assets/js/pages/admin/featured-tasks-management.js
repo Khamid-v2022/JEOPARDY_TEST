@@ -10,24 +10,25 @@ $(function() {
     })
     
 
-    dt_table = $('#feature_tasks_table').DataTable({
-        columnDefs: [
-            {
-                targets: [0, -1],
-                orderable:false,
-                searchable: false,
-            },
-        ],
-        displayLength: 100,
-        lengthMenu: [50, 100, 150],
-        order: [[1, 'desc']],
-        searching: true,
-        orderCellsTop: true,
-        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        scroller: {
-            loadingIndicator: true
-        },
-    });
+    // dt_table = $('#feature_tasks_table').DataTable({
+    //     columnDefs: [
+    //         {
+    //             targets: [1, -1],
+    //             orderable:false,
+    //             searchable: false,
+    //         },
+    //     ],
+    //     displayLength: 100,
+    //     lengthMenu: [50, 100, 150],
+    //     // order: [[0, 'asc']],
+    //     order:false,
+    //     searching: true,
+    //     orderCellsTop: true,
+    //     dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+    //     scroller: {
+    //         loadingIndicator: true
+    //     },
+    // });
 
     $("#form_import_file").on("submit", function(e) {
         e.preventDefault();
@@ -215,4 +216,54 @@ $(function() {
             }
         });
     })
+
+    $(".ranking-up").on("click", function() {
+        let main_id = $(this).parents("tr").attr("data-id");
+        let main_rank = $(this).parents("tr").find(".test-rank").html();
+        let target_id = $(this).parents("tr").prev("tr").attr("data-id");
+        let target_rank = $(this).parents("tr").prev("tr").find(".test-rank").html();
+
+        if(target_id) {
+            $(this).parents("tr").prev().before($(this).parents("tr"));
+            $("tr[data-id=" + main_id + "]").find(".test-rank").html(target_rank);
+            $("tr[data-id=" + target_id + "]").find(".test-rank").html(main_rank);
+            switchRanking(main_id, target_id);
+        }
+    })
+
+    $(".ranking-down").on("click", function() {
+        let main_id = $(this).parents("tr").attr("data-id");
+        let main_rank = $(this).parents("tr").find(".test-rank").html();
+        let target_id = $(this).parents("tr").next("tr").attr("data-id");
+        let target_rank = $(this).parents("tr").next("tr").find(".test-rank").html();
+
+        if(target_id) {
+            $(this).parents("tr").next().after($(this).parents("tr"));
+            $("tr[data-id=" + main_id + "]").find(".test-rank").html(target_rank);
+            $("tr[data-id=" + target_id + "]").find(".test-rank").html(main_rank);
+            switchRanking(main_id, target_id);
+        }
+    })
+
 })
+
+function switchRanking(task_id, target_task_id) {
+    $(".ranking-up").removeClass("d-none");
+    $(".ranking-down").removeClass("d-none");
+
+    // first row hide up button, last row hide down button
+    $("table tr:first-child").find(".ranking-up").addClass("d-none");
+    $("table tr:last-child").find(".ranking-down").addClass("d-none");
+    $.ajax({
+        url: "/admin/feature-task-management/update-task-rank",
+        method: 'post',
+        data: {
+            task_id,
+            target_task_id
+        },
+        success: function(response){
+        },
+        error: function(response){
+        }
+    });
+}

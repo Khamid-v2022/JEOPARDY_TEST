@@ -23,11 +23,14 @@ Route::namespace('admin')->prefix('admin')->group(function(){
         Route::post('/feature-task-management/import-featured-task', [QuestionManageController::class, 'importFeaturedTask']);
         Route::delete('/feature-task-management/delete-featured-task/{id}', [QuestionManageController::class, 'deleteFeaturedTask'])->where('id', '[0-9]+');
         Route::post('/feature-task-management/update-task-title', [QuestionManageController::class, 'updateTaskTitle']);
+        Route::post('/feature-task-management/update-task-rank', [QuestionManageController::class, 'switchFeatureTestRank']);
 
         // Detail page to add/delete questions
         Route::get('/feature-question-management/task/{id}', [QuestionManageController::class, 'featuredQuestionsPage'])->where('id', '[0-9]+')->name('feature-questions-page');
         Route::delete('/feature-question-management/delete-featured-question/{id}', [QuestionManageController::class, 'deleteFeatureQuestion'])->where('id', '[0-9]+');
         Route::post('/feature-question-management/update-question', [QuestionManageController::class, 'updateFeatureQustion']);
+        
+        
         
 
         

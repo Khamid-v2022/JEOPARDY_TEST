@@ -4,7 +4,69 @@
 
 @section('content')
 <div class="container-xxl">
-    <div class="card">
+    <div class="row">
+       
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">Annual Subscribers:</span>
+                    <h3 class="card-title mb-1">{{ $annual_subscribers }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">Monthly Subscribers:</span>
+                    <h3 class="card-title mb-1">{{ $monthly_subscribers }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">New Subs (Last 7 Days):</span>
+                    <h3 class="card-title mb-1">{{ $new_sub_7 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">New Subs (Last 30 Days):</span>
+                    <h3 class="card-title mb-1">{{ $new_sub_30 }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">Total Users:</span>
+                    <h3 class="card-title mb-1">{{ count($users) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">New Users Last 7 Days:</span>
+                    <h3 class="card-title mb-1">{{ $new_users_7 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <span class="d-block fw-medium mb-1">New Users Last 30 Days:</span>
+                    <h3 class="card-title mb-1">{{ $new_users_30 }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">Users</h5>
         </div>
