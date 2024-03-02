@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 use App\Models\UserAnswer;
 use App\Models\FeatureTaskHeader;
 
@@ -48,6 +50,24 @@ class UserAnswerHeader extends Model
             return FeatureTaskHeader::where('id', $this->featured_test_id)->first();
         }
         return false;
+    }
+
+    static public function getMaxFeaturedTestScores($user_id) {
+        $sql = "WITH header AS (
+            SELECT `id`, `featured_test_id`, `score`, `number_of_questions`, `ended_at`,
+                   RANK() OVER (PARTITION BY `featured_test_id`
+                                    ORDER BY `score`/`number_of_questions` DESC
+                               ) AS `Rank`
+              FROM `user_answer_headers`
+              WHERE `user_id`={$user_id} AND `test_type` = 2 AND `featured_test_id` IS NOT NULL
+        )
+        SELECT *
+        FROM `header`
+        WHERE `Rank` = 1
+        ORDER BY `featured_test_id`;";
+        $result =  DB::select($sql);
+
+        return $result;
     }
     
 }

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+
 use App\Models\Category;
 use App\Models\Question;
 use App\Models\OriginalQuestion;
@@ -10,6 +11,7 @@ use App\Models\UserAnswer;
 use App\Models\UserAnswerHeader;
 use App\Models\FeatureTaskHeader;
 use App\Models\FeatureTaskQuestion;
+
 
 use Share;
 
@@ -38,7 +40,24 @@ class JeopardyTestController extends MyController {
         $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;
 
         $featured_tests = FeatureTaskHeader::where('is_delete', 0)->get();
+        
 
+        $max_scores = UserAnswerHeader::getMaxFeaturedTestScores($this->user->id);
+
+        // insert max score
+        if(count($featured_tests) > 0) {
+            for($index = 0; $index < count($featured_tests); $index++) {
+                foreach($max_scores as $max_score) {
+                    if($featured_tests[$index]->id == $max_score->featured_test_id) {
+                        $featured_tests[$index]['max_score'] = $max_score->score;
+                        $featured_tests[$index]['number_of_questions'] = $max_score->number_of_questions;
+                        $featured_tests[$index]['max_scored_date'] = $max_score->ended_at;
+                        break;
+                    }
+                }
+            }
+        }
+        
 
         return view('pages.jeopardy-test', [
             'tested_count' => $tested_count,

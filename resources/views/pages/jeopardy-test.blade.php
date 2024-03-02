@@ -145,14 +145,22 @@
                             <tr class="text-nowrap">
                                 <th>Test Title</th>
                                 <th>Number of Questions</th>
+                                <th>Best Score</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($featured_tests as $test)
-                            <tr>
+                            <tr class="{{isset($test->max_score) ? 'table-info' : ''}}">
                                 <td><img src="{{ asset($test->thumbnail) }}" alt class="thumbnail-img me-2" />{{ $test->title }}</td>
                                 <td>{{ count($test->get_question()) }}</td>
+                                <td>
+                                    @if(isset($test->max_score))
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{$test->max_scored_date}}">{{$test->max_score}} / {{$test->number_of_questions}}</span>
+                                    @else
+                                    <span class="badge bg-label-success">NEW!</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @if(Auth::user()->subscription_status == 1)
                                        
