@@ -50,6 +50,7 @@ class Controller extends BaseController
 
             $today = date("Y-m-d");
             $streak_started_date = $today;
+            $streak_end_date = null;
             
             while(1) {
                 $flag = 0;

@@ -108,7 +108,8 @@
                     <p class="mt-3">
                     👆 Share your score and earn free tests when others sign up.<br>
                     Click <a href="javascript:goto_detailPage();">here</a> to review your responses and compare them to the correct answers.<br>
-                    TIP: If the auto-grader mistakenly marked a correct response as incorrect, you can click “INCORRECT” to toggle the response to “CORRECT”
+                    TIP: If the auto-grader mistakenly marked a correct response as incorrect,<br>
+                    you can click “INCORRECT” to toggle the response to “CORRECT”
                     </p>
                     @if(Auth::user()->subscription_status == 1)
                         <div class="row mb-3">
@@ -129,41 +130,48 @@
                 </div>
             </div>
 
-            <!-- Featured Tests section - Need to be hide when test started -->
-            @if(count($featured_tests) > 0)
-                <div class="mt-5 mx-auto" id="featured_tests_wrapper" style="max-width: 800px;">
-                    <div class="card">
-                        <h5 class="card-header">Featured Tests</h5>
-                        <div class="card-datatable table-responsive">
-                            <table class="dt-responsive table border-top" id="featured_tests_table">
-                                <thead>
-                                    <tr class="text-nowrap">
-                                        <th>Test Title</th>
-                                        <th>Number of Questions</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($featured_tests as $test)
-                                    <tr>
-                                        <td><img src="{{ asset($test->thumbnail) }}" alt class="thumbnail-img me-2" />{{ $test->title }}</td>
-                                        <td>{{ count($test->get_question()) }}</td>
-                                        <td>
-                                            @if(Auth::user()->subscription_status == 1)
-                                            <a href="javascript:;" class="btn btn-primary start-feature-test-btn" data-id="{{ $test->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Test"><i class='bx bx-play me-2'></i>Start Test<i class="as fa-spinner fa-spin d-none"></i></a>
-                                            @else
-                                            <a href="{{ route('pages-pricing') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Subscribers Only"><i class='bx bx-play me-2'></i>Start Test</a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            @endif
+         
         @endif
+    @endif
+
+    <!-- Featured Tests section - Need to be hide when test started -->
+    @if(count($featured_tests) > 0)
+        <div class="mt-5 mx-auto" id="featured_tests_wrapper" style="max-width: 800px;">
+            <div class="card">
+                <h5 class="card-header">Featured Tests</h5>
+                <div class="card-datatable table-responsive">
+                    <table class="dt-responsive table border-top" id="featured_tests_table">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th>Test Title</th>
+                                <th>Number of Questions</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($featured_tests as $test)
+                            <tr>
+                                <td><img src="{{ asset($test->thumbnail) }}" alt class="thumbnail-img me-2" />{{ $test->title }}</td>
+                                <td>{{ count($test->get_question()) }}</td>
+                                <td>
+                                    @if(Auth::user()->subscription_status == 1)
+                                       
+                                        @if(Auth::user()->subscription_plan == "Monthly" && $tested_count >= env('MONTHLY_PLAN_TEST_COUNT') + $free_count )
+                                            <a href="javascript:;" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Exceeded monthly limit"><i class='bx bx-play me-2'></i>Start Test<i class="as fa-spinner fa-spin d-none"></i></a>
+                                        @else
+                                            <a href="javascript:;" class="btn btn-primary start-feature-test-btn" data-id="{{ $test->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Start Test"><i class='bx bx-play me-2'></i>Start Test<i class="as fa-spinner fa-spin d-none"></i></a>
+                                        @endif
+                                    @else
+                                        <a href="{{ route('pages-pricing') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Subscribers Only"><i class='bx bx-play me-2'></i>Start Test</a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     @endif
 
 </div>
