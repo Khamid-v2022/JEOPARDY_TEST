@@ -367,4 +367,22 @@
     border-radius: 4px;
   }
 
- 
+ .free-test-expire-wrapper {
+    margin-top: 50px;
+    padding: 0 16px 0 28px;
+  }
+  .free-test-expire {
+    border-radius: 16px;
+    padding: 16px;
+    background-color: rgba(105, 108, 255, 0.16) !important;
+    color: black;
+  }
+  .free-test-expire h2 {
+    color: black;
+    font-size: 27px;
+  }
+  .free-test-expire h3 {
+    font-size: 16px;
+    line-height: 24px;
+    color: #696cff;
+  }

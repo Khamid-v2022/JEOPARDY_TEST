@@ -12,7 +12,11 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row">  
+        @if(Auth::user()->subscription_status == 0)
+        <div class="col-sm-4">
+        @else
         <div class="col-sm-5">
+        @endif
             <div class="card mt-4 daily-reivew-card">
                 <div class="card-body">
                     {{date("F jS, Y")}}
@@ -42,7 +46,11 @@
                 </div>
             </div>
         </div>
+        @if(Auth::user()->subscription_status == 0)
+        <div class="col-sm-4">
+        @else
         <div class="col-sm-7">
+        @endif
             <div class="card mt-4">
                 <div class="card-header pb-2">
                     Number of Tests Per Day
@@ -52,6 +60,38 @@
                 </div>
             </div>
         </div>
+        @if(Auth::user()->subscription_status == 0)
+        <div class="col-sm-4">
+            <div class="card mt-4 d-flex flex-direction-colum justify-content-between free-test-expire" style="min-height: calc(100% - 26px); padding: 1.5rem">
+                <div>
+                    @php
+                        $remain_trail_test_times = Auth::user()->remain_trail_test_times;
+
+                        $today = new DateTime();
+                        $today->modify('+' . $remain_trail_test_times . ' days');
+                        $futureDate = $today->format('F jS, Y');
+                    @endphp
+                    @if($remain_trail_test_times == 0)
+                        <h2>Your Free Trial Has Expired - Subscribe Now!</h2>
+                    @else
+                        <h2 class="mb-3">Your FREE TRIAL will expire on {{$futureDate}}</h2>
+                        <h3>You have {{$remain_trail_test_times}} {{$remain_trail_test_times == 1 ? 'day' : 'days'}} of Free Trial left.</h3>
+                    @endif
+                    
+                    <div class="plan-statistics">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-semibold mb-2">Days</span>
+                            <span class="fw-semibold mb-2">{{env('FREE_TRIAL_TIMES') - $remain_trail_test_times}} of {{env('FREE_TRIAL_TIMES')}} Days</span>
+                        </div>
+                        <div class="progress" style="height: 8px">
+                            <div class="progress-bar" role="progressbar" style="width:{{(env('FREE_TRIAL_TIMES') - $remain_trail_test_times) / env('FREE_TRIAL_TIMES') * 100}}%" aria-valuenow="{{(env('FREE_TRIAL_TIMES') - $remain_trail_test_times) / env('FREE_TRIAL_TIMES') * 100}}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-primary mt-3 w-100" href="{{ route('pages-pricing') }}">Upgrade Account</a>
+            </div>
+        </div>
+        @endif
     </div>
     <div class="row">   
         <!-- Longest Streak All - time -->
