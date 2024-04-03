@@ -14,7 +14,7 @@
         global $conn;
 
         // get users
-        $sql_users = "SELECT `id`, `name`, `email`, `is_trial_used`, `remain_trail_test_times`, `last_reminder_emailed_at`, `last_tested_at`, `created_at` FROM `users` WHERE `is_email_verified` = 1 AND `subscription_status` = 0 AND `remain_trail_test_times` > 0";
+        $sql_users = "SELECT `id`, `name`, `email`, `is_trial_used`, `remain_trail_test_times`, `last_reminder_emailed_at`, `last_tested_at`, `is_receive_email`, `created_at` FROM `users` WHERE `is_email_verified` = 1 AND `subscription_status` = 0 AND `remain_trail_test_times` > 0";
         $result_users = $conn->query($sql_users);
 
         if($result_users->num_rows == 0){
@@ -68,7 +68,8 @@
     function renew_trial_test($user_id, $remain_trail_test_times) {
         global $conn;
         $current_date = date("Y-m-d H:i:s");
-        $update_sql = "UPDATE `users` SET `is_trial_used` = 0, `remain_trail_test_times` = " . $remain_trail_test_times . ",  `last_reminder_emailed_at` = '" . $current_date . "', `updated_at` = '" . $current_date . "' WHERE `id` = " . $user_id;
+        // $update_sql = "UPDATE `users` SET `is_trial_used` = 0, `remain_trail_test_times` = " . $remain_trail_test_times . ",  `last_reminder_emailed_at` = '" . $current_date . "', `updated_at` = '" . $current_date . "' WHERE `id` = " . $user_id;
+        $update_sql = "UPDATE `users` SET `is_trial_used` = 0, `last_reminder_emailed_at` = '" . $current_date . "', `updated_at` = '" . $current_date . "' WHERE `id` = " . $user_id;
         $conn->query($update_sql);
     }
 

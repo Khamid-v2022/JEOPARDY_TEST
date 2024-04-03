@@ -110,6 +110,7 @@ class JeopardyTestController extends MyController {
             $questions[$index]->question = strip_tags($questions[$index]->question);
         }
 
+
         return response()->json(['code'=>200, 'questions'=>$questions, 'header_id' => $header->id], 200);
     }
 
@@ -168,7 +169,7 @@ class JeopardyTestController extends MyController {
             if($this->user->is_trial_used == "0") {
                 $this->user->is_trial_used = 1;
                 $this->user->last_tested_at = date("Y-m-d H:i:s");
-    
+                $this->user->remain_trail_test_times = $this->user->remain_trail_test_times - 1;
                 $this->user->save();
             } else {
                 $free_count = $this->user->referral_user_count - $this->user->used_referrals_for_test;

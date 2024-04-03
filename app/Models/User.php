@@ -30,6 +30,7 @@ class User extends Authenticatable
         'default_question_count',
         'password',
         'is_trial_used',
+        'remain_trail_test_times',
         'subscription_status',
         'subscription_plan',
         'subscribed_at',
